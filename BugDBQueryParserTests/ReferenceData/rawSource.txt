@@ -1,0 +1,112 @@
+ number      subnumber deadline     status                         date        
+	 closedate    application                                       
+	 modul                                             
+	 submodul                                          
+	 apprelease                     frelease                      
+	 severity                       priority                      
+	 contributor                    leader                        
+	 developer                      qa                            
+	 summary                                                                                                                                                          
+ ----------- --------- ------------ ------------------------------ ------------
+	 ------------ --------------------------------------------------
+	 --------------------------------------------------
+	 --------------------------------------------------
+	 ------------------------------ ------------------------------
+	 ------------------------------ ------------------------------
+	 ------------------------------ ------------------------------
+	 ------------------------------ ------------------------------
+	 ---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+       15210         0 bug          open                           2004/02/23  
+	              Installer                                         
+	                                                   
+	                                                   
+	 unknown                                                      
+	                                n/a                           
+	 viktorov                                                     
+	                                                              
+	 VPIplayer: the error message comes up during deinstallation: "-1612..."
+	                                                                                           
+       15210         1 bug          open                           2004/02/23  
+	              VPI TMM/CM                                        
+	 installer                                         
+	                                                   
+	 devel                          unknown                       
+	 2                              n/a                           
+	 viktorov                       o.tyulin                      
+	                                                              
+	 VPIplayer: the error message comes up during deinstallation: "-1612..."
+	                                                                                           
+       29889         0 bug          open                           2007/04/19  
+	              VPI TMM/CM                                        
+	 player                                            
+	                                                   
+	 7.5                            unknown                       
+	                                n/a                           
+	 gubarand                                                     
+	                                                              
+	 Player installation. 'ptcl.bat' presents in 'bin' folder.                                                                                                        
+       29889         1 bug          assigned                       2007/04/19  
+	              VPI TMM/CM                                        
+	 player                                            
+	                                                   
+	 7.5                            unknown                       
+	 2                              n/a                           
+	 gubarand                       d.kruchkov                    
+	 d.kruchkov                                                   
+	 Player installation. 'ptcl.bat' presents in 'bin' folder.                                                                                                        
+       47566         0 bug          open                           2009/07/15  
+	              VPI TMM/CM                                        
+	 player                                            
+	                                                   
+	 8.3                            unknown                       
+	                                n/a                           
+	 i.poloyko                                                    
+	                                                              
+	 Extra white stripes around Palyer application                                                                                                                    
+       12807         0 bug          open                           2003/08/13  
+	              VPIplayer                                         
+	                                                   
+	                                                   
+	 1.0                                                          
+	                                n/a                           
+	 a.lowery                                                     
+	                                                              
+	 Integer Controls in Player don't work at top setting                                                                                                             
+       12807         1 bug          to_be_assigned                 2004/02/12  
+	              VPIplayer                                         
+	                                                   
+	                                                   
+	 1.0                            1.0                           
+	 2                              1                             
+	 a.lowery                       k.soh                         
+	                                                              
+	 Integer Controls in Player don't work at top setting                                                                                                             
+       12807         2 bug          works_for_me                   2004/02/13  
+	              VPIplayer                                         
+	                                                   
+	                                                   
+	 1.0                            1.0                           
+	 2                              1                             
+	 a.lowery                       k.soh                         
+	                                                              
+	 Integer Controls in Player don't work at top setting                                                                                                             
+       12807         3 bug          verified                       2004/02/25  
+	              VPIplayer                                         
+	                                                   
+	                                                   
+	 1.0                            1.0                           
+	 2                              1                             
+	 a.lowery                       k.soh                         
+	                                sohryn                        
+	 Integer Controls in Player don't work at top setting                                                                                                             
+       12807         4 bug          closed                         2004/04/05  
+	 2004/04/05   VPIplayer                                         
+	                                                   
+	                                                   
+	 1.0                            1.0                           
+	 2                              1                             
+	 a.lowery                       k.soh                         
+	                                sohryn                        
+	 Integer Controls in Player don't work at top setting                                                                                                             
+
+(476 rows affected)
