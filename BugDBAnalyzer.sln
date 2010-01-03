@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugDBDALNUnitTests", "BugDBDALNUnitTests\BugDBDALNUnitTests.csproj", "{FAB42E0D-ECBF-4FBC-B29F-C854398B89B4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugDBQueryParser", "BugDBQueryParser\BugDBQueryParser.csproj", "{3B40BFF4-4513-46FB-9535-D8517FDC81E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugDBQueryParserTests", "BugDBQueryParserTests\BugDBQueryParserTests.csproj", "{05C376B3-41BF-4E8A-853B-42156C5CA26D}"
@@ -48,10 +46,6 @@ Global
 		{F97CB605-901C-444F-9893-19D9B8EAAC15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F97CB605-901C-444F-9893-19D9B8EAAC15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F97CB605-901C-444F-9893-19D9B8EAAC15}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FAB42E0D-ECBF-4FBC-B29F-C854398B89B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FAB42E0D-ECBF-4FBC-B29F-C854398B89B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FAB42E0D-ECBF-4FBC-B29F-C854398B89B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FAB42E0D-ECBF-4FBC-B29F-C854398B89B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3B40BFF4-4513-46FB-9535-D8517FDC81E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3B40BFF4-4513-46FB-9535-D8517FDC81E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B40BFF4-4513-46FB-9535-D8517FDC81E1}.Release|Any CPU.ActiveCfg = Release|Any CPU

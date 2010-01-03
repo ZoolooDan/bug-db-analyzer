@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Windows;
-using BugDB.DAL;
 using BugDB.Aggregator;
 using BugDB.DataAccessLayer;
 using BugDB.DataAccessLayer.BLToolkitProvider;

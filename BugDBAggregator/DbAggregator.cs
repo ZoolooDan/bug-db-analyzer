@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using BugDB.DataAccessLayer;
 using BugDB.DataAccessLayer.DataTransferObjects;
+using BugDB.DataAccessLayer.Utils;
 using BugDB.QueryParser;
 
 namespace BugDB.Aggregator
@@ -18,6 +21,10 @@ namespace BugDB.Aggregator
   public class DbAggregator
   {
     #region Private Fields
+
+    private const string ConnStringSetting = "ConnectionString";
+    private const string CreateDbScript = @"DatabaseScripts\BugDB3.sql";
+
     private const string NumCol = "number";
     private const string RevCol = "subnumber";
     private const string TypeCol = "deadline";
@@ -58,6 +65,9 @@ namespace BugDB.Aggregator
     /// </summary>
     public void FillDatabase(Stream stream)
     {
+      // First create database
+      CreateDatabase();
+
       // Create records enumerator from stream
       IEnumerator<Record> records = QueryResultParser.CreateRecordsEnumerator(stream);
 
@@ -79,9 +89,26 @@ namespace BugDB.Aggregator
         ProcessRelease(record, app, TargetRelCol);
       }
     }
+
     #endregion Public Methods
 
     #region Helper Methods
+    /// <summary>
+    /// Creates database.
+    /// </summary>
+    /// <remarks>
+    /// Executes database creations script.
+    /// If database already exists then it will be removed. 
+    /// </remarks>
+    private static void CreateDatabase()
+    {
+      string connString = ConfigurationManager.AppSettings[ConnStringSetting];
+      SqlScriptRunner runner = new SqlScriptRunner(connString);
+      string scriptPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+      scriptPath = Path.Combine(scriptPath, CreateDbScript);
+      runner.Execute(scriptPath);
+    }
+
     /// <summary>
     /// Processes application of the revision.
     /// </summary>

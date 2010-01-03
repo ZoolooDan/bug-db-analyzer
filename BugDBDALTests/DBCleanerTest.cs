@@ -1,4 +1,4 @@
-﻿using BugDB.DAL;
+﻿using BugDB.DataAccessLayer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BugDBDALTests
 {

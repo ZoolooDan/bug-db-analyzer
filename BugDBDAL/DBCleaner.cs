@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using BLToolkit.Data;
 
-namespace BugDB.DAL
+namespace BugDB.DataAccessLayer
 {
   /// <summary>
   /// Class for purging whole database.
