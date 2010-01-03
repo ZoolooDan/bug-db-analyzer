@@ -71,7 +71,7 @@ namespace BugDBAggregatorTests
         Path.Combine(ReferenceDataDir, DbBackUpFileName));
 
       // Restore
-      BLToolkitDataProviderTest.RestoreDatabase(backupFileName);
+//      BLToolkitDataProviderTest.RestoreDatabase(backupFileName);
     }
 
     /// <summary>
