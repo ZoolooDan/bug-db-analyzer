@@ -14,7 +14,8 @@ namespace BugDB.DAL.Tests
   ///This is a test class for BLToolkitDataProviderTest and is intended
   ///to contain all BLToolkitDataProviderTest Unit Tests
   ///</summary>
-  [DeploymentItem(@"ReferenceData\BugDB_Clean.bak", "ReferenceData")]
+//  [DeploymentItem(@"ReferenceData\BugDB_Clean.bak", "ReferenceData")]
+  [DeploymentItem(@"DatabaseScripts\BugDB3.sql", "DatabaseScripts")]
   [TestClass]
   public class BLToolkitDataProviderTest
   {
@@ -23,6 +24,7 @@ namespace BugDB.DAL.Tests
     private const string SqlCmdExe = @"c:\Program Files\Microsoft SQL Server\90\Tools\Binn\SQLCMD.EXE";
     private const string RestoreQueryTemplate = @"RESTORE DATABASE BugDB FROM DISK = N'{0}' WITH FILE = 1, NOUNLOAD, STATS = 10";
     private const string DbBackUpFileName = @"ReferenceData\BugDB_Clean.bak";
+    private const string DbCreateScript = @"DatabaseScripts\BugDB3.sql";
 
     /// <summary>
     /// BugDB storage data provider.
@@ -74,15 +76,13 @@ namespace BugDB.DAL.Tests
     [TestInitialize]
     public void DataInitialize()
     {
-      // Path to backup file
-      string backupFileName = Path.Combine(
-        this.TestContext.TestDeploymentDir, DbBackUpFileName);
-
-      // Restore
-      RestoreDatabase(backupFileName);
-
+      // Path to create script
+      string dbCreateScriptPath = Path.Combine(
+        this.TestContext.TestDeploymentDir, DbCreateScript);
       // Create provider
-      m_provider = new BLToolkitDataProvider();
+      m_provider = new BLToolkitDataProvider(dbCreateScriptPath);
+      // Initialize storage (recreate database)
+      m_provider.InitializeStorage();
     }
 
     /// <summary>
@@ -107,11 +107,11 @@ namespace BugDB.DAL.Tests
     [DeploymentItem(@"ReferenceData\BugDB_Clean.bak")]
     public void GetBugsTest()
     {
-      BLToolkitDataProvider target = new BLToolkitDataProvider(); // TODO: Initialize to an appropriate value
-      Bug[] expected = null; // TODO: Initialize to an appropriate value
-      Bug[] actual;
-      actual = target.GetBugs();
-      Assert.AreEqual(expected, actual);
+      //BLToolkitDataProvider target = new BLToolkitDataProvider(); // TODO: Initialize to an appropriate value
+      //Bug[] expected = null; // TODO: Initialize to an appropriate value
+      //Bug[] actual;
+      //actual = target.GetBugs();
+      //Assert.AreEqual(expected, actual);
       Assert.Inconclusive("Verify the correctness of this test method.");
     }
 
@@ -121,12 +121,12 @@ namespace BugDB.DAL.Tests
     [TestMethod()]
     public void GetBugRevisionsTest()
     {
-      BLToolkitDataProvider target = new BLToolkitDataProvider(); // TODO: Initialize to an appropriate value
-      int bugNumber = 0; // TODO: Initialize to an appropriate value
-      Revision[] expected = null; // TODO: Initialize to an appropriate value
-      Revision[] actual;
-      actual = target.GetBugRevisions(bugNumber);
-      Assert.AreEqual(expected, actual);
+      //BLToolkitDataProvider target = new BLToolkitDataProvider(); // TODO: Initialize to an appropriate value
+      //int bugNumber = 0; // TODO: Initialize to an appropriate value
+      //Revision[] expected = null; // TODO: Initialize to an appropriate value
+      //Revision[] actual;
+      //actual = target.GetBugRevisions(bugNumber);
+      //Assert.AreEqual(expected, actual);
       Assert.Inconclusive("Verify the correctness of this test method.");
     }
 
@@ -155,12 +155,12 @@ namespace BugDB.DAL.Tests
     [TestMethod()]
     public void GetApplicationTest()
     {
-      BLToolkitDataProvider target = new BLToolkitDataProvider(); // TODO: Initialize to an appropriate value
-      int appId = 0; // TODO: Initialize to an appropriate value
-      Application expected = null; // TODO: Initialize to an appropriate value
-      Application actual;
-      actual = target.GetApplication(appId);
-      Assert.AreEqual(expected, actual);
+      //BLToolkitDataProvider target = new BLToolkitDataProvider(); // TODO: Initialize to an appropriate value
+      //int appId = 0; // TODO: Initialize to an appropriate value
+      //Application expected = null; // TODO: Initialize to an appropriate value
+      //Application actual;
+      //actual = target.GetApplication(appId);
+      //Assert.AreEqual(expected, actual);
       Assert.Inconclusive("Verify the correctness of this test method.");
     }
 
@@ -185,7 +185,7 @@ namespace BugDB.DAL.Tests
     [TestMethod()]
     public void BlToolkitDataProviderConstructorTest()
     {
-      BLToolkitDataProvider target = new BLToolkitDataProvider();
+//      BLToolkitDataProvider target = new BLToolkitDataProvider();
       Assert.Inconclusive("TODO: Implement code to verify target");
     }
 

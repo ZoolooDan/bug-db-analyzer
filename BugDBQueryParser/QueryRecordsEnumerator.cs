@@ -36,9 +36,12 @@ namespace BugDB.QueryParser
     #endregion Private Fields
 
     #region Constructors
-    public QueryRecordsEnumerator(Stream stream)
+    /// <summary>
+    /// Constructs enumerator for TextReader.
+    /// </summary>
+    public QueryRecordsEnumerator(TextReader reader)
     {
-      m_rawEnum = new QueryRawStringsEnumerator(stream);
+      m_rawEnum = new QueryRawStringsEnumerator(reader);
 
       string namesBlock = null;
       string widthsBlock = null;

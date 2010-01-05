@@ -77,9 +77,9 @@ namespace BugDB.QueryParser
     /// characters concatenation are made.
     /// All string (including empty ones) are returned.
     /// </remarks>
-    public static IEnumerator<string> CreateRawStringsEnumerator(Stream stream)
+    public static IEnumerator<string> CreateRawStringsEnumerator(TextReader reader)
     {
-      return new QueryRawStringsEnumerator(stream);
+      return new QueryRawStringsEnumerator(reader);
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ namespace BugDB.QueryParser
     /// for opening in Excel or other CSV aware program. 
     /// Only "colum names" block and "record blocks" are returned.
     /// </remarks>
-    public static IEnumerator<string> CreateCsvStringsEnumerator(Stream stream)
+    public static IEnumerator<string> CreateCsvStringsEnumerator(TextReader reader)
     {
       throw new NotImplementedException();
     }
@@ -105,16 +105,15 @@ namespace BugDB.QueryParser
     /// If value for some column is empty string then it's 
     /// represented with "null".
     /// </remarks>
-    public static IEnumerator<IDictionary<string, string>> CreateRecordsEnumerator(Stream stream)
+    public static IEnumerator<IDictionary<string, string>> CreateRecordsEnumerator(TextReader reader)
     {
-      return new QueryRecordsEnumerator(stream);
+      return new QueryRecordsEnumerator(reader);
     }
 
     #endregion Public Methods
 
     #region Inner Types
     #endregion Inner Types
-
   }
 }
 
