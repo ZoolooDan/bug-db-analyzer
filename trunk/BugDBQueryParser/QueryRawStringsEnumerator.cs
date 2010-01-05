@@ -20,9 +20,9 @@ namespace BugDB.QueryParser
     #endregion Private Fields
 
     #region Constructors
-    public QueryRawStringsEnumerator(Stream stream)
+    public QueryRawStringsEnumerator(TextReader reader)
     {
-      m_reader = new StreamReader(stream);
+      m_reader = reader;
     }
     #endregion Constructors
 

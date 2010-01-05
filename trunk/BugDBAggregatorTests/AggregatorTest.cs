@@ -1,26 +1,28 @@
-﻿using BugDB.Aggregator;
-using BugDB.DAL.Tests;
+﻿using System;
+using System.IO;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using BugDB.DataAccessLayer;
 using BugDB.DataAccessLayer.BLToolkitProvider;
 using BugDB.DataAccessLayer.DataTransferObjects;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
-using BugDB.DataAccessLayer;
+using BugDB.Aggregator;
+
 
 namespace BugDBAggregatorTests
 {
   /// <summary>
-  ///This is a test class for AggregatorTest and is intended
-  ///to contain all AggregatorTest Unit Tests
-  ///</summary>
+  /// Tests for StorageAggregator.
+  /// </summary>
   [TestClass]
-//  [DeploymentItem(ReferenceDataDir + "\\" + DbBackUpFileName, ReferenceDataDir)]
-//  [DeploymentItem(@"ReferenceData\BugDB_Clean2.bak", "ReferenceData")]
+  [DeploymentItem(@"DatabaseScripts\BugDB3.sql", "DatabaseScripts")]
   public class AggregatorTest
   {
     #region Private Fields
-    private const string ReferenceDataDir = "ReferenceData";
-    private const string RecordSourceFileName = "recordsSource.txt";
-    private const string DbBackUpFileName = @"BugDB_Clean2.bak";
+    private const string RecordSourceFileName = @"ReferenceData\aggregatorSource.txt";
+    private const string DbCreateScript = @"DatabaseScripts\BugDB3.sql";
+
+    private IDataProvider m_provider;
     #endregion Private Fields
 
     #region Public Properites
@@ -65,38 +67,46 @@ namespace BugDBAggregatorTests
     [TestInitialize]
     public void TestInitialize()
     {
-      // Path to backup file
-      string backupFileName = Path.Combine(
-        this.TestContext.TestDeploymentDir, 
-        Path.Combine(ReferenceDataDir, DbBackUpFileName));
-
-      // Restore
-//      BLToolkitDataProviderTest.RestoreDatabase(backupFileName);
+      // Path to create script
+      string dbCreateScriptPath = Path.Combine(
+        this.TestContext.TestDeploymentDir, DbCreateScript);
+      // Create provider
+      m_provider = new BLToolkitDataProvider(dbCreateScriptPath);
+      // Initialize storage (recreate database)
+      m_provider.InitializeStorage();
     }
 
     /// <summary>
-    /// A test for FillDatabase
+    /// A test for FillStorage().
     /// </summary>
     [TestMethod]
-    [DeploymentItem(@"ReferenceData\recordsSource.txt", "ReferenceData")]
-    [DeploymentItem(@"ReferenceData\BugDB_Clean2.bak", "ReferenceData")]
-    public void FillDatabaseTest()
+    [DeploymentItem(@"ReferenceData\aggregatorSource.txt", "ReferenceData")]
+    public void FillStorageTest()
     {
-      string path = Path.Combine(this.TestContext.TestDeploymentDir,
-                                 Path.Combine(ReferenceDataDir, RecordSourceFileName));
+      string path = Path.Combine(this.TestContext.TestDeploymentDir, RecordSourceFileName);
 
-      using(Stream stream = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
-      {
-        IDataProvider provider = new BLToolkitDataProvider();
-        DbAggregator aggregator = new DbAggregator(provider);
-        aggregator.FillDatabase(stream);
+      // Check that storage is empty
+      Application[] apps = m_provider.GetApplications();
+      Assert.AreEqual(0, apps.Length);
 
-        Application[] apps = provider.GetApplications();
-        Assert.AreNotEqual(0, apps.Length);
+      StorageAggregator aggregator = new StorageAggregator(m_provider);
+      aggregator.FillStorage(path);
 
-        Release[] rels = provider.GetApplicationReleases(apps[0].Id);
-        Assert.AreNotEqual(0, rels.Length);
-      }
+      apps = m_provider.GetApplications();
+      Assert.AreNotEqual(0, apps.Length);
+
+      Application tmmApp = Array.Find(apps, app => app.Title == "VPI TMM/CM");
+      Assert.IsNotNull(tmmApp, "No 'VPI TMM/CM' application.");
+
+      Release[] rels = m_provider.GetApplicationReleases(tmmApp.Id);
+      Assert.AreNotEqual(0, rels.Length);
+
+      // Check that there are no revisions which starts or ends with quote ('"')
+      Array.ForEach(rels, item => Assert.IsFalse(item.Title.StartsWith("\"") || 
+                                                 item.Title.EndsWith("\""),
+                                                 "Release shouldn't start with quote."));
+
+      Assert.IsTrue(Array.Exists(rels, rel => rel.Title == "4.0"), "No '4.0' release.");
     }
   }
 }
