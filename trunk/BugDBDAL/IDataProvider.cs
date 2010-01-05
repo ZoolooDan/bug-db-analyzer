@@ -16,6 +16,15 @@ namespace BugDB.DataAccessLayer
   public interface IDataProvider
   {
     /// <summary>
+    /// Initializes underlying storage.
+    /// </summary>
+    /// <remarks>
+    /// Storage will be created and initialized or 
+    /// recreated if existed before.
+    /// </remarks>
+    void InitializeStorage();
+
+    /// <summary>
     /// Returns all applications.
     /// </summary>
     DTO.Application[] GetApplications();

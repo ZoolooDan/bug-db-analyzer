@@ -14,12 +14,45 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     #region Private Fields
     private static ObjectCopier<DTO.Application, EDM.Application> s_appCopier = new ObjectCopier<DTO.Application, EDM.Application>();
     private static ObjectCopier<DTO.Release, EDM.Release> s_relCopier = new ObjectCopier<DTO.Release, EDM.Release>();
+
+    private string m_createDbScriptPath;
     #endregion Private Fields
 
     #region Constructors
+    /// <summary>
+    /// Constructs provider with specific DB create string.
+    /// </summary>
+    public BLToolkitDataProvider(string createDbScriptPath)
+    {
+      m_createDbScriptPath = createDbScriptPath;
+    }
     #endregion Constructors
 
     #region Implementation of IDataProvider
+
+    /// <summary>
+    /// Initializes underlying storage.
+    /// </summary>
+    /// <remarks>
+    /// Storage will be created and initialized or 
+    /// recreated if existed before.
+    ///
+    /// This implement uses <see cref="SqlScriptRunner"/> to 
+    /// execute DB creation script.
+    /// </remarks>
+    public void InitializeStorage()
+    {
+      string connString;
+      // Use DbManager.Connection to access connection string
+      using(DbManager db = new DbManager())
+      {
+        connString = db.Connection.ConnectionString;
+      }
+      // Use script runner to execute script
+      SqlScriptRunner runner = new SqlScriptRunner(connString);
+      runner.Execute(m_createDbScriptPath);
+
+    }
 
     /// <summary>
     /// Returns all applications.

@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugDBGUI", "BugDBGUI\BugDBG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugDBHost", "BugDBHost\BugDBHost.csproj", "{8C93433A-0AA9-49BD-A9B7-8A45E2B78507}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestUtils", "UnitTestUtils\UnitTestUtils.csproj", "{58A809A5-89C5-440D-94E5-66CD3F300A08}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = BugDBAnalyzer.vsmdi
@@ -70,6 +72,10 @@ Global
 		{8C93433A-0AA9-49BD-A9B7-8A45E2B78507}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C93433A-0AA9-49BD-A9B7-8A45E2B78507}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C93433A-0AA9-49BD-A9B7-8A45E2B78507}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58A809A5-89C5-440D-94E5-66CD3F300A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58A809A5-89C5-440D-94E5-66CD3F300A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58A809A5-89C5-440D-94E5-66CD3F300A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58A809A5-89C5-440D-94E5-66CD3F300A08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

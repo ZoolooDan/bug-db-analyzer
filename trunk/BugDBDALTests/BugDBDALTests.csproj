@@ -52,9 +52,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Shadow Include="Test References\BugDB.DAL.accessor" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\Sources\BLToolkit\Source\BLToolkit.3.csproj">
       <Project>{0C325F5D-E50E-4340-8724-D29896CCC583}</Project>
       <Name>BLToolkit.3</Name>
@@ -65,10 +62,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="ReferenceData\BugDB_Clean.bak">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="..\DatabaseScripts\BugDB3.sql">
+      <Link>DatabaseScripts\BugDB3.sql</Link>
     </None>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
