@@ -54,10 +54,6 @@
       <Project>{D29D2B2E-B26B-4BFA-9640-74355BD060AB}</Project>
       <Name>BugDBAggregator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BugDBDALTests\BugDBDALTests.csproj">
-      <Project>{F97CB605-901C-444F-9893-19D9B8EAAC15}</Project>
-      <Name>BugDBDALTests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BugDBDAL\BugDBDAL.csproj">
       <Project>{3D281C5F-8FE3-4AC4-AB65-4C2D4CFDE1DF}</Project>
       <Name>BugDBDAL</Name>
@@ -68,15 +64,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ReferenceData\recordsSource.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="..\DatabaseScripts\BugDB3.sql">
+      <Link>DatabaseScripts\BugDB3.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="ReferenceData\BugDB_Clean2.bak">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Content Include="ReferenceData\aggregatorSource.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
