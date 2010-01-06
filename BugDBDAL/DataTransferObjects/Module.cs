@@ -26,7 +26,7 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
     /// <summary>
     /// ID of parent application.
     /// </summary>
-    public int ApplicationId { get; set; }
+    public int AppId { get; set; }
 
     /// <summary>
     /// Title of the module.
