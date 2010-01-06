@@ -50,7 +50,10 @@
   <ItemGroup>
     <Compile Include="BLToolkitProvider\BLToolkitDataProvider.cs" />
     <Compile Include="BLToolkitProvider\EntityDataModel\Application.cs" />
+    <Compile Include="BLToolkitProvider\EntityDataModel\Module.cs" />
+    <Compile Include="BLToolkitProvider\EntityDataModel\Person.cs" />
     <Compile Include="BLToolkitProvider\EntityDataModel\Release.cs" />
+    <Compile Include="BLToolkitProvider\EntityDataModel\SubModule.cs" />
     <Compile Include="DataTransferObjects\Application.cs" />
     <Compile Include="DataTransferObjects\Bug.cs" />
     <Compile Include="DataTransferObjects\BugSeverity.cs" />

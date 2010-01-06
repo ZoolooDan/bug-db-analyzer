@@ -56,5 +56,32 @@ namespace BugDB.DataAccessLayer
     /// Creates new release.
     /// </summary>
     Release CreateRelease(Release release);
+
+    /// <summary>
+    /// Creates new person.
+    /// </summary>
+    Person CreatePerson(Person person);
+    /// <summary>
+    /// Return all persons.
+    /// </summary>
+    Person[] GetStaff();
+
+    /// <summary>
+    /// Creates new module.
+    /// </summary>
+    Module CreateModule(Module module);
+    /// <summary>
+    /// Returns all modules of specific application.
+    /// </summary>
+    Module[] GetApplicationModules(int appId);
+
+    /// <summary>
+    /// Creates new sub module.
+    /// </summary>
+    SubModule CreateSubModule(SubModule module);
+    /// <summary>
+    /// Returns all sub modules of specific module.
+    /// </summary>
+    SubModule[] GetModuleSubModules(int moduleId);
   }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using BLToolkit.Data;
-using BugDB.DataAccessLayer.DataTransferObjects;
 using BugDB.DataAccessLayer.Utils;
 
 using EDM = BugDB.DataAccessLayer.BLToolkitProvider.EntityDataModel;
@@ -13,7 +12,10 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
   {
     #region Private Fields
     private static ObjectCopier<DTO.Application, EDM.Application> s_appCopier = new ObjectCopier<DTO.Application, EDM.Application>();
+    private static ObjectCopier<DTO.Module, EDM.Module> s_moduleCopier = new ObjectCopier<DTO.Module, EDM.Module>();
+    private static ObjectCopier<DTO.SubModule, EDM.SubModule> s_subModuleCopier = new ObjectCopier<DTO.SubModule, EDM.SubModule>();
     private static ObjectCopier<DTO.Release, EDM.Release> s_relCopier = new ObjectCopier<DTO.Release, EDM.Release>();
+    private static ObjectCopier<DTO.Person, EDM.Person> s_personCopier = new ObjectCopier<DTO.Person, EDM.Person>();
 
     private string m_createDbScriptPath;
     #endregion Private Fields
@@ -125,7 +127,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// <summary>
     /// Returns all releases of the specified application.
     /// </summary>
-    public Release[] GetApplicationReleases(int appId)
+    public DTO.Release[] GetApplicationReleases(int appId)
     {
       List<EDM.Release> relEDMs;
       using (DbManager db = new DbManager())
@@ -146,7 +148,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// <summary>
     /// Creates new release.
     /// </summary>
-    public Release CreateRelease(Release relDTO)
+    public DTO.Release CreateRelease(DTO.Release relDTO)
     {
       // Map DTO to EDM
       EDM.Release relEDM = s_relCopier.Copy(relDTO);
@@ -168,6 +170,129 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
       return relDTO;
     }
 
+    /// <summary>
+    /// Creates new person.
+    /// </summary>
+    public DTO.Person CreatePerson(DTO.Person personDTO)
+    {
+      EDM.Person personEDM = s_personCopier.Copy(personDTO);
+
+      using(DbManager db = new DbManager())
+      {
+        db.SetCommand(
+          @"INSERT INTO Staff (person_login, person_title) 
+            VALUES (@person_login, @person_title)
+            SELECT Cast(SCOPE_IDENTITY() as int) person_id",
+          db.CreateParameters(personEDM, new[] {"person_id"}, null, null)).
+          ExecuteObject(personEDM);
+      }
+
+      return s_personCopier.Copy(personEDM);
+    }
+
+    /// <summary>
+    /// Return all persons.
+    /// </summary>
+    public DTO.Person[] GetStaff()
+    {
+      List<EDM.Person> personEDMs;
+      using (DbManager db = new DbManager())
+      {
+        personEDMs = db.SetCommand(@"SELECT * FROM Staff").
+          ExecuteList<EDM.Person>();
+      }
+
+      // TODO: Add method to copy lists to copier
+      List<DTO.Person> personDTOs = new List<DTO.Person>(personEDMs.Count);
+      // Copy EDMs to DTOs
+      personEDMs.ForEach(personEDM => personDTOs.Add(s_personCopier.Copy(personEDM)));
+
+      return personDTOs.ToArray();
+    }
+
+    /// <summary>
+    /// Creates new module.
+    /// </summary>
+    public DTO.Module CreateModule(DTO.Module moduleDTO)
+    {
+      EDM.Module moduleEDM = s_moduleCopier.Copy(moduleDTO);
+
+      using (DbManager db = new DbManager())
+      {
+        db.SetCommand(
+          @"INSERT INTO Modules (app_id, module_title) 
+            VALUES (@app_id, @module_title)
+            SELECT Cast(SCOPE_IDENTITY() as int) module_id",
+          db.CreateParameters(moduleEDM, new[] { "module_id" }, null, null)).
+          ExecuteObject(moduleEDM);
+      }
+
+      return s_moduleCopier.Copy(moduleEDM);
+    }
+
+    /// <summary>
+    /// Returns all modules of specific application.
+    /// </summary>
+    public DTO.Module[] GetApplicationModules(int appId)
+    {
+      List<EDM.Module> moduleEDMs;
+      using (DbManager db = new DbManager())
+      {
+        moduleEDMs = db.SetCommand(@"SELECT * FROM Modules WHERE app_id=@AppId",
+          db.InputParameter("@AppId", appId)).
+          ExecuteList<EDM.Module>();
+      }
+
+      // TODO: Add method to copy lists to copier
+      List<DTO.Module> moduleDTOs = new List<DTO.Module>(moduleEDMs.Count);
+      // Copy EDMs to DTOs
+      moduleEDMs.ForEach(moduleEDM => moduleDTOs.Add(s_moduleCopier.Copy(moduleEDM)));
+
+      return moduleDTOs.ToArray();
+    }
+
+    /// <summary>
+    /// Creates new sub module.
+    /// </summary>
+    public DTO.SubModule CreateSubModule(DTO.SubModule subModuleDTO)
+    {
+      EDM.SubModule subModuleEDM = s_subModuleCopier.Copy(subModuleDTO);
+
+      using (DbManager db = new DbManager())
+      {
+        db.SetCommand(
+          @"INSERT INTO Submodules (module_id, submodule_title) 
+            VALUES (@module_id, @submodule_title)
+            SELECT Cast(SCOPE_IDENTITY() as int) submodule_id",
+          db.CreateParameters(subModuleEDM, new[] { "submodule_id" }, null, null)).
+          ExecuteObject(subModuleEDM);
+      }
+
+      return s_subModuleCopier.Copy(subModuleEDM);
+    }
+
+    /// <summary>
+    /// Returns all sub modules of specific module.
+    /// </summary>
+    public DTO.SubModule[] GetModuleSubModules(int moduleId)
+    {
+      List<EDM.SubModule> subModuleEDMs;
+      using (DbManager db = new DbManager())
+      {
+        subModuleEDMs = db.SetCommand(
+          @"SELECT * FROM Submodules WHERE module_id=@ModuleId",
+          db.InputParameter("@ModuleId", moduleId)).
+          ExecuteList<EDM.SubModule>();
+      }
+
+      // TODO: Add method to copy lists to copier
+      List<DTO.SubModule> subModuleDTOs = new List<DTO.SubModule>(subModuleEDMs.Count);
+      // Copy EDMs to DTOs
+      subModuleEDMs.ForEach(subModuleEDM => 
+        subModuleDTOs.Add(s_subModuleCopier.Copy(subModuleEDM)));
+
+      return subModuleDTOs.ToArray();
+    }
     #endregion
   }
 }
