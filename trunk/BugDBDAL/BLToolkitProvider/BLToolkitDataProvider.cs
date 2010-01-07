@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using BLToolkit.Data;
+
+using BugDB.DataAccessLayer.DataTransferObjects;
 using BugDB.DataAccessLayer.Utils;
 
 using EDM = BugDB.DataAccessLayer.BLToolkitProvider.EntityDataModel;
@@ -16,6 +18,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     private static ObjectCopier<DTO.SubModule, EDM.SubModule> s_subModuleCopier = new ObjectCopier<DTO.SubModule, EDM.SubModule>();
     private static ObjectCopier<DTO.Release, EDM.Release> s_relCopier = new ObjectCopier<DTO.Release, EDM.Release>();
     private static ObjectCopier<DTO.Person, EDM.Person> s_personCopier = new ObjectCopier<DTO.Person, EDM.Person>();
+    private static ObjectCopier<DTO.Revision, EDM.Revision> s_revisionCopier = new ObjectCopier<DTO.Revision, EDM.Revision>();
 
     private string m_createDbScriptPath;
     #endregion Private Fields
@@ -292,6 +295,41 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
         subModuleDTOs.Add(s_subModuleCopier.Copy(subModuleEDM)));
 
       return subModuleDTOs.ToArray();
+    }
+
+    /// <summary>
+    /// Creates new revision.
+    /// </summary>
+    public Revision CreateRevision(Revision revisionDTO)
+    {
+      // Map DTO to EDM
+      EDM.Revision relEDM = s_revisionCopier.Copy(revisionDTO);
+
+      // Insert application
+      using (DbManager db = new DbManager())
+      {
+        db.SetCommand(
+          @"INSERT INTO Revisions
+           ([bug_number], [revision], [date], [bug_type], 
+            [app_id], [module_id], [submodule_id],
+            [status],[found_release_id],[target_release_id],
+            [severity],[priority],[contributor_id],[leader_id],[developer_id],[qa_id],
+            [summary])
+            VALUES
+           (@bug_number, @revision, @date, @bug_type, 
+            @app_id, @module_id, @submodule_id,
+            @status, @found_release_id, @target_release_id,
+            @severity, @priority, 
+            @contributor_id, @leader_id, @developer_id, @qa_id, 
+            @summary)",
+          db.CreateParameters(relEDM)).
+          ExecuteObject(relEDM);
+      }
+
+      // Map EDM to DTO
+      revisionDTO = s_revisionCopier.Copy(relEDM);
+
+      return revisionDTO;
     }
     #endregion
   }

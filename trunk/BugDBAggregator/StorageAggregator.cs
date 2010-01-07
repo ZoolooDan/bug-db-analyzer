@@ -32,12 +32,32 @@ namespace BugDB.Aggregator
     private const string FoundRelCol = "apprelease";
     private const string TargetRelCol = "frelease";
     private const string SeverityCol = "severity";
-    private const string PriorCol = "priority";
+    private const string PriorityCol = "priority";
     private const string ContributorCol = "contributor";
     private const string LeaderCol = "leader";
     private const string DevCol = "developer";
     private const string QaCol = "qa";
     private const string SummaryCol = "summary";
+
+    private const string BuggType = "bug";
+    private const string FeatureType = "feature";
+
+    private const string OpenStatus = "open";
+    private const string InvalidStatus = "invalid";
+    private const string DuplicateStatus = "duplicate";
+    private const string AnalyzedStatus = "analysed";
+    private const string ToBeAssStatus = "to_be_assigned";
+    private const string AssignedStatus = "assigned";
+    private const string WorksForMeStatus = "works_for_me";
+    private const string ActiveStatus = "active";
+    private const string FixedStatus = "fixed";
+    private const string ReopenStatus = "reopen";
+    private const string VerifiedStatus = "verified";
+    private const string ClosedStatus = "closed";
+
+    private static readonly IDictionary<string, BugType> s_typeMappings;
+    private static readonly IDictionary<string, BugStatus> s_statusMappings;
+    private static readonly IDictionary<string, BugSeverity> s_severityMappings;
 
     private IDataProvider m_provider;
     private IDictionary<string, Application> m_appCache;
@@ -48,6 +68,41 @@ namespace BugDB.Aggregator
     #endregion Private Fields
 
     #region Constructors
+    /// <summary>
+    /// Constructs static state.
+    /// </summary>
+    static StorageAggregator()
+    {
+      s_typeMappings = new Dictionary<string, BugType>();
+      s_typeMappings.Add(BuggType, BugType.Bug);
+      s_typeMappings.Add(FeatureType, BugType.Feature);
+
+      s_statusMappings = new Dictionary<string, BugStatus>();
+      s_statusMappings.Add(OpenStatus, BugStatus.Open);
+      s_statusMappings.Add(InvalidStatus, BugStatus.Invalid);
+      s_statusMappings.Add(DuplicateStatus, BugStatus.Duplicate);
+      s_statusMappings.Add(AnalyzedStatus, BugStatus.Analyzed);
+      s_statusMappings.Add(ToBeAssStatus, BugStatus.ToBeAssigned);
+      s_statusMappings.Add(AssignedStatus, BugStatus.Assigned);
+      s_statusMappings.Add(WorksForMeStatus, BugStatus.WorksForMe);
+      s_statusMappings.Add(ActiveStatus, BugStatus.Active);
+      s_statusMappings.Add(FixedStatus, BugStatus.Fixed);
+      s_statusMappings.Add(ReopenStatus, BugStatus.Reopen);
+      s_statusMappings.Add(VerifiedStatus, BugStatus.Verified);
+      s_statusMappings.Add(ClosedStatus, BugStatus.Closed);
+
+      s_severityMappings = new Dictionary<string, BugSeverity>();
+      s_severityMappings.Add("1", BugSeverity.Fatal);
+      s_severityMappings.Add("2", BugSeverity.Critical);
+      s_severityMappings.Add("3", BugSeverity.Serious);
+      s_severityMappings.Add("4", BugSeverity.Minor);
+      s_severityMappings.Add("5", BugSeverity.Sev5);
+      s_severityMappings.Add("6", BugSeverity.Sev6);
+      s_severityMappings.Add("7", BugSeverity.Sev7);
+      s_severityMappings.Add("8", BugSeverity.Sev8);
+      s_severityMappings.Add("9", BugSeverity.Sev9);
+    }
+
     /// <summary>
     /// Constracts aggregator for specified provider.
     /// </summary>
@@ -96,56 +151,32 @@ namespace BugDB.Aggregator
       // Enumerate records (actually revisions)
       while( records.MoveNext() )
       {
+        // Take current record from parser
         Record record = records.Current;
 
         // Process number
-        int number;
-        if( !int.TryParse(record[NumCol], out number) )
-        {
-          Debug.Fail("Number shall be specified.");
-          continue;
-        }
+        int number = ProcessNumber(record);
 
-        int revision;
         // Process revision number
-        if (!int.TryParse(record[RevisionCol], out revision))
-        {
-          Debug.Fail("Revision shall be specified.");
-          continue;
-        }
+        int revision = ProcessRevisionNumber(record);
+
+        // Process short description
+        string summary = record[SummaryCol];
 
         // Process date
-        DateTime date;
-        if (!DateTime.TryParse(record[DateCol], out date))
-        {
-          Debug.Fail("Date shall be specified.");
-          continue;
-        }
+        DateTime date = ProcessDate(record);
 
         // Process record type (could be null)
-        string recordTypeStr = record[TypeCol];
+        BugType? type = ProcessType(record);
+
         // Process status
-        string statusStr = record[StatusCol];
+        BugStatus? status = ProcessStatus(record);
+
         // Process severity
-        int severityNum = -1;
-        if( record[SeverityCol] != null )
-        {
-          if (!int.TryParse(record[SeverityCol], out severityNum))
-          {
-            Debug.Fail("Severity shall be the number.");
-            continue;
-          }
-        }
+        BugSeverity? severity = ProcessSeverity(record);
+
         // Process priority
-        int priority = -1;
-        if( record[PriorCol] != null )
-        {
-          if(!int.TryParse(record[PriorCol], out priority))
-          {
-            Debug.Fail("Number shall be specified.");
-            continue;
-          }
-        }
+        int? priority = ProcessPriority(record);
 
         // Process application
         Application app = ProcessApp(record);
@@ -182,12 +213,106 @@ namespace BugDB.Aggregator
         Person tester = ProcessPerson(record, QaCol);
 
         // Process revision
+        ProcessRevision(number, revision, date, type, status, 
+          summary, severity, priority, app, module, 
+          subModule, foundRelease, 
+          targetRelease, contributor, leader, developer, tester);
       }
     }
-
     #endregion Public Methods
 
     #region Helper Methods
+    /// <summary>
+    /// Process bug number.
+    /// </summary>
+    private static int ProcessNumber(Record record)
+    {
+      int number;
+      Debug.Assert(int.TryParse(record[NumCol], out number));
+      return number;
+    }
+
+    /// <summary>
+    /// Process revision number.
+    /// </summary>
+    private static int ProcessRevisionNumber(Record record)
+    {
+      int revision;
+      // Process revision number
+      Debug.Assert(int.TryParse(record[RevisionCol], out revision));
+      return revision;
+    }
+    
+    /// <summary>
+    /// Process record type.
+    /// </summary>
+    /// <remarks>
+    /// It seems type can be null for old bugs.
+    /// </remarks>
+    private static BugType? ProcessType(Record record)
+    {
+      BugType type = BugType.Bug;
+      string typeStr = record[TypeCol];
+      bool found = typeStr != null ? s_typeMappings.TryGetValue(typeStr, out type) : false;
+    
+      return found ? new BugType?(type) : null;
+    }
+
+    /// <summary>
+    /// Process severity.
+    /// </summary>
+    /// <remarks>
+    /// Can be null.
+    /// </remarks>
+    private static BugSeverity? ProcessSeverity(Record record)
+    {
+      BugSeverity value = BugSeverity.Fatal;
+      string str = record[SeverityCol];
+      bool found = str != null ? s_severityMappings.TryGetValue(str, out value) : false;
+
+      return found ? new BugSeverity?(value) : null;
+    }
+
+    /// <summary>
+    /// Process severity.
+    /// </summary>
+    /// <remarks>
+    /// Can be null.
+    /// </remarks>
+    private static int? ProcessPriority(Record record)
+    {
+      int priority = 0;
+      string str = record[PriorityCol];
+      bool found = false;
+      if (str != null)
+      {
+        found = int.TryParse(str, out priority);
+      }
+      return found ? (int?)priority : null;
+    }
+
+    /// <summary>
+    /// Process status.
+    /// </summary>
+    private static BugStatus? ProcessStatus(Record record)
+    {
+      BugStatus status = BugStatus.Open;
+      string str = record[StatusCol];
+      bool found = str != null ? s_statusMappings.TryGetValue(str, out status) : false;
+
+      return found ? new BugStatus?(status) : null;
+    }
+
+    /// <summary>
+    /// Process date.
+    /// </summary>
+    private static DateTime ProcessDate(Record record)
+    {
+      DateTime date;
+      Debug.Assert(DateTime.TryParse(record[DateCol], out date));
+      return date;
+    }
+
     /// <summary>
     /// Processes application of the revision.
     /// </summary>
@@ -329,6 +454,38 @@ namespace BugDB.Aggregator
         }
       }
       return person;
+    }
+
+    /// <summary>
+    /// Create revision based on provided information.
+    /// </summary>
+    private void ProcessRevision(int number, int revision, DateTime date,
+      BugType? type, BugStatus? status, string summary,
+      BugSeverity? severity, int? priority, Application app,
+      Module module, SubModule subModule, Release foundRelease, Release targetRelease,
+      Person contributor, Person leader, Person developer, Person tester)
+    {
+      Revision rev = new Revision
+                     {
+                       BugNumber = number,
+                       Id = revision,
+                       Date = date,
+                       Type = type,
+                       Status = status,
+                       Summary = summary,
+                       Severity = severity,
+                       Priority = priority,
+                       AppId = app.Id,
+                       ModuleId = module != null ? (int?)module.Id : null,
+                       SubModuleId = subModule != null ? (int?)subModule.Id : null,
+                       FoundReleaseId = foundRelease != null ? (int?)foundRelease.Id : null,
+                       TargetReleaseId = targetRelease != null ? (int?)targetRelease.Id : null,
+                       ContributorId = contributor.Id,
+                       TeamLeaderId = leader != null ? (int?)leader.Id : null,
+                       DeveloperId = developer != null ? (int?)developer.Id : null,
+                       TesterId = tester != null ? (int?)tester.Id : null
+                     };
+      m_provider.CreateRevision(rev);
     }
     #endregion Helper Methods
   }
