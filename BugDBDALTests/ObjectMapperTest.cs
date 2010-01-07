@@ -63,11 +63,20 @@ namespace BugDB.DAL.Tests
     }
 
 
+    internal enum EnA
+    {
+      A,
+      B,
+      C
+    }
+
     internal class A
     {
       public const int PropAValue = 1;
       public const string PropBValue = "FromA";
       public const double PropDValue = 2.5;
+      public const EnA PropCValue = EnA.B;
+      public const int PropEValue = 1;
 
       private double m_d = PropDValue;
 
@@ -75,13 +84,25 @@ namespace BugDB.DAL.Tests
       {
         PropA = PropAValue;
         PropB = PropBValue;
+        PropC = PropCValue;
+        PropE = PropEValue;
       }
 
       public int PropA { get; set; }
       private string PropB { get; set; }
+      public EnA? PropC { get; set; }
 
       public string GetB() { return PropB;  }
       public double GetD() { return m_d;  }
+
+      public int? PropE { get; set; }
+    }
+
+    internal enum EnB
+    {
+      A,
+      B,
+      C
     }
 
     internal class B
@@ -89,6 +110,8 @@ namespace BugDB.DAL.Tests
       public const int PropAValue = 2;
       public const string PropBValue = "FromB";
       public const double PropDValue = 3.5;
+      public const EnB PropCValue = EnB.C;
+      public const int PropEValue = 2;
 
       private double m_d = PropDValue;
 
@@ -96,13 +119,18 @@ namespace BugDB.DAL.Tests
       {
         PropA = PropAValue;
         PropB = PropBValue;
+        PropC = PropCValue;
+        PropE = PropEValue;
       }
 
       public int PropA { get; set; }
       private string PropB { get; set; }
+      public EnB? PropC { get; set; }
 
       public string GetB() { return PropB; }
       public double GetD() { return m_d; }
+
+      public int? PropE { get; set; }
     }
 
     [TestMethod]
@@ -129,6 +157,7 @@ namespace BugDB.DAL.Tests
       Assert.AreEqual(a1.PropA, b1.PropA);
       Assert.AreEqual(B.PropBValue, b1.GetB());
       Assert.AreEqual(B.PropDValue, b1.GetD());
+      Assert.AreEqual((int)a1.PropC, (int)b1.PropC);
 
       B b2 = new B();
       A a2 = copier.Copy(b2);
@@ -137,6 +166,11 @@ namespace BugDB.DAL.Tests
       Assert.AreEqual(b2.PropA, a2.PropA);
       Assert.AreEqual(A.PropBValue, a2.GetB());
       Assert.AreEqual(A.PropDValue, a2.GetD());
+      Assert.AreEqual((int)b2.PropC, (int)a2.PropC);
+
+      A a3 = new A {PropC = null};
+      B b3 = copier.Copy(a3);
+      Assert.IsFalse(b3.PropC.HasValue);
     }
   }
 }

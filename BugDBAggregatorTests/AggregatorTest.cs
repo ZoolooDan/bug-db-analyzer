@@ -151,6 +151,9 @@ namespace BugDBAggregatorTests
       Assert.AreNotEqual(0, staff.Length);
       Person contr = Array.Find(staff, person => person.Login == "rudolph");
       Assert.IsNotNull(contr);
+
+      // Revisions
+//      Revision[] revisions = m_provider.GetBugs();
     }
   }
 }

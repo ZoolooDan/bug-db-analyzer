@@ -50,9 +50,13 @@
   <ItemGroup>
     <Compile Include="BLToolkitProvider\BLToolkitDataProvider.cs" />
     <Compile Include="BLToolkitProvider\EntityDataModel\Application.cs" />
+    <Compile Include="BLToolkitProvider\EntityDataModel\BugSeverity.cs" />
+    <Compile Include="BLToolkitProvider\EntityDataModel\BugStatus.cs" />
+    <Compile Include="BLToolkitProvider\EntityDataModel\BugType.cs" />
     <Compile Include="BLToolkitProvider\EntityDataModel\Module.cs" />
     <Compile Include="BLToolkitProvider\EntityDataModel\Person.cs" />
     <Compile Include="BLToolkitProvider\EntityDataModel\Release.cs" />
+    <Compile Include="BLToolkitProvider\EntityDataModel\Revision.cs" />
     <Compile Include="BLToolkitProvider\EntityDataModel\SubModule.cs" />
     <Compile Include="DataTransferObjects\Application.cs" />
     <Compile Include="DataTransferObjects\Bug.cs" />

@@ -3,75 +3,82 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BugDB.DataAccessLayer.DataTransferObjects
+using BLToolkit.Mapping;
+
+using BugDB.DataAccessLayer.DataTransferObjects;
+
+
+namespace BugDB.DataAccessLayer.BLToolkitProvider.EntityDataModel
 {
   /// <summary>
-  /// Revision represents state of the bug
-  /// at some particular time.
+  /// EDM object for working with Revisions table.
   /// </summary>
-  /// <remarks>
-  /// Through it's lifetime each bug may have several revisons.
-  /// Revision is created when some properties of bug are changed.
-  /// State of the revision itself can't be changed (e.g. it's immutable).
-  /// Revision ID increased from 0 and greates revision ID
-  /// corresponds to the most recent revision. This revision
-  /// represents current state of the bug.
-  /// </remarks>
   public class Revision
   {
     /// <summary>
     /// Unique number of the bug record.
     /// </summary>
+    [MapField("bug_number")]
     public int BugNumber { get; set; }
 
     /// <summary>
-    /// Bug revision ID.
+    /// Bug revision number.
     /// </summary>
+    [MapField("revision")]
     public int Id { get; set; }
 
     /// <summary>
     /// Type of the bug record.
     /// </summary>
-    public BugType? Type { get; set;  }
+    [MapField("bug_type")]
+    public BugType? Type { get; set; }
     
     /// <summary>
     /// Status of the revision.
     /// </summary>
+    [MapField("status")]
     public BugStatus? Status { get; set; }
 
     /// <summary>
     /// Date of the revision.
     /// </summary>
+    [MapField("date")]
     public DateTime Date { get; set; }
 
     /// <summary>
     /// ID of application.
     /// </summary>
+    [MapField("app_id")]
     public int AppId { get; set; }
 
     /// <summary>
     /// ID of module.
     /// </summary>
+    [MapField("module_id")]
     public int? ModuleId { get; set; }
 
     /// <summary>
     /// ID of submodule.
     /// </summary>
+    [MapField("submodule_id")]
     public int? SubModuleId { get; set; }
 
     /// <summary>
     /// ID of the application release during which this bug was found.
     /// </summary>
+    [MapField("found_release_id")]
     public int? FoundReleaseId { get; set; }
 
     /// <summary>
     /// ID of the application release during which bug supposed to be fixed.
     /// </summary>
+    [MapField("target_release_id")]
     public int? TargetReleaseId { get; set; }
 
     /// <summary>
     /// Importance of the bug for daily work and release.
     /// </summary>
+    [MapField("severity")]
     public BugSeverity? Severity { get; set; }
 
     /// <summary>
@@ -80,21 +87,25 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
     /// <remarks>
     /// Lower values mean higher priority.
     /// </remarks>
+    [MapField("priority")]
     public int? Priority { get; set; }
 
     /// <summary>
     /// ID of person who created the bug.
     /// </summary>
+    [MapField("contributor_id")]
     public int ContributorId { get; set; }
     
     /// <summary>
     /// ID of person who is responsible for the bug assignment.
     /// </summary>
+    [MapField("leader_id")]
     public int? TeamLeaderId { get; set; }
     
     /// <summary>
     /// ID of person who is responsible for the bug fixing.
     /// </summary>
+    [MapField("developer_id")]
     public int? DeveloperId { get; set; }
     
     /// <summary>
@@ -107,14 +118,17 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
     /// +) WorksForMe
     /// +) Invalid
     /// </remarks>
+    [MapField("qa_id")]
     public int? TesterId { get; set; }
     
     /// <summary>
     /// Short description of the bug.
     /// </summary>
+    [MapField("summary")]
     public string Summary { get; set; }  
   }
 }
+
 
 /*
  number      subnumber deadline     status                         date         closedate    application                                        modul                                              submodul                                           apprelease                     frelease                       severity                       priority                       contributor                    leader                         developer                      qa                             summary                                                                                                                                                          

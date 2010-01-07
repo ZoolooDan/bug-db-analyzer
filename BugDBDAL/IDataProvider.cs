@@ -83,5 +83,10 @@ namespace BugDB.DataAccessLayer
     /// Returns all sub modules of specific module.
     /// </summary>
     SubModule[] GetModuleSubModules(int moduleId);
+
+    /// <summary>
+    /// Creates new revision.
+    /// </summary>
+    Revision CreateRevision(Revision revision);
   }
 }
