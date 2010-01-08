@@ -9,14 +9,19 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
   ///   invalid
   ///   duplicate
   ///   analysed
+  ///   suspend
   ///   to_be_assigned
   ///   assigned
   ///   works_for_me
   ///   active
   ///   fixed
   ///   reopen
+  ///   modelling
+  ///   regression
+  ///   test_cases
   ///   verified
   ///   closed
+  ///   deleted
   /// </remarks>
   public enum BugStatus
   {
@@ -36,6 +41,11 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
     /// Bug was analyzed and postponed for now.
     /// </summary>
     Analyzed,
+    /// <summary>
+    /// Bug can't be fixed without significant
+    /// changes or depends on fix in 3rd party software.
+    /// </summary>
+    Suspend,
     /// <summary>
     /// Bug should be assigned by Team Leader.
     /// </summary>
@@ -61,12 +71,28 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
     /// </summary>
     Reopen,
     /// <summary>
+    /// Modeling staff should verify bug fix.
+    /// </summary>
+    Modeling,
+    /// <summary>
+    /// Modeling staff should create regression tests.
+    /// </summary>
+    Regression,
+    /// <summary>
+    /// Test cases should be prepared by QM.
+    /// </summary>
+    TestCases,
+    /// <summary>
     /// Bug was verified as fixed by Tester.
     /// </summary>
     Verified,
     /// <summary>
     /// Bug was finally closed after release is finished.
     /// </summary>
-    Closed
+    Closed,
+    /// <summary>
+    /// ??
+    /// </summary>
+    Deleted
   }
 }

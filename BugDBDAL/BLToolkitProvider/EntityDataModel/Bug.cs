@@ -1,29 +1,27 @@
-﻿namespace BugDB.DataAccessLayer.DataTransferObjects
+﻿using BLToolkit.Mapping;
+
+
+namespace BugDB.DataAccessLayer.BLToolkitProvider.EntityDataModel
 {
   /// <summary>
-  /// Bug represents one particular defect or feature.
+  /// EDM object for working with Bugs table.
   /// </summary>
-  /// <remarks>
-  /// Although bug itself has many properties bug itself
-  /// has only one unchanging field - it's number.
-  /// All the rest properties may change through bug
-  /// lifetime and are stored in so called revisions.
-  /// Last (most recent) revision represents current
-  /// state of the bug record.
-  /// </remarks>
   public class Bug
   {
     /// <summary>
     /// Unique bug number.
     /// </summary>
+    [MapField("bug_number")]
     public int Number { get; set; }
 
     /// <summary>
     /// Most recent revision ID.
     /// </summary>
+    [MapField("recent_revision")]
     public int RecentRevisionId { get; set; }
   }
 }
+
 
 /*
  number      subnumber deadline     status                         date         closedate    application                                        modul                                              submodul                                           apprelease                     frelease                       severity                       priority                       contributor                    leader                         developer                      qa                             summary                                                                                                                                                          

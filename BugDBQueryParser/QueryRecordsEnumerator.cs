@@ -185,28 +185,43 @@ namespace BugDB.QueryParser
     /// <summary>
     /// Returns columns information.
     /// </summary>
-    private static ColumnInfo[] ParseColumns(string headerLine, string columnWidthLine)
+    private static ColumnInfo[] ParseColumns(string namesLine, string widthsLine)
     {
-      string[] widths = columnWidthLine.Split(' ');
+      Debug.Assert(namesLine.Length >= widthsLine.Length);
 
-      int count = widths.Length - 2;
-      ColumnInfo[] columns = new ColumnInfo[count];
+      List<ColumnInfo> columns = new List<ColumnInfo>();
 
-      int pos = 1;
-      for (int i = 0; i < count; i++)
+      int start = 0;
+      do
       {
-        int width = widths[i + 1].Length;
+        // Find beginning of the next column
+        if( (start = widthsLine.IndexOf('-', start)) == -1 )
+          break;
+        // End of column is on space or at the end of the string
+        int end = widthsLine.IndexOf(' ', start);
+        end = end != -1 ? end : widthsLine.Length;
 
-        columns[i] = new ColumnInfo
-                       {
-                         Title = headerLine.Substring(pos, width).Trim(), 
-                         Width = width, 
-                         Position = pos
-                       };
+        // Calculate column width
+        int width = end - start;
+        // Get column name
+        string name = namesLine.Substring(start, width);
+        // Remove trailing and ending spaces
+        name = name.Trim();
 
-        pos += width + 1;
+        // Add new column
+        columns.Add(new ColumnInfo
+               {
+                 Title = name,
+                 Width = width,
+                 Position = start
+               });
+
+        // Move start to the end
+        start = end;
       }
-      return columns;
+      while( true );
+
+      return columns.ToArray();
     }
     #endregion Helper Methods
 
