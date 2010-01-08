@@ -308,20 +308,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
       // Insert application
       using (DbManager db = new DbManager())
       {
-        db.SetCommand(
-          @"INSERT INTO Revisions
-           ([bug_number], [revision], [date], [bug_type], 
-            [app_id], [module_id], [submodule_id],
-            [status],[found_release_id],[target_release_id],
-            [severity],[priority],[contributor_id],[leader_id],[developer_id],[qa_id],
-            [summary])
-            VALUES
-           (@bug_number, @revision, @date, @bug_type, 
-            @app_id, @module_id, @submodule_id,
-            @status, @found_release_id, @target_release_id,
-            @severity, @priority, 
-            @contributor_id, @leader_id, @developer_id, @qa_id, 
-            @summary)",
+        db.SetSpCommand("Revision_Create",
           db.CreateParameters(relEDM)).
           ExecuteObject(relEDM);
       }
