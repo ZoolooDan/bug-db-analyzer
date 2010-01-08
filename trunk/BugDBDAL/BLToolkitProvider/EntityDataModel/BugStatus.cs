@@ -29,44 +29,70 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider.EntityDataModel
     [MapValue(4)]
     Analyzed,
     /// <summary>
-    /// Bug should be assigned by Team Leader.
+    /// Bug can't be fixed without significant
+    /// changes or depends on fix in 3rd party software.
     /// </summary>
     [MapValue(5)]
+    Suspend,
+    /// <summary>
+    /// Bug should be assigned by Team Leader.
+    /// </summary>
+    [MapValue(6)]
     ToBeAssigned,
     /// <summary>
     /// Bug was assigned to Developer.
     /// </summary>
-    [MapValue(6)]
+    [MapValue(7)]
     Assigned,
     /// <summary>
     /// Developer considered bug as not reprodusing any more.
     /// </summary>
-    [MapValue(7)]
+    [MapValue(8)]
     WorksForMe,
     /// <summary>
     /// Bug was taken for work by Developer.
     /// </summary>
-    [MapValue(8)]
+    [MapValue(9)]
     Active,
     /// <summary>
     /// Bug was fixed by Developer.
     /// </summary>
-    [MapValue(9)]
+    [MapValue(10)]
     Fixed,
     /// <summary>
     /// Bug was considered by Tester as still reprodusing after fix.
     /// </summary>
-    [MapValue(10)]
+    [MapValue(11)]
     Reopen,
+    /// <summary>
+    /// Modeling staff should verify bug fix.
+    /// </summary>
+    [MapValue(12)]
+    Modeling,
+    /// <summary>
+    /// Modeling staff should create regression tests.
+    /// </summary>
+    [MapValue(13)]
+    Regression,
+    /// <summary>
+    /// Test cases should be prepared by QM.
+    /// </summary>
+    [MapValue(14)]
+    TestCases,
     /// <summary>
     /// Bug was verified as fixed by Tester.
     /// </summary>
-    [MapValue(11)]
+    [MapValue(15)]
     Verified,
     /// <summary>
     /// Bug was finally closed after release is finished.
     /// </summary>
-    [MapValue(12)]
-    Closed
+    [MapValue(16)]
+    Closed,
+    /// <summary>
+    /// ??
+    /// </summary>
+    [MapValue(17)]
+    Deleted
   }
 }

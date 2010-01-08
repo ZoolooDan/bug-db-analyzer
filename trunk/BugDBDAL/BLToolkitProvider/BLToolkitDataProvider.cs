@@ -13,6 +13,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
   public class BLToolkitDataProvider : IDataProvider
   {
     #region Private Fields
+    private static ObjectCopier<DTO.Bug, EDM.Bug> s_bugCopier = new ObjectCopier<DTO.Bug, EDM.Bug>();
     private static ObjectCopier<DTO.Application, EDM.Application> s_appCopier = new ObjectCopier<DTO.Application, EDM.Application>();
     private static ObjectCopier<DTO.Module, EDM.Module> s_moduleCopier = new ObjectCopier<DTO.Module, EDM.Module>();
     private static ObjectCopier<DTO.SubModule, EDM.SubModule> s_subModuleCopier = new ObjectCopier<DTO.SubModule, EDM.SubModule>();
@@ -116,7 +117,18 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// </summary>
     public DTO.Bug[] GetBugs()
     {
-      throw new NotImplementedException();
+      List<EDM.Bug> bugEDMs;
+      using (DbManager db = new DbManager())
+      {
+        bugEDMs = db.SetCommand(@"SELECT * FROM Bugs ORDER BY bug_number").
+          ExecuteList<EDM.Bug>();
+      }
+
+      List<DTO.Bug> bugDTOs = new List<DTO.Bug>(bugEDMs.Count);
+      // Copy EDMs to DTOs
+      bugEDMs.ForEach(bugEDM => bugDTOs.Add(s_bugCopier.Copy(bugEDM)));
+
+      return bugDTOs.ToArray();
     }
 
     /// <summary>
@@ -124,7 +136,22 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// </summary>
     public DTO.Revision[] GetBugRevisions(int bugNumber)
     {
-      throw new NotImplementedException();
+      List<EDM.Revision> revEDMs;
+      using (DbManager db = new DbManager())
+      {
+        revEDMs = db.SetCommand(@"
+            SELECT * FROM Revisions 
+            WHERE bug_number=@BugNumber
+            ORDER BY revision",
+            db.InputParameter("@BugNumber", bugNumber)).
+          ExecuteList<EDM.Revision>();
+      }
+
+      List<DTO.Revision> revDTOs = new List<DTO.Revision>(revEDMs.Count);
+      // Copy EDMs to DTOs
+      revEDMs.ForEach(revEDM => revDTOs.Add(s_revisionCopier.Copy(revEDM)));
+
+      return revDTOs.ToArray();
     }
 
     /// <summary>

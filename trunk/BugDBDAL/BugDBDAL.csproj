@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="BLToolkitProvider\BLToolkitDataProvider.cs" />
     <Compile Include="BLToolkitProvider\EntityDataModel\Application.cs" />
+    <Compile Include="BLToolkitProvider\EntityDataModel\Bug.cs" />
     <Compile Include="BLToolkitProvider\EntityDataModel\BugSeverity.cs" />
     <Compile Include="BLToolkitProvider\EntityDataModel\BugStatus.cs" />
     <Compile Include="BLToolkitProvider\EntityDataModel\BugType.cs" />

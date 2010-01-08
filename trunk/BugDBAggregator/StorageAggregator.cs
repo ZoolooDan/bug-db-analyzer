@@ -46,14 +46,19 @@ namespace BugDB.Aggregator
     private const string InvalidStatus = "invalid";
     private const string DuplicateStatus = "duplicate";
     private const string AnalyzedStatus = "analysed";
+    private const string SuspendStatus = "suspend";
     private const string ToBeAssStatus = "to_be_assigned";
     private const string AssignedStatus = "assigned";
     private const string WorksForMeStatus = "works_for_me";
     private const string ActiveStatus = "active";
     private const string FixedStatus = "fixed";
     private const string ReopenStatus = "reopen";
-    private const string VerifiedStatus = "verified";
+    private const string ModelingStatus = "modelling";
+    private const string RegressionStatus = "regression";
+    private const string VerifiedStatus = "test_cases";
+    private const string TestCasesStatus = "verified";
     private const string ClosedStatus = "closed";
+    private const string DeletedStatus = "deleted";
 
     private static readonly IDictionary<string, BugType> s_typeMappings;
     private static readonly IDictionary<string, BugStatus> s_statusMappings;
@@ -82,14 +87,19 @@ namespace BugDB.Aggregator
       s_statusMappings.Add(InvalidStatus, BugStatus.Invalid);
       s_statusMappings.Add(DuplicateStatus, BugStatus.Duplicate);
       s_statusMappings.Add(AnalyzedStatus, BugStatus.Analyzed);
+      s_statusMappings.Add(SuspendStatus, BugStatus.Suspend);
       s_statusMappings.Add(ToBeAssStatus, BugStatus.ToBeAssigned);
       s_statusMappings.Add(AssignedStatus, BugStatus.Assigned);
       s_statusMappings.Add(WorksForMeStatus, BugStatus.WorksForMe);
       s_statusMappings.Add(ActiveStatus, BugStatus.Active);
       s_statusMappings.Add(FixedStatus, BugStatus.Fixed);
       s_statusMappings.Add(ReopenStatus, BugStatus.Reopen);
+      s_statusMappings.Add(ModelingStatus, BugStatus.Modeling);
+      s_statusMappings.Add(TestCasesStatus, BugStatus.TestCases);
+      s_statusMappings.Add(RegressionStatus, BugStatus.Regression);
       s_statusMappings.Add(VerifiedStatus, BugStatus.Verified);
       s_statusMappings.Add(ClosedStatus, BugStatus.Closed);
+      s_statusMappings.Add(DeletedStatus, BugStatus.Deleted);
 
       s_severityMappings = new Dictionary<string, BugSeverity>();
       s_severityMappings.Add("1", BugSeverity.Fatal);
@@ -161,7 +171,7 @@ namespace BugDB.Aggregator
         int revision = ProcessRevisionNumber(record);
 
         // Process short description
-        string summary = record[SummaryCol];
+        string summary = ProcessSummary(record);
 
         // Process date
         DateTime date = ProcessDate(record);
@@ -219,6 +229,7 @@ namespace BugDB.Aggregator
           targetRelease, contributor, leader, developer, tester);
       }
     }
+
     #endregion Public Methods
 
     #region Helper Methods
@@ -243,6 +254,14 @@ namespace BugDB.Aggregator
       return revision;
     }
     
+    /// <summary>
+    /// Process summary.
+    /// </summary>
+    private static string ProcessSummary(Record record)
+    {
+      return record[SummaryCol] ?? "";
+    }
+
     /// <summary>
     /// Process record type.
     /// </summary>

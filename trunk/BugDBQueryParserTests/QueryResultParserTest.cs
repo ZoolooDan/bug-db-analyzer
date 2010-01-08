@@ -169,24 +169,60 @@ namespace BugDB.QueryParser.Tests
     }
 
     /// <summary>
-    /// A test for CreateRecordsEnumerator
+    /// Test records source without leading and trailing spaces
     /// </summary>
     [TestMethod]
     [DeploymentItem(@"ReferenceData\recordsSource2.txt")]
     public void CreateRecordsEnumeratorTest2()
     {
       string inputFileName = Path.Combine(this.TestContext.TestDeploymentDir,
-                                          RecordSourceFileName2);
+                                          "recordsSource2.txt");
 
+      TestRecordsEnumerators(inputFileName);
+    }
+
+    /// <summary>
+    /// Test records source with leading and trailing spaces
+    /// </summary>
+    [TestMethod]
+    [DeploymentItem(@"ReferenceData\recordsSource3.txt")]
+    public void CreateRecordsEnumeratorTest3()
+    {
+      string inputFileName = Path.Combine(this.TestContext.TestDeploymentDir,
+                                          "recordsSource3.txt");
+
+      TestRecordsEnumerators(inputFileName);
+    }
+
+    /// <summary>
+    /// Test records enumerators correctness.
+    /// </summary>
+    private static void TestRecordsEnumerators(string inputFileName)
+    {
       using(TextReader reader = new StreamReader(inputFileName))
       {
         int count = 0;
-        var actual = QueryResultParser.CreateRecordsEnumerator(reader);
-        while( actual.MoveNext() )
+        var records = QueryResultParser.CreateRecordsEnumerator(reader);
+        while( records.MoveNext() )
         {
+          var record = records.Current;
+          // Check number of records
+          Assert.AreEqual(18, record.Count);
+          // Check that value names doesn't contain spaces
+          foreach( string name in record.Keys )
+          {
+            Assert.IsNotNull(name);
+            Assert.IsTrue(name.Length > 0);
+            Assert.IsFalse(name.StartsWith(" "));
+            Assert.IsFalse(name.EndsWith(" "));
+
+            string[] parts = name.Split(' ');
+            Assert.AreEqual(1, parts.Length);
+          }
+          
           count++;
         }
-        Assert.AreEqual(18, count);
+        Assert.AreEqual(6, count);
       }
     }
 
