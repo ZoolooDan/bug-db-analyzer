@@ -19,6 +19,7 @@ namespace BugDB.QueryParser.Tests
     private const string RawSourceFileName = "rawSource.txt";
     private const string RawRefFileName = "rawRef.txt";
     private const string RecordSourceFileName = "recordsSource.txt";
+    private const string RecordSourceFileName2 = "recordsSource2.txt";
     private const string CsvSourceFileName = "csvSource.txt";
     private const string CsvRefFileName = "csvRef.txt";
     #endregion
@@ -88,7 +89,7 @@ namespace BugDB.QueryParser.Tests
     /// <summary>
     ///A test for CreateCsvStringsEnumerator
     ///</summary>
-    [TestMethod()]
+    [TestMethod]
     public void CreateCsvStringsEnumeratorTest()
     {
       //Stream stream = null; // TODO: Initialize to an appropriate value
@@ -102,7 +103,8 @@ namespace BugDB.QueryParser.Tests
     /// <summary>
     /// A test for CreateRecordsEnumerator
     /// </summary>
-    [TestMethod()]
+    [TestMethod]
+    [DeploymentItem(@"ReferenceData\recordsSource.txt")]
     public void CreateRecordsEnumeratorTest()
     {
       string inputFileName = Path.Combine(this.TestContext.TestDeploymentDir,
@@ -163,6 +165,28 @@ namespace BugDB.QueryParser.Tests
 
         // Compare
         CheckEnumeratorsAreEqual2(records.GetEnumerator(), actual);
+      }
+    }
+
+    /// <summary>
+    /// A test for CreateRecordsEnumerator
+    /// </summary>
+    [TestMethod]
+    [DeploymentItem(@"ReferenceData\recordsSource2.txt")]
+    public void CreateRecordsEnumeratorTest2()
+    {
+      string inputFileName = Path.Combine(this.TestContext.TestDeploymentDir,
+                                          RecordSourceFileName2);
+
+      using(TextReader reader = new StreamReader(inputFileName))
+      {
+        int count = 0;
+        var actual = QueryResultParser.CreateRecordsEnumerator(reader);
+        while( actual.MoveNext() )
+        {
+          count++;
+        }
+        Assert.AreEqual(18, count);
       }
     }
 
