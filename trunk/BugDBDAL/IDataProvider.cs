@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BugDB.DataAccessLayer.DataTransferObjects;
+﻿using BugDB.DataAccessLayer.DataTransferObjects;
+
 
 namespace BugDB.DataAccessLayer
 {
   // Alias for the namespaces where 
   // Data Transfer Objects (DTO) are defined
   using DTO = DataTransferObjects;
+
 
   /// <summary>
   /// Interface for accessing objects from data layer.
@@ -25,17 +23,24 @@ namespace BugDB.DataAccessLayer
     void InitializeStorage();
 
     /// <summary>
+    /// Creates new application.
+    /// </summary>
+    DTO.Application CreateApplicaton(DTO.Application app);
+
+    /// <summary>
     /// Returns all applications.
     /// </summary>
     DTO.Application[] GetApplications();
+
     /// <summary>
     /// Returns application by ID.
     /// </summary>
     DTO.Application GetApplication(int appId);
+
     /// <summary>
-    /// Creates new application.
+    /// Creates new revision.
     /// </summary>
-    DTO.Application CreateApplicaton(DTO.Application app);
+    Revision CreateRevision(Revision revision);
 
     /// <summary>
     /// Returns all bugs.
@@ -48,19 +53,20 @@ namespace BugDB.DataAccessLayer
     DTO.Revision[] GetBugRevisions(int bugNumber);
 
     /// <summary>
-    /// Returns all releases of the specified application.
-    /// </summary>
-    Release[] GetApplicationReleases(int appId);
-
-    /// <summary>
     /// Creates new release.
     /// </summary>
     Release CreateRelease(Release release);
 
     /// <summary>
+    /// Returns all releases of the specified application.
+    /// </summary>
+    Release[] GetApplicationReleases(int appId);
+
+    /// <summary>
     /// Creates new person.
     /// </summary>
     Person CreatePerson(Person person);
+
     /// <summary>
     /// Return all persons.
     /// </summary>
@@ -70,6 +76,7 @@ namespace BugDB.DataAccessLayer
     /// Creates new module.
     /// </summary>
     Module CreateModule(Module module);
+
     /// <summary>
     /// Returns all modules of specific application.
     /// </summary>
@@ -79,14 +86,10 @@ namespace BugDB.DataAccessLayer
     /// Creates new sub module.
     /// </summary>
     SubModule CreateSubModule(SubModule module);
+
     /// <summary>
     /// Returns all sub modules of specific module.
     /// </summary>
     SubModule[] GetModuleSubModules(int moduleId);
-
-    /// <summary>
-    /// Creates new revision.
-    /// </summary>
-    Revision CreateRevision(Revision revision);
   }
 }

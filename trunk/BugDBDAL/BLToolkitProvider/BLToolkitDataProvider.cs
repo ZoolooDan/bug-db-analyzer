@@ -43,7 +43,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// Storage will be created and initialized or 
     /// recreated if existed before.
     ///
-    /// This implement uses <see cref="SqlScriptRunner"/> to 
+    /// This implementation uses <see cref="SqlScriptRunner"/> to 
     /// execute DB creation script.
     /// </remarks>
     public void InitializeStorage()
@@ -58,6 +58,31 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
       SqlScriptRunner runner = new SqlScriptRunner(connString);
       runner.Execute(m_createDbScriptPath);
 
+    }
+
+    /// <summary>
+    /// Creates new application.
+    /// </summary>
+    public DTO.Application CreateApplicaton(DTO.Application appDTO)
+    {
+      // Map DTO to EDM
+      EDM.Application appEDM = s_appCopier.Copy(appDTO);
+
+      // Insert application
+      using( DbManager db = new DbManager() )
+      {
+        db.SetCommand(
+          @"
+          INSERT INTO Applications (app_title) VALUES (@app_title) 
+          SELECT Cast(SCOPE_IDENTITY() as int) app_id",
+          db.CreateParameters(appEDM, new[] {"app_id"}, null, null)).
+          ExecuteObject(appEDM);
+      }
+
+      // Map EDM to DTO
+      appDTO = s_appCopier.Copy(appEDM);
+
+      return appDTO;
     }
 
     /// <summary>
@@ -88,28 +113,25 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     }
 
     /// <summary>
-    /// Creates new application.
+    /// Creates new revision.
     /// </summary>
-    public DTO.Application CreateApplicaton(DTO.Application appDTO)
+    public Revision CreateRevision(Revision revisionDTO)
     {
       // Map DTO to EDM
-      EDM.Application appEDM = s_appCopier.Copy(appDTO);
+      EDM.Revision relEDM = s_revisionCopier.Copy(revisionDTO);
 
       // Insert application
-      using( DbManager db = new DbManager() )
+      using (DbManager db = new DbManager())
       {
-        db.SetCommand(
-          @"
-          INSERT INTO Applications (app_title) VALUES (@app_title) 
-          SELECT Cast(SCOPE_IDENTITY() as int) app_id",
-          db.CreateParameters(appEDM, new[] {"app_id"}, null, null)).
-          ExecuteObject(appEDM);
+        db.SetSpCommand("Revision_Create",
+          db.CreateParameters(relEDM)).
+          ExecuteObject(relEDM);
       }
 
       // Map EDM to DTO
-      appDTO = s_appCopier.Copy(appEDM);
+      revisionDTO = s_revisionCopier.Copy(relEDM);
 
-      return appDTO;
+      return revisionDTO;
     }
 
     /// <summary>
@@ -155,27 +177,6 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     }
 
     /// <summary>
-    /// Returns all releases of the specified application.
-    /// </summary>
-    public DTO.Release[] GetApplicationReleases(int appId)
-    {
-      List<EDM.Release> relEDMs;
-      using (DbManager db = new DbManager())
-      {
-        relEDMs = db.SetCommand(@"SELECT * FROM Releases WHERE app_id = @AppId",
-          db.InputParameter("@AppId", appId)).
-          ExecuteList<EDM.Release>();
-      }
-
-      // TODO: Add method to copy lists to copier
-      List<DTO.Release> relDTOs = new List<DTO.Release>(relEDMs.Count);
-      // Copy EDMs to DTOs
-      relEDMs.ForEach(relEDM => relDTOs.Add(s_relCopier.Copy(relEDM)));
-
-      return relDTOs.ToArray();
-    }
-
-    /// <summary>
     /// Creates new release.
     /// </summary>
     public DTO.Release CreateRelease(DTO.Release relDTO)
@@ -198,6 +199,27 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
       relDTO = s_relCopier.Copy(relEDM);
 
       return relDTO;
+    }
+
+    /// <summary>
+    /// Returns all releases of the specified application.
+    /// </summary>
+    public DTO.Release[] GetApplicationReleases(int appId)
+    {
+      List<EDM.Release> relEDMs;
+      using (DbManager db = new DbManager())
+      {
+        relEDMs = db.SetCommand(@"SELECT * FROM Releases WHERE app_id = @AppId",
+          db.InputParameter("@AppId", appId)).
+          ExecuteList<EDM.Release>();
+      }
+
+      // TODO: Add method to copy lists to copier
+      List<DTO.Release> relDTOs = new List<DTO.Release>(relEDMs.Count);
+      // Copy EDMs to DTOs
+      relEDMs.ForEach(relEDM => relDTOs.Add(s_relCopier.Copy(relEDM)));
+
+      return relDTOs.ToArray();
     }
 
     /// <summary>
@@ -324,27 +346,6 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
       return subModuleDTOs.ToArray();
     }
 
-    /// <summary>
-    /// Creates new revision.
-    /// </summary>
-    public Revision CreateRevision(Revision revisionDTO)
-    {
-      // Map DTO to EDM
-      EDM.Revision relEDM = s_revisionCopier.Copy(revisionDTO);
-
-      // Insert application
-      using (DbManager db = new DbManager())
-      {
-        db.SetSpCommand("Revision_Create",
-          db.CreateParameters(relEDM)).
-          ExecuteObject(relEDM);
-      }
-
-      // Map EDM to DTO
-      revisionDTO = s_revisionCopier.Copy(relEDM);
-
-      return revisionDTO;
-    }
     #endregion
   }
 }
