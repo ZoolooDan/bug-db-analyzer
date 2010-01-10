@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugDBHost", "BugDBHost\BugD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestUtils", "UnitTestUtils\UnitTestUtils.csproj", "{58A809A5-89C5-440D-94E5-66CD3F300A08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugDBReporter", "BugDBReporter\BugDBReporter.csproj", "{EDE24341-4863-4114-A8AC-AA960ABD27BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugDBReporterTests", "BugDBReporterTests\BugDBReporterTests.csproj", "{4224F7C0-C0A6-4058-82C1-B65E4A4925FD}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = BugDBAnalyzer.vsmdi
@@ -76,6 +80,14 @@ Global
 		{58A809A5-89C5-440D-94E5-66CD3F300A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58A809A5-89C5-440D-94E5-66CD3F300A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58A809A5-89C5-440D-94E5-66CD3F300A08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDE24341-4863-4114-A8AC-AA960ABD27BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDE24341-4863-4114-A8AC-AA960ABD27BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDE24341-4863-4114-A8AC-AA960ABD27BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDE24341-4863-4114-A8AC-AA960ABD27BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4224F7C0-C0A6-4058-82C1-B65E4A4925FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4224F7C0-C0A6-4058-82C1-B65E4A4925FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4224F7C0-C0A6-4058-82C1-B65E4A4925FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4224F7C0-C0A6-4058-82C1-B65E4A4925FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
