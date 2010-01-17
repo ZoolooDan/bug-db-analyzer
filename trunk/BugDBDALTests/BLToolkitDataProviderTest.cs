@@ -11,9 +11,8 @@ using BugDB.DataAccessLayer.BLToolkitProvider;
 namespace BugDB.DAL.Tests
 {
   /// <summary>
-  ///This is a test class for BLToolkitDataProviderTest and is intended
-  ///to contain all BLToolkitDataProviderTest Unit Tests
-  ///</summary>
+  /// BLToolkitDataProvider Tests.
+  /// </summary>
 //  [DeploymentItem(@"ReferenceData\BugDB_Clean.bak", "ReferenceData")]
   [DeploymentItem(@"DatabaseScripts\BugDB3.sql", "DatabaseScripts")]
   [TestClass]
@@ -226,3 +225,9 @@ namespace BugDB.DAL.Tests
     #endregion Helper Methods
   }
 }
+
+
+// Look into 
+// http://netcave.org/GettingStartedWithTDDInVisualStudio.aspx 
+// http://stephenwalther.com/blog/archive/2008/03/20/tdd-test-driven-development-with-visual-studio-2008-unit-tests.aspx
+// for some TDD techniques

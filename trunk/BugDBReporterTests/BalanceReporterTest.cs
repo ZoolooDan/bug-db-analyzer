@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 using BugDB.Aggregator;
 using BugDB.DataAccessLayer;
@@ -84,14 +86,19 @@ namespace BugDBReporterTests
     }
 
     /// <summary>
-    ///A test for CreateReport
-    ///</summary>
+    /// ByDay report test.
+    /// </summary>
     [TestMethod]
-    public void CreateReportTest()
+    public void ByDayTest()
     {
-      var reporter = new BalanceReporter(); // TODO: Initialize to an appropriate value
-      reporter.CreateReport();
-      Assert.Inconclusive("A method that does not return a value cannot be verified.");
+      var reporter = new BalanceReporter(m_provider);
+      
+      List<Group> report = reporter.CreateReport(GroupPeriod.ByDay, false);
+      Assert.AreEqual(13, report.Count);
+      Assert.AreEqual(new DateTime(2000, 12, 08), report[0].IntervalStart);
+      Assert.AreEqual(new DateTime(2000, 12, 08), report[0].IntervalEnd);
+
+
     }
   }
 }

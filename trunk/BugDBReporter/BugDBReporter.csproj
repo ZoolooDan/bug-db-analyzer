@@ -48,6 +48,12 @@
     <Compile Include="BalanceReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BugDBDAL\BugDBDAL.csproj">
+      <Project>{3D281C5F-8FE3-4AC4-AB65-4C2D4CFDE1DF}</Project>
+      <Name>BugDBDAL</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
