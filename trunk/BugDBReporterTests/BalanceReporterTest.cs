@@ -94,11 +94,89 @@ namespace BugDBReporterTests
       var reporter = new BalanceReporter(m_provider);
       
       List<Group> report = reporter.CreateReport(GroupPeriod.ByDay, false);
-      Assert.AreEqual(13, report.Count);
+      Assert.AreEqual(9, report.Count);
       Assert.AreEqual(new DateTime(2000, 12, 08), report[0].IntervalStart);
       Assert.AreEqual(new DateTime(2000, 12, 08), report[0].IntervalEnd);
 
 
     }
+
+    /// <summary>
+    /// ByWeek report test.
+    /// </summary>
+    [TestMethod]
+    public void ByWeekTest()
+    {
+      var reporter = new BalanceReporter(m_provider);
+      
+      List<Group> report = reporter.CreateReport(GroupPeriod.ByWeek, false);
+      Assert.AreEqual(2, report.Count);
+      Assert.AreEqual(new DateTime(2000, 12, 04), report[0].IntervalStart);
+      Assert.AreEqual(new DateTime(2000, 12, 10), report[0].IntervalEnd);
+
+
+    }
+
+    /// <summary>
+    /// ByMonth report test.
+    /// </summary>
+    [TestMethod]
+    public void ByMonthTest()
+    {
+      var reporter = new BalanceReporter(m_provider);
+      
+      List<Group> report = reporter.CreateReport(GroupPeriod.ByMonth, false);
+      Assert.AreEqual(1, report.Count);
+      Assert.AreEqual(new DateTime(2000, 12, 01), report[0].IntervalStart);
+      Assert.AreEqual(new DateTime(2000, 12, 31), report[0].IntervalEnd);
+
+
+    }
+
+    /// <summary>
+    /// ByQuater report test.
+    /// </summary>
+    [TestMethod]
+    public void ByQuaterTest()
+    {
+      var reporter = new BalanceReporter(m_provider);
+      
+      // 01 Jan -
+      // 02 Feb  1
+      // 03 Mar -
+      // 04 Apr -
+      // 05 May  2
+      // 06 Jun -
+      // 07 Jul -
+      // 08 Aug  3
+      // 09 Sep -
+      // 10 Nov -
+      // 11 Oct  4
+      // 12 Dec -
+
+      List<Group> report = reporter.CreateReport(GroupPeriod.ByQuater, false);
+      Assert.AreEqual(1, report.Count);
+      Assert.AreEqual(new DateTime(2000, 10, 1), report[0].IntervalStart);
+      Assert.AreEqual(new DateTime(2000, 12, 31), report[0].IntervalEnd);
+
+
+    }
+
+    /// <summary>
+    /// ByYear report test.
+    /// </summary>
+    [TestMethod]
+    public void ByYearTest()
+    {
+      var reporter = new BalanceReporter(m_provider);
+      
+      List<Group> report = reporter.CreateReport(GroupPeriod.ByYear, false);
+      Assert.AreEqual(1, report.Count);
+      Assert.AreEqual(new DateTime(2000, 1, 1), report[0].IntervalStart);
+      Assert.AreEqual(new DateTime(2000, 12, 31), report[0].IntervalEnd);
+
+
+    }
+
   }
 }
