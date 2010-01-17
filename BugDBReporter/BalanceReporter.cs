@@ -159,6 +159,9 @@ namespace BugDB.Reporter
 
       // Sort groups by index because they go in arbitrary order
       groups.Sort((x, y) => x.Interval - y.Interval);
+
+      // Make groups go without gaps
+      UnsparseGroups(groups, period);
      
       // Return report
       return groups;
@@ -186,8 +189,6 @@ namespace BugDB.Reporter
 
       TimeSpan offset = revision.Date - refDate;
 
-      DateTime intervalStart = new DateTime(), intervalEnd = new DateTime();
-
       int index = -1;
       // ByDay
       if( period == GroupPeriod.ByDay )
@@ -214,8 +215,8 @@ namespace BugDB.Reporter
       }
       else if( period == GroupPeriod.ByQuater ) // ByQuater
       {
-        // Same as months but divided by 4
-        index = ((date.Year - refDate.Year)*12 + (date.Month - refDate.Month))/4;
+        // Same as months but divided by 3
+        index = ((date.Year - refDate.Year)*12 + (date.Month - refDate.Month))/3;
       }
       else if( period == GroupPeriod.ByYear ) // ByYear
       {
@@ -229,6 +230,9 @@ namespace BugDB.Reporter
       Group group = groups.Find(item => item.Interval == index);
       if( group == null )
       {
+        DateTime intervalStart, intervalEnd;
+        // Get dates
+        GetIntervalDates(period, index, out intervalStart, out intervalEnd);
         // Create new group
         group = new Group(index, intervalStart, intervalEnd);
         groups.Add(group);
@@ -367,6 +371,93 @@ namespace BugDB.Reporter
           out statusGroup));
       }
       return statusGroup;
+    }
+
+    /// <summary>
+    /// Make groups go without gaps.
+    /// </summary>
+    private static void UnsparseGroups(IList<Group> groups, GroupPeriod period)
+    {
+      // Just exit if empty collection
+      if( groups.Count == 0 )
+      {
+        return;
+      }
+
+      int prevInterval = groups.Count > 0 ? groups[0].Interval : -1;
+      for( int i = 1; i < groups.Count; i++ )
+      {
+        int interval = prevInterval + 1;
+        // If gap is found
+        if( groups[i].Interval > interval )
+        {
+          // Insert new group
+          DateTime intervalStart, intervalEnd; 
+          GetIntervalDates(period, interval, out intervalStart, out intervalEnd);
+          Group group = new Group(interval, intervalStart, intervalEnd);
+          groups.Insert(i, group);
+        }
+        prevInterval = interval;
+      }
+    }
+
+    /// <summary>
+    /// Returns start and end dates of interval.
+    /// </summary>
+    private static void GetIntervalDates(GroupPeriod period, int interval, 
+      out DateTime intervalStart, out DateTime intervalEnd)
+    {
+      DateTime refDate = new DateTime(1990, 1, 1);
+
+      intervalStart = DateTime.MinValue;
+      intervalEnd = DateTime.MinValue;
+
+      // ByDay
+      if( period == GroupPeriod.ByDay )
+      {
+        // Shift reference date by interval days
+        intervalStart = refDate + new TimeSpan(interval, 0, 0, 0);
+        // Interval end is the same as start
+        intervalEnd = intervalStart;
+      }
+      else if( period == GroupPeriod.ByWeek ) // ByWeek
+      {
+        // Shift reference date by interval weeks
+        intervalStart = refDate.AddDays(interval*7);
+        intervalEnd = intervalStart.AddDays(6);
+      }
+      else if( period == GroupPeriod.ByMonth ) // ByMonth
+      {
+        // 01.1990 - 0  = (1990 - 1990)*12 + (01 - 01) = 0*12 + 0
+        // 12.1990 - 11 = (1990 - 1990)*12 + (12 - 01) = 0*12 + 11
+        // 01.1991 - 12 = (1991 - 1990)*12 + (01 - 01) = 1*12 + 0
+        // 06.1991 - 17 = (1991 - 1990)*12 + (06 - 01) = 1*12 + 5
+        // 06.1992 - 29 = (1992 - 1990)*12 + (06 - 01) = 2*12 + 5
+
+        // Number of full years to years, modulo to months
+        intervalStart = new DateTime(refDate.Year + interval/12, refDate.Month + interval%12, 1);
+        intervalEnd = intervalStart.AddMonths(1) - new TimeSpan(1, 0, 0, 0);
+      }
+      else if( period == GroupPeriod.ByQuater ) // ByQuater
+      {
+        // Multiply by 4 to get months
+        int months1 = interval*3;
+        int months2 = (interval + 1)*3;
+        // Similar as for months
+        intervalStart = new DateTime(refDate.Year + months1/12, refDate.Month + months1%12, 1);
+        intervalEnd = new DateTime(refDate.Year + months2/12, refDate.Month + months2%12, 1) 
+          - new TimeSpan(1, 0, 0, 0);
+      }
+      else if( period == GroupPeriod.ByYear ) // ByYear
+      {
+        // Shift years
+        intervalStart = new DateTime(refDate.Year + interval, 1, 1);
+        intervalEnd = new DateTime(refDate.Year + interval, 12, 31);
+      }
+      else
+      {
+        Debug.Fail("Unknow interval.");
+      }
     }
     #endregion Helper Methods
   }
