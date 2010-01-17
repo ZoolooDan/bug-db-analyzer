@@ -73,3 +73,4 @@ namespace BugDB.DataAccessLayer.Utils
 
 // Interesting article on SqlScriptRunner which supports template parameters
 // http://haacked.com/archive/2007/11/04/a-library-for-executing-sql-scripts-with-go-separators-and.aspx
+// 
