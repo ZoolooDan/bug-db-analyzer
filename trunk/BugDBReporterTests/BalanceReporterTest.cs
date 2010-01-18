@@ -97,8 +97,10 @@ namespace BugDBReporterTests
       Assert.AreEqual(9, report.Count);
       Assert.AreEqual(new DateTime(2000, 12, 08), report[0].IntervalStart);
       Assert.AreEqual(new DateTime(2000, 12, 08), report[0].IntervalEnd);
-
-
+      Assert.AreEqual(1, report[0].Added);
+      Assert.AreEqual(0, report[0].Removed);
+      Assert.AreEqual(0, report[0].Postponed);
+      Assert.AreEqual(0, report[0].Reactivated);
     }
 
     /// <summary>
@@ -113,8 +115,10 @@ namespace BugDBReporterTests
       Assert.AreEqual(2, report.Count);
       Assert.AreEqual(new DateTime(2000, 12, 04), report[0].IntervalStart);
       Assert.AreEqual(new DateTime(2000, 12, 10), report[0].IntervalEnd);
-
-
+      Assert.AreEqual(1, report[1].Added);
+      Assert.AreEqual(3, report[1].Removed);
+      Assert.AreEqual(0, report[1].Postponed);
+      Assert.AreEqual(1, report[1].Reactivated);
     }
 
     /// <summary>
