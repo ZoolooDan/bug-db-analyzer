@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BalanceReporter.cs" />
+    <Compile Include="Configuration\ReporterConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +54,12 @@
       <Project>{3D281C5F-8FE3-4AC4-AB65-4C2D4CFDE1DF}</Project>
       <Name>BugDBDAL</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\ReporterConfig.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config\ReporterConfig.xsd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

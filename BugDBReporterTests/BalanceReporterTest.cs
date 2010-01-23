@@ -17,6 +17,7 @@ namespace BugDBReporterTests
   /// </summary>
   [TestClass]
   [DeploymentItem(@"DatabaseScripts\BugDB3.sql", "DatabaseScripts")]
+  [DeploymentItem(@"Config\ReporterConfig.xml", "Config")]
   [DeploymentItem(@"ReferenceData\approachOne.txt", "ReferenceData")]
   public class BalanceReporterTest
   {
