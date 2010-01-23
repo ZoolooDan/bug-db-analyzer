@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using System.Xml.Serialization;
 
 using BugDB.DataAccessLayer;
 using BugDB.DataAccessLayer.DataTransferObjects;
@@ -19,7 +22,8 @@ namespace BugDB.Reporter
     ByQuater,
     ByYear
   }
-
+// C:\Program Files\Microsoft Visual Studio 9.0\vc\bin>xsd d:\Work\MyProjects\BugDBAnalyzer4\BugDBReporter\config\ReporterConfig.xsd
+// /classes /l:CS /n:BugDB.Reporter.Configuration /out:d:\Work\MyProjects\BugDBAnalyzer4\BugDBReporter\Configuration
 
   /// <summary>
   /// Creates different reports.
@@ -105,6 +109,8 @@ namespace BugDB.Reporter
     public BalanceReporter(IDataProvider provider)
     {
       m_provider = provider;
+
+      LoadConfig();
     }
     #endregion Constructors
 
@@ -170,6 +176,21 @@ namespace BugDB.Reporter
     #endregion Public Methods
 
     #region Helper Methods
+    /// <summary>
+    /// Load configuration from file.
+    /// </summary>
+    private void LoadConfig()
+    {
+      XmlSerializer serializer = new XmlSerializer(typeof(Configuration.Reporter));
+
+      string configPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+        @"config\ReporterConfig.xml");
+      using( Stream stream = new FileStream(configPath, FileMode.Open, FileAccess.Read) )
+      {
+        Configuration.Reporter reporter = (Configuration.Reporter)serializer.Deserialize(stream);
+      }
+    }
+
     /// <summary>
     /// Returns group for specified revision.
     /// </summary>
