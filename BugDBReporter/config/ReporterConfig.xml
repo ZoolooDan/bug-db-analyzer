@@ -1,25 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Reporter>
+<ReportConfig xmlns="http://www.vpisystems.com/BugDB/Analyzer/ReportConfig">
   <StatusGroups>
+    <!-- DontExist: <empty> -->
+    <StatusGroup Name="DontExist" />
     <!-- ForAnalysi: open, reopen -->
-    <StatusGroup name="ForAnalysis">
+    <StatusGroup Name="ForAnalysis">
       <Status>Open</Status>
       <Status>Reopen</Status>
     </StatusGroup>
     <!-- Postponed: analysed, suspend -->
-    <StatusGroup name="Postponed">
+    <StatusGroup Name="Postponed">
       <Status>Analyzed</Status>
       <Status>Suspend</Status>
     </StatusGroup>
     <!-- ForWork: to_be_assigned, assigned, active -->
-    <StatusGroup name="ForWork">
+    <StatusGroup Name="ForWork">
       <Status>ToBeAssigned</Status>
       <Status>Assigned</Status>
       <Status>Active</Status>
     </StatusGroup>
     <!-- ForTesting: invalid, duplicate, works_for_me, fixed, 
                      modelling, regression, test_cases -->
-    <StatusGroup name="ForTesting">
+    <StatusGroup Name="ForTesting">
       <Status>Invalid</Status>
       <Status>Duplicate</Status>
       <Status>WorksForMe</Status>
@@ -29,46 +31,48 @@
       <Status>TestCases</Status>
     </StatusGroup>
     <!-- Finished: verified, closed, deleted -->
-    <StatusGroup name="Finished">
+    <StatusGroup Name="Finished">
       <Status>Verified</Status>
       <Status>Closed</Status>
       <Status>Deleted</Status>
     </StatusGroup>
   </StatusGroups>
   <AllowedTransitions>
+    <!-- Added: <empty> -->
+    <Transition Name="None" />
     <!-- Added: (DontExist, ForTesting, Finished)->(ForAnalysis) -->
-    <Transition name="Added">
-      <Passage from="DontExist" to="ForAnalysis" />
-      <Passage from="ForTesting" to="ForAnalysis" />
-      <Passage from="Finished" to="ForAnalysis" />
+    <Transition Name="Added">
+      <Passage From="DontExist" To="ForAnalysis" />
+      <Passage From="ForTesting" To="ForAnalysis" />
+      <Passage From="Finished" To="ForAnalysis" />
     </Transition>
     <!-- Removed: (ForAnalysis, ForWork, Postponed)->(ForTesting) -->
-    <Transition name="Removed">
-      <Passage from="ForAnalysis" to="ForTesting" />
-      <Passage from="ForWork" to="ForTesting" />
-      <Passage from="Postponed" to="ForTesting" />
+    <Transition Name="Removed">
+      <Passage From="ForAnalysis" To="ForTesting" />
+      <Passage From="ForWork" To="ForTesting" />
+      <Passage From="Postponed" To="ForTesting" />
     </Transition>
     <!-- Postponed: (ForAnalysis, ForWork)->(Postponed) -->
-    <Transition name="Postponed">
-      <Passage from="ForAnalysis" to="Postponed" />
-      <Passage from="ForWork" to="Postponed" />
+    <Transition Name="Postponed">
+      <Passage From="ForAnalysis" To="Postponed" />
+      <Passage From="ForWork" To="Postponed" />
     </Transition>
     <!-- Reactivated: (Postponed)->(ForAnalysis, ForWork) -->
-    <Transition name="Reactivated">
-      <Passage from="Postponed" to="ForAnalysis" />
-      <Passage from="Postponed" to="ForWork" />
+    <Transition Name="Reactivated">
+      <Passage From="Postponed" To="ForAnalysis" />
+      <Passage From="Postponed" To="ForWork" />
     </Transition>
   </AllowedTransitions>
   <ForbiddenTransitions>
-    <Transition name="Forbidden">
+    <Transition Name="Forbidden">
       <!-- (ForAnalysis, Postponed, ForWork)->(Finished) -->
-      <Passage from="ForAnalysis" to="Finished" />
-      <Passage from="Postponed" to="Finished" />
-      <Passage from="ForWork" to="Finished" />
+      <Passage From="ForAnalysis" To="Finished" />
+      <Passage From="Postponed" To="Finished" />
+      <Passage From="ForWork" To="Finished" />
       <!-- (Finished)->(ForAnalysis, Postponed, ForWork) -->
-      <Passage from="Finished" to="ForAnalysis" />
-      <Passage from="Finished" to="Postponed" />
-      <Passage from="Finished" to="ForWork" />
+      <Passage From="Finished" To="ForAnalysis" />
+      <Passage From="Finished" To="Postponed" />
+      <Passage From="Finished" To="ForWork" />
     </Transition>
   </ForbiddenTransitions>
-</Reporter>
+</ReportConfig>

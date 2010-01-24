@@ -1,57 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="Reporter">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" 
+           targetNamespace="http://www.vpisystems.com/BugDB/Analyzer/ReportConfig" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:rcf="http://www.vpisystems.com/BugDB/Analyzer/ReportConfig">
+
+  <!-- =================================== -->
+  <xs:complexType name="Passage">
+    <xs:attribute name="From" type="xs:string" use="required" />
+    <xs:attribute name="To" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <!-- =================================== -->
+  <xs:complexType name="StatusGroup">
+    <xs:sequence>
+      <xs:element name="Status" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <!-- =================================== -->
+  <xs:complexType name="Transition">
+    <xs:sequence>
+      <xs:element name="Passage" type="rcf:Passage" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <!-- Root element of configuration file -->
+  <xs:element name="ReportConfig">
     <xs:complexType>
       <xs:sequence>
         <xs:element name="StatusGroups">
           <xs:complexType>
             <xs:sequence>
-              <xs:element maxOccurs="unbounded" name="StatusGroup">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element maxOccurs="unbounded" name="Status" type="xs:string" />
-                  </xs:sequence>
-                  <xs:attribute name="name" type="xs:string" use="required" />
-                </xs:complexType>
-              </xs:element>
+              <xs:element name="StatusGroup" type="rcf:StatusGroup" maxOccurs="unbounded" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
         <xs:element name="AllowedTransitions">
           <xs:complexType>
             <xs:sequence>
-              <xs:element maxOccurs="unbounded" name="Transition">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element maxOccurs="unbounded" name="Passage">
-                      <xs:complexType>
-                        <xs:attribute name="from" type="xs:string" use="required" />
-                        <xs:attribute name="to" type="xs:string" use="required" />
-                      </xs:complexType>
-                    </xs:element>
-                  </xs:sequence>
-                  <xs:attribute name="name" type="xs:string" use="required" />
-                </xs:complexType>
-              </xs:element>
+              <xs:element name="Transition" type="rcf:Transition" maxOccurs="unbounded" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
         <xs:element name="ForbiddenTransitions">
           <xs:complexType>
             <xs:sequence>
-              <xs:element maxOccurs="unbounded" name="Transition">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element maxOccurs="unbounded" name="Passage">
-                      <xs:complexType>
-                        <xs:attribute name="from" type="xs:string" use="required" />
-                        <xs:attribute name="to" type="xs:string" use="required" />
-                      </xs:complexType>
-                    </xs:element>
-                  </xs:sequence>
-                  <xs:attribute name="name" type="xs:string" use="required" />
-                </xs:complexType>
-              </xs:element>
+              <xs:element maxOccurs="unbounded" name="Transition" type="rcf:Transition" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

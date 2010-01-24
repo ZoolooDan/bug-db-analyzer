@@ -20,19 +20,19 @@ namespace BugDB.Reporter.Configuration {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
-    public partial class Reporter {
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.vpisystems.com/BugDB/Analyzer/ReportConfig")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="http://www.vpisystems.com/BugDB/Analyzer/ReportConfig", IsNullable=false)]
+    public partial class ReportConfig {
         
-        private ReporterStatusGroup[] statusGroupsField;
+        private StatusGroup[] statusGroupsField;
         
-        private ReporterTransition[] allowedTransitionsField;
+        private Transition[] allowedTransitionsField;
         
-        private ReporterTransition1[] forbiddenTransitionsField;
+        private Transition[] forbiddenTransitionsField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("StatusGroup", IsNullable=false)]
-        public ReporterStatusGroup[] StatusGroups {
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public StatusGroup[] StatusGroups {
             get {
                 return this.statusGroupsField;
             }
@@ -42,8 +42,8 @@ namespace BugDB.Reporter.Configuration {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("Transition", IsNullable=false)]
-        public ReporterTransition[] AllowedTransitions {
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Transition[] AllowedTransitions {
             get {
                 return this.allowedTransitionsField;
             }
@@ -53,8 +53,8 @@ namespace BugDB.Reporter.Configuration {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("Transition", IsNullable=false)]
-        public ReporterTransition1[] ForbiddenTransitions {
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Transition[] ForbiddenTransitions {
             get {
                 return this.forbiddenTransitionsField;
             }
@@ -69,8 +69,8 @@ namespace BugDB.Reporter.Configuration {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ReporterStatusGroup {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.vpisystems.com/BugDB/Analyzer/ReportConfig")]
+    public partial class StatusGroup {
         
         private string[] statusField;
         
@@ -89,7 +89,7 @@ namespace BugDB.Reporter.Configuration {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string name {
+        public string Name {
             get {
                 return this.nameField;
             }
@@ -104,43 +104,8 @@ namespace BugDB.Reporter.Configuration {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ReporterTransition {
-        
-        private ReporterTransitionPassage[] passageField;
-        
-        private string nameField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Passage")]
-        public ReporterTransitionPassage[] Passage {
-            get {
-                return this.passageField;
-            }
-            set {
-                this.passageField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ReporterTransitionPassage {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.vpisystems.com/BugDB/Analyzer/ReportConfig")]
+    public partial class Passage {
         
         private string fromField;
         
@@ -148,7 +113,7 @@ namespace BugDB.Reporter.Configuration {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string from {
+        public string From {
             get {
                 return this.fromField;
             }
@@ -159,7 +124,7 @@ namespace BugDB.Reporter.Configuration {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string to {
+        public string To {
             get {
                 return this.toField;
             }
@@ -174,16 +139,16 @@ namespace BugDB.Reporter.Configuration {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ReporterTransition1 {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.vpisystems.com/BugDB/Analyzer/ReportConfig")]
+    public partial class Transition {
         
-        private ReporterTransitionPassage1[] passageField;
+        private Passage[] passageField;
         
         private string nameField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Passage")]
-        public ReporterTransitionPassage1[] Passage {
+        public Passage[] Passage {
             get {
                 return this.passageField;
             }
@@ -194,47 +159,12 @@ namespace BugDB.Reporter.Configuration {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string name {
+        public string Name {
             get {
                 return this.nameField;
             }
             set {
                 this.nameField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public partial class ReporterTransitionPassage1 {
-        
-        private string fromField;
-        
-        private string toField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string from {
-            get {
-                return this.fromField;
-            }
-            set {
-                this.fromField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string to {
-            get {
-                return this.toField;
-            }
-            set {
-                this.toField = value;
             }
         }
     }

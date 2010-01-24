@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="BalanceReporterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RevisionTransitionFilterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BugDBAggregator\BugDBAggregator.csproj">
@@ -64,7 +65,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\ReporterConfig.xml">
+    <Content Include="..\BugDBReporter\config\ReporterConfig.xml">
+      <Link>Config\ReporterConfig.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ReferenceData\approachOne.txt">
@@ -74,9 +76,6 @@
   <ItemGroup>
     <None Include="..\DatabaseScripts\BugDB3.sql">
       <Link>DatabaseScripts\BugDB3.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Config\ReporterConfig.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\App.config" />
