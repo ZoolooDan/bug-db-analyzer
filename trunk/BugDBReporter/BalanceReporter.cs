@@ -22,8 +22,10 @@ namespace BugDB.Reporter
     ByQuater,
     ByYear
   }
-// C:\Program Files\Microsoft Visual Studio 9.0\vc\bin>xsd d:\Work\MyProjects\BugDBAnalyzer4\BugDBReporter\config\ReporterConfig.xsd
-// /classes /l:CS /n:BugDB.Reporter.Configuration /out:d:\Work\MyProjects\BugDBAnalyzer4\BugDBReporter\Configuration
+
+  // C:\Program Files\Microsoft Visual Studio 9.0\vc\bin>
+  // xsd d:\Work\MyProjects\BugDBAnalyzer4\BugDBReporter\config\ReporterConfig.xsd /classes /l:CS /n:BugDB.Reporter.Configuration /out:d:\Work\MyProjects\BugDBAnalyzer4\BugDBReporter\Configuration
+
 
   /// <summary>
   /// Creates different reports.
@@ -181,13 +183,13 @@ namespace BugDB.Reporter
     /// </summary>
     private void LoadConfig()
     {
-      XmlSerializer serializer = new XmlSerializer(typeof(Configuration.Reporter));
+      XmlSerializer serializer = new XmlSerializer(typeof(Configuration.ReportConfig));
 
       string configPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
         @"config\ReporterConfig.xml");
       using( Stream stream = new FileStream(configPath, FileMode.Open, FileAccess.Read) )
       {
-        Configuration.Reporter reporter = (Configuration.Reporter)serializer.Deserialize(stream);
+        Configuration.ReportConfig reporter = (Configuration.ReportConfig)serializer.Deserialize(stream);
       }
     }
 
