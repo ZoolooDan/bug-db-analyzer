@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 using BugDB.Aggregator;
@@ -102,8 +104,88 @@ namespace BugDBReporterTests
       var transitions = new List<RevisionStatusTransition>(filter.GetTransitions(revisions));
       var transitionsExp = new List<RevisionStatusTransition>
                            {
-                             new RevisionStatusTransition() {}
+                             new RevisionStatusTransition
+                             {
+                               Name = "Added",
+                               PreviousGroup = new RevisionStatusGroup { Name = "NotExists" },
+                               PreviousRevision = null,
+                               CurrentGroup = new RevisionStatusGroup { Name = "ForAnalysis" },
+                               CurrentRevision = new Revision { BugNumber = 1, Id = 4 }
+                             },
+                             new RevisionStatusTransition
+                             {
+                               Name = "Removed",
+                               PreviousGroup = new RevisionStatusGroup { Name = "ForWork" },
+                               PreviousRevision = new Revision { BugNumber = 1, Id = 3 },
+                               CurrentGroup = new RevisionStatusGroup { Name = "ForTesting" },
+                               CurrentRevision = new Revision { BugNumber = 1, Id = 4 }
+                             }
                            };
+      CollectionAssert.AreEqual(transitionsExp, transitions, new RevisionStatusTransitionComparer());
+    }
+
+
+    /// <summary>
+    /// Compares RevisionStatusTransition by
+    /// </summary>
+    public class RevisionStatusTransitionComparer : IComparer
+    {
+      #region Implementation of IComparer
+      public int Compare(object x, object y)
+      {
+        var lhs = (RevisionStatusTransition)x;
+        var rhs = (RevisionStatusTransition)y;
+
+        if( (lhs == null && rhs == null) ||
+          Object.ReferenceEquals(lhs, rhs) )
+        {
+          return 0;
+        }
+
+        if( lhs == null || rhs == null )
+        {
+          return -1;
+        }
+        
+        if( lhs.Name != rhs.Name )
+        {
+          return -1;
+        }
+
+        if( lhs.PreviousGroup == null || rhs.PreviousGroup == null ||
+          lhs.PreviousGroup.Name != lhs.PreviousGroup.Name )
+        {
+          return -1;
+        }
+
+        if( (lhs.PreviousRevision == null && rhs.PreviousRevision != null) ||
+          (lhs.PreviousRevision != null && rhs.PreviousRevision == null ) )
+        {
+          return -1;
+        }
+        if( lhs.PreviousRevision != null && rhs.PreviousRevision != null )
+        {
+          if( lhs.PreviousRevision.BugNumber != rhs.PreviousRevision.BugNumber || 
+            lhs.PreviousRevision.Id != rhs.PreviousRevision.Id )
+          {
+            return -1;
+          }
+        }
+
+        if( lhs.CurrentRevision == null || rhs.CurrentRevision == null )
+        {
+          return -1;
+        }
+
+        if( lhs.CurrentRevision.BugNumber != rhs.CurrentRevision.BugNumber || 
+          lhs.CurrentRevision.Id != rhs.CurrentRevision.Id )
+        {
+          return -1;
+        }
+
+        return 0;
+      }
+      #endregion
     }
   }
 }
