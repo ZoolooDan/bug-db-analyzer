@@ -55,8 +55,8 @@ namespace BugDB.Aggregator
     private const string ReopenStatus = "reopen";
     private const string ModelingStatus = "modelling";
     private const string RegressionStatus = "regression";
-    private const string VerifiedStatus = "test_cases";
-    private const string TestCasesStatus = "verified";
+    private const string VerifiedStatus = "verified";
+    private const string TestCasesStatus = "test_cases";
     private const string ClosedStatus = "closed";
     private const string DeletedStatus = "deleted";
 
