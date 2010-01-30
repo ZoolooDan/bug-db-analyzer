@@ -91,11 +91,11 @@ namespace BugDBReporterTests
     #endregion Test Setup
     
     /// <summary>
-    /// A test for GetTransitions
+    /// Test for allowed transitions.
     ///</summary>
     [TestMethod]
-    [DeploymentItem("BugDB.Reporter.dll")]
-    public void GetTransitionsTest()
+//    [DeploymentItem("BugDB.Reporter.dll")]
+    public void AllowedTransitionsTest()
     {
       RevisionTransitionFilter filter = new RevisionTransitionFilter();
       Bug[] bugs = m_provider.GetBugs();
@@ -107,10 +107,10 @@ namespace BugDBReporterTests
                              new RevisionStatusTransition
                              {
                                Name = "Added",
-                               PreviousGroup = new RevisionStatusGroup { Name = "NotExists" },
+                               PreviousGroup = new RevisionStatusGroup { Name = "DontExist" },
                                PreviousRevision = null,
                                CurrentGroup = new RevisionStatusGroup { Name = "ForAnalysis" },
-                               CurrentRevision = new Revision { BugNumber = 1, Id = 4 }
+                               CurrentRevision = new Revision { BugNumber = 1, Id = 0 }
                              },
                              new RevisionStatusTransition
                              {
@@ -124,10 +124,58 @@ namespace BugDBReporterTests
       CollectionAssert.AreEqual(transitionsExp, transitions, new RevisionStatusTransitionComparer());
     }
 
+    /// <summary>
+    /// Test for forbidden transitions.
+    ///</summary>
+    [TestMethod]
+    public void ForbiddenTransitionsTest()
+    {
+      RevisionTransitionFilter filter = new RevisionTransitionFilter();
+      Bug[] bugs = m_provider.GetBugs();
+      Revision[] revisions = m_provider.GetBugRevisions(bugs[2].Number);
+
+      var transitions = new List<RevisionStatusTransition>(filter.GetTransitions(revisions));
+      var transitionsExp = new List<RevisionStatusTransition>
+                           {
+                             new RevisionStatusTransition
+                             {
+                               Name = "Added",
+                               PreviousGroup = new RevisionStatusGroup { Name = "DontExist" },
+                               PreviousRevision = null,
+                               CurrentGroup = new RevisionStatusGroup { Name = "ForAnalysis" },
+                               CurrentRevision = new Revision { BugNumber = 3, Id = 0 },
+                               IsForbidden = false
+                             },
+                             new RevisionStatusTransition
+                             {
+                               Name = "Removed",
+                               PreviousGroup = new RevisionStatusGroup { Name = "ForAnalysis" },
+                               PreviousRevision = new Revision { BugNumber = 3, Id = 0 },
+                               CurrentGroup = new RevisionStatusGroup { Name = "Finished" },
+                               CurrentRevision = new Revision { BugNumber = 3, Id = 1 },
+                               IsForbidden = true
+                             },
+                             new RevisionStatusTransition
+                             {
+                               Name = "Added",
+                               PreviousGroup = new RevisionStatusGroup { Name = "Finished" },
+                               PreviousRevision = new Revision { BugNumber = 3, Id = 1 },
+                               CurrentGroup = new RevisionStatusGroup { Name = "ForWork" },
+                               CurrentRevision = new Revision { BugNumber = 3, Id = 2 },
+                               IsForbidden = true
+                             }
+                           };
+      CollectionAssert.AreEqual(transitionsExp, transitions, new RevisionStatusTransitionComparer());
+    }
+
 
     /// <summary>
-    /// Compares RevisionStatusTransition by
+    /// Compares RevisionStatusTransition only for equality.
     /// </summary>
+    /// <remarks>
+    /// Returns 0 if equal and -1 if not equal. 
+    /// So don't use for sorting.
+    /// </remarks>
     public class RevisionStatusTransitionComparer : IComparer
     {
       #region Implementation of IComparer
@@ -178,7 +226,8 @@ namespace BugDBReporterTests
         }
 
         if( lhs.CurrentRevision.BugNumber != rhs.CurrentRevision.BugNumber || 
-          lhs.CurrentRevision.Id != rhs.CurrentRevision.Id )
+          lhs.CurrentRevision.Id != rhs.CurrentRevision.Id ||
+          lhs.IsForbidden != rhs.IsForbidden )
         {
           return -1;
         }
