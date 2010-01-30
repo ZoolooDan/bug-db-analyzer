@@ -84,7 +84,8 @@ namespace BugDB.Reporter.RevisionTransition
                               PreviousRevision = prevRevision,
                               CurrentRevision = curRevision,
                               PreviousGroup = prevGroup,
-                              CurrentGroup = curGroup
+                              CurrentGroup = curGroup,
+                              IsForbidden = false
                            };
 
         // Get first returned if any
@@ -103,27 +104,19 @@ namespace BugDB.Reporter.RevisionTransition
                                 PreviousRevision = prevRevision,
                                 CurrentRevision = curRevision,
                                 PreviousGroup = prevGroup,
-                                CurrentGroup = curGroup
+                                CurrentGroup = curGroup,
+                                IsForbidden = true
                              };
-          // If in forbidded - report
-          if( queryF.Any() )
-          {
-            Debug.Fail("Forbidden transition detected.");
-          }
-          //else
-          //{
-          //  // If neither - then find specific (None) transition
-          //  transition = (from t in m_reportConfig.AllowedTransitions
-          //                  where t.Passage.Length == 0
-          //                  select );
-          //}
 
-          // Just go to the next revision
-          continue;
+          // Get first returned if any
+          transition = queryF.Any() ? queryF.First() : null;
         }
 
         // Return found transition
-        yield return transition;
+        if( transition != null )
+        {
+          yield return transition;
+        }
 
         // Remember previous revision
         prevRevision = curRevision;

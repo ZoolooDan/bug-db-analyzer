@@ -64,12 +64,14 @@
     </Transition>
   </AllowedTransitions>
   <ForbiddenTransitions>
-    <Transition Name="Forbidden">
+    <Transition Name="Removed">
       <!-- (ForAnalysis, Postponed, ForWork)->(Finished) -->
       <Passage From="ForAnalysis" To="Finished" />
       <Passage From="Postponed" To="Finished" />
       <Passage From="ForWork" To="Finished" />
-      <!-- (Finished)->(ForAnalysis, Postponed, ForWork) -->
+    </Transition>
+    <Transition Name="Added">
+        <!-- (Finished)->(ForAnalysis, Postponed, ForWork) -->
       <Passage From="Finished" To="ForAnalysis" />
       <Passage From="Finished" To="Postponed" />
       <Passage From="Finished" To="ForWork" />
