@@ -21,5 +21,13 @@ namespace BugDB.Reporter.RevisionTransition
     /// Statuses which form the group.
     /// </summary>
     public BugStatus[] Statuses { get; set; }
+
+    /// <summary>
+    /// Prints debugging string.
+    /// </summary>
+    public override string ToString()
+    {
+      return this.Name;
+    }
   }
 }
