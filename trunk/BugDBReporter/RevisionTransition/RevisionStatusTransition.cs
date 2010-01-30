@@ -1,4 +1,7 @@
-﻿using BugDB.DataAccessLayer.DataTransferObjects;
+﻿using System;
+using System.Text;
+
+using BugDB.DataAccessLayer.DataTransferObjects;
 
 
 namespace BugDB.Reporter.RevisionTransition
@@ -40,5 +43,43 @@ namespace BugDB.Reporter.RevisionTransition
     /// Group to which belongs status of current revision.
     /// </summary>
     public RevisionStatusGroup CurrentGroup { get; set; }
+
+    /// <summary>
+    /// Returns true if transition is forbidded.
+    /// </summary>
+    public bool IsForbidden { get; set; }
+
+    /// <summary>
+    /// Prints debugging string.
+    /// </summary>
+    public override string ToString()
+    {
+      StringBuilder builder = new StringBuilder();
+
+      builder.AppendFormat("{0}: ", this.Name);
+      if( this.PreviousRevision != null )
+      {
+        builder.AppendFormat("{{{0},{1},{2}}}", this.PreviousRevision.BugNumber, this.PreviousRevision.Id,
+          this.PreviousGroup);
+      }
+      else
+      {
+        builder.AppendFormat("{{{0}}}", 
+          this.PreviousGroup != null ? this.PreviousGroup.ToString() : "None");
+      }
+      builder.Append("->");
+      if( this.CurrentRevision != null )
+      {
+        builder.AppendFormat("{{{0},{1},{2}}}", this.CurrentRevision.BugNumber, this.CurrentRevision.Id,
+          this.CurrentGroup);
+      }
+      else
+      {
+        builder.AppendFormat("{{{0}}}", 
+          this.CurrentGroup != null ? this.CurrentGroup.ToString() : "None");
+      }
+
+      return builder.ToString();
+    }
   }
 }

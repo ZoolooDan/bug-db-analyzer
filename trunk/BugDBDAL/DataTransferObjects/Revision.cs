@@ -112,7 +112,19 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
     /// <summary>
     /// Short description of the bug.
     /// </summary>
-    public string Summary { get; set; }  
+    public string Summary { get; set; }
+
+    /// <summary>
+    /// Prints debugging information.
+    /// </summary>
+    public override string ToString()
+    {
+      string str = String.Format("{{{0},{1}}}-{2},{3},{4}", this.BugNumber, this.Id,
+        this.Type.HasValue ? this.Type.ToString() : "None", 
+        this.Status.HasValue ? this.Status.ToString() : "None",
+        this.Date);
+      return str;
+    }
   }
 }
 
