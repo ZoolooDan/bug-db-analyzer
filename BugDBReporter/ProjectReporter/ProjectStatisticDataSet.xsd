@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ProjectStatisticDataSet" targetNamespace="http://tempuri.org/ProjectStatisticDataSet.xsd" xmlns:mstns="http://tempuri.org/ProjectStatisticDataSet.xsd" xmlns="http://tempuri.org/ProjectStatisticDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ProjectStatisticDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="ProjectStatisticDataSet" msprop:Generator_DataSetName="ProjectStatisticDataSet" msprop:EnableTableAdapterManager="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Periods" msprop:Generator_UserTableName="Periods" msprop:Generator_RowDeletedName="PeriodsRowDeleted" msprop:Generator_RowChangedName="PeriodsRowChanged" msprop:Generator_RowClassName="PeriodsRow" msprop:Generator_RowChangingName="PeriodsRowChanging" msprop:Generator_RowEvArgName="PeriodsRowChangeEvent" msprop:Generator_RowEvHandlerName="PeriodsRowChangeEventHandler" msprop:Generator_TableClassName="PeriodsDataTable" msprop:Generator_TableVarName="tablePeriods" msprop:Generator_RowDeletingName="PeriodsRowDeleting" msprop:Generator_TablePropName="Periods">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Added" msprop:Generator_UserColumnName="Added" msprop:Generator_ColumnVarNameInTable="columnAdded" msprop:Generator_ColumnPropNameInRow="Added" msprop:Generator_ColumnPropNameInTable="AddedColumn" type="xs:int" />
+              <xs:element name="Postponed" msprop:Generator_UserColumnName="Postponed" msprop:Generator_ColumnVarNameInTable="columnPostponed" msprop:Generator_ColumnPropNameInRow="Postponed" msprop:Generator_ColumnPropNameInTable="PostponedColumn" type="xs:int" />
+              <xs:element name="Reactivated" msprop:Generator_UserColumnName="Reactivated" msprop:Generator_ColumnVarNameInTable="columnReactivated" msprop:Generator_ColumnPropNameInRow="Reactivated" msprop:Generator_ColumnPropNameInTable="ReactivatedColumn" type="xs:int" />
+              <xs:element name="Removed" msprop:Generator_UserColumnName="Removed" msprop:Generator_ColumnVarNameInTable="columnRemoved" msprop:Generator_ColumnPropNameInRow="Removed" msprop:Generator_ColumnPropNameInTable="RemovedColumn" type="xs:int" />
+              <xs:element name="Balance1" msdata:ReadOnly="true" msdata:Expression="(Added + Reactivated) - (Postponed + Removed)" msdata:Caption="Development Balance" msprop:Generator_UserColumnName="Balance1" msprop:Generator_ColumnVarNameInTable="columnBalance1" msprop:Generator_ColumnPropNameInRow="Balance1" msprop:Generator_ColumnPropNameInTable="Balance1Column" type="xs:int" />
+              <xs:element name="Balance2" msdata:ReadOnly="true" msdata:Expression="Added - Removed" msdata:Caption="Clear Balance" msprop:Generator_UserColumnName="Balance2" msprop:Generator_ColumnVarNameInTable="columnBalance2" msprop:Generator_ColumnPropNameInRow="Balance2" msprop:Generator_ColumnPropNameInTable="Balance2Column" type="xs:int" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
