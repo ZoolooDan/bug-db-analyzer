@@ -47,6 +47,16 @@
   <ItemGroup>
     <Compile Include="BalanceReporter.cs" />
     <Compile Include="Configuration\ReporterConfig.cs" />
+    <Compile Include="DeveloperStatisticsReporter.cs" />
+    <Compile Include="IReporter.cs" />
+    <Compile Include="ProjectReporter\ProjectStatisticDataSet.cs">
+      <DependentUpon>ProjectStatisticDataSet.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ProjectReporter\ProjectStatisticDataSet.Designer.cs">
+      <DependentUpon>ProjectStatisticDataSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectReporter\ProjectStatisticsReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RevisionTransition\RevisionStatusGroup.cs" />
     <Compile Include="RevisionTransition\RevisionTransitionFilter.cs" />
@@ -63,6 +73,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\ReporterConfig.xsd" />
+    <None Include="ProjectReporter\ProjectStatisticDataSet.xsc">
+      <DependentUpon>ProjectStatisticDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="ProjectReporter\ProjectStatisticDataSet.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ProjectReporter\ProjectStatisticDataSet.xss">
+      <DependentUpon>ProjectStatisticDataSet.xsd</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
