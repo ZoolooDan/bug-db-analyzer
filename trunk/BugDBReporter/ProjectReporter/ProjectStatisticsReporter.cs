@@ -52,6 +52,7 @@ namespace BugDB.Reporter
     /// accounted.
     /// 
     /// There are following columns in the table:
+    /// +) Interval - interval index
     /// +) FromDate - period start date
     /// +) ToDate - period end date
     /// +) Added - number of Add transition during period
@@ -65,10 +66,10 @@ namespace BugDB.Reporter
     /// 
     /// --------------------------------------------------
     /// Bugfixing statistics table contains information on
-    /// Total, Average per period and Average per day statistics.
+    /// Sum, Average per period and Average per day statistics.
     /// 
     /// There are following columns in the table:
-    /// +) Aggregate - name of aggregate
+    /// +) Aggregate - name of aggregate (Sum, Avg, AvgDay)
     /// +) Added - value of aggregate for Added through all periods
     /// +) Postponed - -//- for Postponed
     /// +) Reactivated - -//- 
@@ -124,19 +125,24 @@ namespace BugDB.Reporter
         // Fill gaps between nonempty periods with zero rows
         if (prevInterval != -1 && group.Key.Interval > (prevInterval + 1))
         {
-          for (int i = prevInterval + 1; i < group.Key.Interval; i++)
+          for (int interval = prevInterval + 1; interval < group.Key.Interval; interval++)
           {
-            dataSet.Periods.AddPeriodsRow(0, 0, 0, 0);
+            DateTime fromDate, toDate;
+            GetIntervalDates(m_period, interval, out fromDate, out toDate);
+            dataSet.Periods.AddPeriodsRow(interval, fromDate, toDate, 
+              0, 0, 0, 0);
           }
         }
         // Add row for current group
-        dataSet.Periods.AddPeriodsRow(added, postponed, reactivated, removed);
+        dataSet.Periods.AddPeriodsRow(group.Key.Interval, 
+          group.Key.IntervalStart, group.Key.IntervalEnd,
+          added, postponed, reactivated, removed);
 
         // Remember current interval
         prevInterval = group.Key.Interval;
       }
 
-      return null;
+      return dataSet;
     }
     #endregion
 

@@ -91,19 +91,29 @@ namespace BugDBReporterTests
     ///A test for CreateReport
     ///</summary>
     [TestMethod]
+    [DeploymentItem(@"ReferenceData\projectReporterDataRef.xml", "ReferenceData")]
     public void CreateReportTest()
     {
-      Revision[] revisions = null; // TODO: Initialize to an appropriate value
-      var period = new GroupPeriod(); // TODO: Initialize to an appropriate value
-      var fromDate = new DateTime(); // TODO: Initialize to an appropriate value
-      var toDate = new DateTime(); // TODO: Initialize to an appropriate value
-      var target = new ProjectStatisticsReporter(revisions, period, fromDate, toDate);
-        // TODO: Initialize to an appropriate value
-      DataSet expected = null; // TODO: Initialize to an appropriate value
-      DataSet actual;
-      actual = target.CreateReport();
-      Assert.AreEqual(expected, actual);
-      Assert.Inconclusive("Verify the correctness of this test method.");
+      Bug[] bugs = m_provider.GetBugs();
+      Revision[] revisions = m_provider.GetBugRevisions(bugs[0].Number);
+
+      var period = GroupPeriod.ByWeek;
+      var fromDate = DateTime.MinValue;
+      var toDate = DateTime.MaxValue;
+      var reporter = new ProjectStatisticsReporter(revisions, period, fromDate, toDate);
+
+      // Create report
+      DataSet actual = reporter.CreateReport();
+      // Write it for reference
+      actual.WriteXml(@"d:\Work\MyProjects\BugDBAnalyzer4\BugDBReporterTests\ReferenceData\projectReporterDataRef_.xml");
+
+      // Load reference dataset from XML file
+      DataSet expected = new ProjectStatisticDataSet();
+      string refDataPath = Path.Combine(this.TestContext.TestDeploymentDir,
+                                        @"ReferenceData\projectReporterDataRef.xml");
+      expected.ReadXml(refDataPath);
+
+      Assert.AreEqual(expected.GetXml(), actual.GetXml());
     }
   }
 }

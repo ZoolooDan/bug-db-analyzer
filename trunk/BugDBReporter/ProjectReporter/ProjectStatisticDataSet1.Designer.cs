@@ -261,6 +261,7 @@ namespace BugDB.Reporter {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         private void InitExpressions() {
             this.Periods.Balance1Column.Expression = "(Added + Reactivated) - (Postponed + Removed)";
+            this.Periods.Balance2Column.Expression = "Added - Removed";
         }
         
         public delegate void PeriodsRowChangeEventHandler(object sender, PeriodsRowChangeEvent e);
@@ -272,6 +273,12 @@ namespace BugDB.Reporter {
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class PeriodsDataTable : global::System.Data.TypedTableBase<PeriodsRow> {
+            
+            private global::System.Data.DataColumn columnInterval;
+            
+            private global::System.Data.DataColumn columnFromDate;
+            
+            private global::System.Data.DataColumn columnToDate;
             
             private global::System.Data.DataColumn columnAdded;
             
@@ -321,6 +328,27 @@ namespace BugDB.Reporter {
             protected PeriodsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn IntervalColumn {
+                get {
+                    return this.columnInterval;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn FromDateColumn {
+                get {
+                    return this.columnFromDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn ToDateColumn {
+                get {
+                    return this.columnToDate;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -394,9 +422,12 @@ namespace BugDB.Reporter {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public PeriodsRow AddPeriodsRow(int Added, int Postponed, int Reactivated, int Removed, int Balance1, int Balance2) {
+            public PeriodsRow AddPeriodsRow(int Interval, System.DateTime FromDate, System.DateTime ToDate, int Added, int Postponed, int Reactivated, int Removed, int Balance1, int Balance2) {
                 PeriodsRow rowPeriodsRow = ((PeriodsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
+                        Interval,
+                        FromDate,
+                        ToDate,
                         Added,
                         Postponed,
                         Reactivated,
@@ -409,9 +440,12 @@ namespace BugDB.Reporter {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public PeriodsRow AddPeriodsRow(int Added, int Postponed, int Reactivated, int Removed) {
+            public PeriodsRow AddPeriodsRow(int Interval, System.DateTime FromDate, System.DateTime ToDate, int Added, int Postponed, int Reactivated, int Removed) {
                 PeriodsRow rowPeriodsRow = ((PeriodsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
+                        Interval,
+                        FromDate,
+                        ToDate,
                         Added,
                         Postponed,
                         Reactivated,
@@ -437,6 +471,9 @@ namespace BugDB.Reporter {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             internal void InitVars() {
+                this.columnInterval = base.Columns["Interval"];
+                this.columnFromDate = base.Columns["FromDate"];
+                this.columnToDate = base.Columns["ToDate"];
                 this.columnAdded = base.Columns["Added"];
                 this.columnPostponed = base.Columns["Postponed"];
                 this.columnReactivated = base.Columns["Reactivated"];
@@ -447,6 +484,12 @@ namespace BugDB.Reporter {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             private void InitClass() {
+                this.columnInterval = new global::System.Data.DataColumn("Interval", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnInterval);
+                this.columnFromDate = new global::System.Data.DataColumn("FromDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFromDate);
+                this.columnToDate = new global::System.Data.DataColumn("ToDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnToDate);
                 this.columnAdded = new global::System.Data.DataColumn("Added", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnAdded);
                 this.columnPostponed = new global::System.Data.DataColumn("Postponed", typeof(int), null, global::System.Data.MappingType.Element);
@@ -459,14 +502,17 @@ namespace BugDB.Reporter {
                 base.Columns.Add(this.columnBalance1);
                 this.columnBalance2 = new global::System.Data.DataColumn("Balance2", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnBalance2);
+                this.columnInterval.AllowDBNull = false;
+                this.columnFromDate.AllowDBNull = false;
+                this.columnToDate.AllowDBNull = false;
                 this.columnAdded.AllowDBNull = false;
                 this.columnPostponed.AllowDBNull = false;
                 this.columnReactivated.AllowDBNull = false;
                 this.columnRemoved.AllowDBNull = false;
-                this.columnBalance1.AllowDBNull = false;
                 this.columnBalance1.ReadOnly = true;
                 this.columnBalance1.Caption = "Development Balance";
-                this.columnBalance2.AllowDBNull = false;
+                this.columnBalance2.ReadOnly = true;
+                this.columnBalance2.Caption = "Clear Balance";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -487,6 +533,7 @@ namespace BugDB.Reporter {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             private void InitExpressions() {
                 this.Balance1Column.Expression = "(Added + Reactivated) - (Postponed + Removed)";
+                this.Balance2Column.Expression = "Added - Removed";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -604,6 +651,36 @@ namespace BugDB.Reporter {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public int Interval {
+                get {
+                    return ((int)(this[this.tablePeriods.IntervalColumn]));
+                }
+                set {
+                    this[this.tablePeriods.IntervalColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public System.DateTime FromDate {
+                get {
+                    return ((global::System.DateTime)(this[this.tablePeriods.FromDateColumn]));
+                }
+                set {
+                    this[this.tablePeriods.FromDateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public System.DateTime ToDate {
+                get {
+                    return ((global::System.DateTime)(this[this.tablePeriods.ToDateColumn]));
+                }
+                set {
+                    this[this.tablePeriods.ToDateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public int Added {
                 get {
                     return ((int)(this[this.tablePeriods.AddedColumn]));
@@ -646,7 +723,12 @@ namespace BugDB.Reporter {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public int Balance1 {
                 get {
-                    return ((int)(this[this.tablePeriods.Balance1Column]));
+                    try {
+                        return ((int)(this[this.tablePeriods.Balance1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Balance1\' in table \'Periods\' is DBNull.", e);
+                    }
                 }
                 set {
                     this[this.tablePeriods.Balance1Column] = value;
@@ -656,11 +738,36 @@ namespace BugDB.Reporter {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public int Balance2 {
                 get {
-                    return ((int)(this[this.tablePeriods.Balance2Column]));
+                    try {
+                        return ((int)(this[this.tablePeriods.Balance2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Balance2\' in table \'Periods\' is DBNull.", e);
+                    }
                 }
                 set {
                     this[this.tablePeriods.Balance2Column] = value;
                 }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsBalance1Null() {
+                return this.IsNull(this.tablePeriods.Balance1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetBalance1Null() {
+                this[this.tablePeriods.Balance1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsBalance2Null() {
+                return this.IsNull(this.tablePeriods.Balance2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetBalance2Null() {
+                this[this.tablePeriods.Balance2Column] = global::System.Convert.DBNull;
             }
         }
         
