@@ -76,6 +76,9 @@
     <Content Include="ReferenceData\projectReporterData.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="ReferenceData\projectReporterDataRef.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\DatabaseScripts\BugDB3.sql">

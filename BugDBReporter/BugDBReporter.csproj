@@ -53,8 +53,10 @@
       <DependentUpon>ProjectStatisticDataSet.xsd</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ProjectReporter\ProjectStatisticDataSet.Designer.cs">
-      <DependentUpon>ProjectStatisticDataSet.cs</DependentUpon>
+    <Compile Include="ProjectReporter\ProjectStatisticDataSet1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProjectStatisticDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="ProjectReporter\ProjectStatisticsReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,6 +80,9 @@
     </None>
     <None Include="ProjectReporter\ProjectStatisticDataSet.xsd">
       <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ProjectStatisticDataSet1.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>BugDB.Reporter</CustomToolNamespace>
     </None>
     <None Include="ProjectReporter\ProjectStatisticDataSet.xss">
       <DependentUpon>ProjectStatisticDataSet.xsd</DependentUpon>
