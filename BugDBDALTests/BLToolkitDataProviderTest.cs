@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+
+using BugDB.Aggregator;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -19,10 +22,10 @@ namespace BugDB.DAL.Tests
   public class BLToolkitDataProviderTest
   {
     #region Private Fields
-    private const string SqlCmdArgsTemplate = @"-S .\SQLEXPRESS -b -r -Q ""{0}""";
-    private const string SqlCmdExe = @"c:\Program Files\Microsoft SQL Server\90\Tools\Binn\SQLCMD.EXE";
-    private const string RestoreQueryTemplate = @"RESTORE DATABASE BugDB FROM DISK = N'{0}' WITH FILE = 1, NOUNLOAD, STATS = 10";
-    private const string DbBackUpFileName = @"ReferenceData\BugDB_Clean.bak";
+    //private const string SqlCmdArgsTemplate = @"-S .\SQLEXPRESS -b -r -Q ""{0}""";
+    //private const string SqlCmdExe = @"c:\Program Files\Microsoft SQL Server\90\Tools\Binn\SQLCMD.EXE";
+    //private const string RestoreQueryTemplate = @"RESTORE DATABASE BugDB FROM DISK = N'{0}' WITH FILE = 1, NOUNLOAD, STATS = 10";
+    //private const string DbBackUpFileName = @"ReferenceData\BugDB_Clean.bak";
     private const string DbCreateScript = @"DatabaseScripts\BugDB3.sql";
 
     /// <summary>
@@ -87,20 +90,20 @@ namespace BugDB.DAL.Tests
     /// <summary>
     /// Restore database from specified file.
     /// </summary>
-    public static void RestoreDatabase(string backupFileName)
-    {
-      // Query to be executed
-      string restoreQuery = String.Format(RestoreQueryTemplate, backupFileName);
+    //public static void RestoreDatabase(string backupFileName)
+    //{
+    //  // Query to be executed
+    //  string restoreQuery = String.Format(RestoreQueryTemplate, backupFileName);
 
-      // Arguments
-      string sqlCmdArgs = String.Format(SqlCmdArgsTemplate, restoreQuery);
+    //  // Arguments
+    //  string sqlCmdArgs = String.Format(SqlCmdArgsTemplate, restoreQuery);
 
-      // Execute program
-      ExecuteProcess(SqlCmdExe, sqlCmdArgs);
-    }
+    //  // Execute program
+    //  ExecuteProcess(SqlCmdExe, sqlCmdArgs);
+    //}
 
     /// <summary>
-    /// A test for GetBugs().
+    /// A test for GetAllBugs().
     /// </summary>
     [TestMethod]
     [DeploymentItem(@"ReferenceData\BugDB_Clean.bak")]
@@ -109,7 +112,7 @@ namespace BugDB.DAL.Tests
       //BLToolkitDataProvider target = new BLToolkitDataProvider(); // TODO: Initialize to an appropriate value
       //Bug[] expected = null; // TODO: Initialize to an appropriate value
       //Bug[] actual;
-      //actual = target.GetBugs();
+      //actual = target.GetAllBugs();
       //Assert.AreEqual(expected, actual);
       Assert.Inconclusive("Verify the correctness of this test method.");
     }
@@ -130,7 +133,7 @@ namespace BugDB.DAL.Tests
     }
 
     /// <summary>
-    /// A test for GetApplications()
+    /// A test for GetAllApplications()
     /// </summary>
     [TestMethod()]
     public void GetApplicationsTest()
@@ -140,7 +143,7 @@ namespace BugDB.DAL.Tests
       // Create application
       CreateApplicatonTest();
 
-      Application[] actual = m_provider.GetApplications();
+      Application[] actual = m_provider.GetAllApplications();
       Assert.IsNotNull(actual);
       Assert.AreEqual(1, actual.Length);
       Assert.IsNotNull(actual[0]);
@@ -188,6 +191,36 @@ namespace BugDB.DAL.Tests
       Assert.Inconclusive("TODO: Implement code to verify target");
     }
 
+    /// <summary>
+    /// Test for GetRevisions().
+    /// </summary>
+    [TestMethod()]
+    [DeploymentItem(@"ReferenceData\getRevisionsData.txt", "ReferenceData")]
+    public void GetRevisionsTest()
+    {
+      // Fill storage with data
+      string dbDataPath = Path.Combine(
+        this.TestContext.TestDeploymentDir,
+        @"ReferenceData\getRevisionsData.txt");
+      StorageAggregator aggregator = new StorageAggregator(m_provider);
+      aggregator.FillStorage(dbDataPath);
+
+      QueryParams prms = new QueryParams()
+                         {
+                           Apps = new []
+                                  {
+                                    (from a in m_provider.GetAllApplications()
+                                     where a.Title == "App1"
+                                     select a.Id).First()
+                                  }
+                         };
+      // Get all revisions for bugs where application of 
+      // the most recent revision is "App1"
+      Revision[] actual = m_provider.GetRevisions(prms);
+
+      Assert.AreEqual(6, actual.Length);
+    }
+
     #region Helper Methods
     /// <summary>
     /// Executes specified program with specified arguments.
@@ -223,6 +256,7 @@ namespace BugDB.DAL.Tests
       }
     }
     #endregion Helper Methods
+
   }
 }
 

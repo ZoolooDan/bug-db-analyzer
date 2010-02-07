@@ -44,7 +44,7 @@ namespace BugDB.Analyzer.GUI
       FillDatabase();
 
       // Request applications
-      Application[] apps = m_provider.GetApplications();
+      Application[] apps = m_provider.GetAllApplications();
       // Assign them to list data source
       appsListBox.ItemsSource = apps;
       appsListBox.DisplayMemberPath = "Title";

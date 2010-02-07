@@ -177,7 +177,7 @@ namespace BugDB.Aggregator
         DateTime date = ProcessDate(record);
 
         // Process record type (could be null)
-        BugType? type = ProcessType(record);
+        BugType type = ProcessType(record);
 
         // Process status
         BugStatus? status = ProcessStatus(record);
@@ -267,14 +267,15 @@ namespace BugDB.Aggregator
     /// </summary>
     /// <remarks>
     /// It seems type can be null for old bugs.
+    /// So in that case it is handled as Unspecified.
     /// </remarks>
-    private static BugType? ProcessType(Record record)
+    private static BugType ProcessType(Record record)
     {
       BugType type = BugType.Bug;
       string typeStr = record[TypeCol];
       bool found = typeStr != null ? s_typeMappings.TryGetValue(typeStr, out type) : false;
     
-      return found ? new BugType?(type) : null;
+      return found ? type : BugType.Unspecified;
     }
 
     /// <summary>
@@ -479,15 +480,27 @@ namespace BugDB.Aggregator
     /// Create revision based on provided information.
     /// </summary>
     private void ProcessRevision(int number, int revision, DateTime date,
-      BugType? type, BugStatus? status, string summary,
+      BugType type, BugStatus? status, string summary,
       BugSeverity? severity, int? priority, Application app,
       Module module, SubModule subModule, Release foundRelease, Release targetRelease,
       Person contributor, Person leader, Person developer, Person tester)
     {
+      // Check prerequisites
+      if( app == null )
+      {
+        throw new Exception(
+          String.Format("Application isn't specified for bug={0}, revision={1}", number, revision));
+      }
+      if( contributor == null )
+      {
+        throw new Exception(
+          String.Format("Contributor isn't specified for bug={0}, revision={1}", number, revision));
+      }
+
       Revision rev = new Revision
                      {
                        BugNumber = number,
-                       Id = revision,
+                       Rev = revision,
                        Date = date,
                        Type = type,
                        Status = status,

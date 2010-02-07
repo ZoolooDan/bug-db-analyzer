@@ -23,6 +23,16 @@ namespace BugDB.DataAccessLayer
     void InitializeStorage();
 
     /// <summary>
+    /// Clean already initialized storage.
+    /// </summary>
+    /// <remarks>
+    /// Storage shall be already created.
+    /// It is just cleaned up, e.g. everything is
+    /// deleted from all tables.
+    /// </remarks>
+    void CleanStorage();
+
+    /// <summary>
     /// Creates new application.
     /// </summary>
     DTO.Application CreateApplicaton(DTO.Application app);
@@ -30,7 +40,7 @@ namespace BugDB.DataAccessLayer
     /// <summary>
     /// Returns all applications.
     /// </summary>
-    DTO.Application[] GetApplications();
+    DTO.Application[] GetAllApplications();
 
     /// <summary>
     /// Returns application by ID.
@@ -45,12 +55,26 @@ namespace BugDB.DataAccessLayer
     /// <summary>
     /// Returns all bugs.
     /// </summary>
-    DTO.Bug[] GetBugs();
+    DTO.Bug[] GetAllBugs();
 
     /// <summary>
     /// Returns all revisions of the specified bug.
     /// </summary>
     DTO.Revision[] GetBugRevisions(int bugNumber);
+
+    /// <summary>
+    /// Returns revisions satisfying query parameters.
+    /// </summary>
+    /// <remarks>
+    /// Most recent or all revisions of bug are searched
+    /// depending on <see cref="QueryParams.IncludeHistory"/>.
+    /// If at least one searched revision satisfy query
+    /// then all revisions of bug are returned.
+    /// 
+    /// It is allowed to specify only part of parameters. 
+    /// In that case only they will be accouneted in query.
+    /// </remarks>
+    DTO.Revision[] GetRevisions(QueryParams prms);
 
     /// <summary>
     /// Creates new release.

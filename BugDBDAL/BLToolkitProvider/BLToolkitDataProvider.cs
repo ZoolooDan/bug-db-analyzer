@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Text;
+
 using BLToolkit.Data;
 
 using BugDB.DataAccessLayer.DataTransferObjects;
@@ -61,6 +64,19 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     }
 
     /// <summary>
+    /// Clean already initialized storage.
+    /// </summary>
+    /// <remarks>
+    /// Storage shall be already created.
+    /// It is just cleaned up, e.g. everything is
+    /// deleted from all tables.
+    /// </remarks>
+    public void CleanStorage()
+    {
+      throw new NotImplementedException();
+    }
+
+    /// <summary>
     /// Creates new application.
     /// </summary>
     public DTO.Application CreateApplicaton(DTO.Application appDTO)
@@ -88,7 +104,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// <summary>
     /// Returns all applications.
     /// </summary>
-    public DTO.Application[] GetApplications()
+    public DTO.Application[] GetAllApplications()
     {
       List<EDM.Application> appEDMs;
       using (DbManager db = new DbManager())
@@ -137,7 +153,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// <summary>
     /// Returns all bugs.
     /// </summary>
-    public DTO.Bug[] GetBugs()
+    public DTO.Bug[] GetAllBugs()
     {
       List<EDM.Bug> bugEDMs;
       using (DbManager db = new DbManager())
@@ -174,6 +190,131 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
       revEDMs.ForEach(revEDM => revDTOs.Add(s_revisionCopier.Copy(revEDM)));
 
       return revDTOs.ToArray();
+    }
+
+    /// <summary>
+    /// Returns revisions satisfying query parameters.
+    /// </summary>
+    /// <remarks>
+    /// Most recent or all revisions of bug are searched
+    /// depending on <see cref="QueryParams.IncludeHistory"/>.
+    /// If at least one searched revision satisfy query
+    /// then all revisions of bug are returned.
+    /// 
+    /// It is allowed to specify only part of parameters. 
+    /// In that case only they will be accouneted in query.
+    /// 
+    /// All revisions are returned for bug because it is
+    /// analysis of status transition may be erronous overwise.
+    /// </remarks>
+    public Revision[] GetRevisions(QueryParams prms)
+    {
+      // -- In recent
+      // SELECT * FROM Revisions
+      // WHERE bug_number IN
+      //  (SELECT B.bug_number FROM Bugs AS B INNER JOIN Revisions AS R 
+      //     ON B.bug_number = R.bug_number AND 
+      //        B.recent_revision = R.revision
+      //   WHERE <condition>)
+      // ORDER BY bug_number, revision
+      //
+      // -- With history
+      // SELECT * FROM Revisions 
+      // WHERE bug_number IN 
+      //   (SELECT DISTINCT bug_number FROM Revisions AS R 
+      //    WHERE <condition>)
+      // ORDER BY bug_number, revision
+
+
+      List<EDM.Revision> revEDMs;
+      using (DbManager db = new DbManager())
+      {
+        var dbPrms = new List<IDbDataParameter>();
+
+        // Create subordinate query command depending on 
+        // whether to include history of revisions or 
+        // process only recent one
+        string subQueryBase = prms.IncludeHistory ?
+          @"SELECT DISTINCT bug_number FROM Revisions AS R" :
+          @"SELECT B.bug_number FROM Bugs AS B INNER JOIN Revisions AS R 
+              ON B.bug_number = R.bug_number AND 
+                 B.recent_revision = R.revision";
+
+        StringBuilder condition = new StringBuilder();
+        // Bug numbers
+        if( prms.BugNumberMin.HasValue )
+        {
+          AppendSimpleCondition(condition, "R.bug_number >= @BugNumberMin");
+          dbPrms.Add(db.InputParameter("@BugNumberMin", 
+            prms.BugNumberMin.Value));
+        }
+        if( prms.BugNumberMax.HasValue )
+        {
+          AppendSimpleCondition(condition, "R.bug_number <= @BugNumberMax");
+          dbPrms.Add(db.InputParameter("@BugNumberMax", 
+            prms.BugNumberMax.Value));
+        }
+
+        // Applications
+        if( prms.Apps != null && prms.Apps.Length != 0 )
+        {
+          AppendInCondition(condition, "R.app_id", prms.Apps);
+        }
+
+        // Final query
+        string query = String.Format(
+          @"SELECT * FROM Revisions WHERE bug_number IN ({0}{1}{2}) 
+            ORDER BY bug_number, revision", 
+          subQueryBase,
+          condition.Length != 0 ? " WHERE " : "",
+          condition);
+
+        // Execute
+        revEDMs = db.SetCommand(query, dbPrms.ToArray()).
+          ExecuteList<EDM.Revision>();
+      }
+
+      List<DTO.Revision> revDTOs = new List<DTO.Revision>(revEDMs.Count);
+      // Copy EDMs to DTOs
+      revEDMs.ForEach(revEDM => revDTOs.Add(s_revisionCopier.Copy(revEDM)));
+
+      return revDTOs.ToArray();
+    }
+
+    /// <summary>
+    /// Appends simple logical AND condition.
+    /// </summary>
+    private static void AppendSimpleCondition(StringBuilder builder, string condition)
+    {
+      // Add consequent condition with AND
+      if( builder.Length != 0 )
+      {
+        builder.Append(" AND ");
+      }
+      builder.Append(condition);
+    }
+
+    /// <summary>
+    /// Appends IN condition for ints.
+    /// </summary>
+    private static void AppendInCondition(StringBuilder builder, string field, int[] values)
+    {
+      // Add consequent condition with AND
+      if( builder.Length != 0 )
+      {
+        builder.Append(" AND ");
+      }
+      builder.Append(field);
+      builder.Append(" IN (");
+      for( int i = 0; i < values.Length; i++ )
+      {
+        if( i > 0 )
+        {
+          builder.Append(",");
+        }
+        builder.Append(values[i]);
+      }
+      builder.Append(")");
     }
 
     /// <summary>

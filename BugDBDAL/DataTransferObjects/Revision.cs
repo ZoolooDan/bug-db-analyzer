@@ -25,14 +25,14 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
     public int BugNumber { get; set; }
 
     /// <summary>
-    /// Bug revision ID.
+    /// Bug revision.
     /// </summary>
-    public int Id { get; set; }
+    public int Rev { get; set; }
 
     /// <summary>
     /// Type of the bug record.
     /// </summary>
-    public BugType? Type { get; set;  }
+    public BugType Type { get; set;  }
     
     /// <summary>
     /// Status of the revision.
@@ -119,10 +119,11 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
     /// </summary>
     public override string ToString()
     {
-      string str = String.Format("{{{0},{1}}}-{2},{3},{4}", this.BugNumber, this.Id,
-        this.Type.HasValue ? this.Type.ToString() : "None", 
+      string str = String.Format("{{{0},{1}}}-{2},{3},{4}", 
+        this.BugNumber, this.Rev,
+        this.Type, 
         this.Status.HasValue ? this.Status.ToString() : "None",
-        this.Date);
+        this.Date.ToShortDateString());
       return str;
     }
   }

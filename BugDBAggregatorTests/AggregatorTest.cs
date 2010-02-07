@@ -86,7 +86,7 @@ namespace BugDBAggregatorTests
       string path = Path.Combine(this.TestContext.TestDeploymentDir, RecordSourceFileName);
 
       // Check that storage is empty
-      Application[] apps = m_provider.GetApplications();
+      Application[] apps = m_provider.GetAllApplications();
       Assert.AreEqual(0, apps.Length);
 
       // Fill storage
@@ -94,7 +94,7 @@ namespace BugDBAggregatorTests
       aggregator.FillStorage(path);
 
       // Check applications
-      apps = m_provider.GetApplications();
+      apps = m_provider.GetAllApplications();
       Assert.AreNotEqual(0, apps.Length);
 
       Application tmmApp = Array.Find(apps, app => app.Title == "VPI TMM/CM");
@@ -154,7 +154,7 @@ namespace BugDBAggregatorTests
 
 
       // Bugs
-      Bug[] bugs = m_provider.GetBugs();
+      Bug[] bugs = m_provider.GetAllBugs();
       Assert.IsNotNull(bugs);
       Assert.AreNotEqual(0, bugs.Length);
 

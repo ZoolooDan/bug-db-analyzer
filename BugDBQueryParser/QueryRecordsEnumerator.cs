@@ -116,7 +116,7 @@ namespace BugDB.QueryParser
             if (length < info.Position + info.Width)
             {
               throw new Exception(
-                String.Format("No record data in block for column '{0}'", info.Title));
+                String.Format("Not enough data in block for column '{0}'", info.Title));
             }
             // Extract value
             string value = recordBlock.Substring(info.Position, info.Width).Trim();
