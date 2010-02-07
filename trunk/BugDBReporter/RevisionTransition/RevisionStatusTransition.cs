@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 using BugDB.DataAccessLayer.DataTransferObjects;
 
@@ -59,24 +58,29 @@ namespace BugDB.Reporter.RevisionTransition
       builder.AppendFormat("{0}: ", this.Name);
       if( this.PreviousRevision != null )
       {
-        builder.AppendFormat("{{{0},{1},{2}}}", this.PreviousRevision.BugNumber, this.PreviousRevision.Id,
+        builder.AppendFormat("{{{0},{1},{2}}}", 
+          this.PreviousRevision.BugNumber, 
+          this.PreviousRevision.Rev,
           this.PreviousGroup);
       }
       else
       {
         builder.AppendFormat("{{{0}}}", 
-          this.PreviousGroup != null ? this.PreviousGroup.ToString() : "None");
+          this.PreviousGroup != null ? 
+          this.PreviousGroup.ToString() : "None");
       }
       builder.Append("->");
       if( this.CurrentRevision != null )
       {
-        builder.AppendFormat("{{{0},{1},{2}}}", this.CurrentRevision.BugNumber, this.CurrentRevision.Id,
+        builder.AppendFormat("{{{0},{1},{2}}}", 
+          this.CurrentRevision.BugNumber, this.CurrentRevision.Rev,
           this.CurrentGroup);
       }
       else
       {
         builder.AppendFormat("{{{0}}}", 
-          this.CurrentGroup != null ? this.CurrentGroup.ToString() : "None");
+          this.CurrentGroup != null ? 
+          this.CurrentGroup.ToString() : "None");
       }
 
       return builder.ToString();

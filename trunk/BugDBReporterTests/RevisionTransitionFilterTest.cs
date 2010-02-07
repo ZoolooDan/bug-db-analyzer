@@ -98,7 +98,7 @@ namespace BugDBReporterTests
     public void AllowedTransitionsTest()
     {
       RevisionTransitionFilter filter = new RevisionTransitionFilter();
-      Bug[] bugs = m_provider.GetBugs();
+      Bug[] bugs = m_provider.GetAllBugs();
       Revision[] revisions = m_provider.GetBugRevisions(bugs[0].Number);
 
       var transitions = new List<RevisionStatusTransition>(filter.GetTransitions(revisions));
@@ -110,15 +110,15 @@ namespace BugDBReporterTests
                                PreviousGroup = new RevisionStatusGroup { Name = "DontExist" },
                                PreviousRevision = null,
                                CurrentGroup = new RevisionStatusGroup { Name = "ForAnalysis" },
-                               CurrentRevision = new Revision { BugNumber = 1, Id = 0 }
+                               CurrentRevision = new Revision { BugNumber = 1, Rev = 0 }
                              },
                              new RevisionStatusTransition
                              {
                                Name = "Removed",
                                PreviousGroup = new RevisionStatusGroup { Name = "ForWork" },
-                               PreviousRevision = new Revision { BugNumber = 1, Id = 3 },
+                               PreviousRevision = new Revision { BugNumber = 1, Rev = 3 },
                                CurrentGroup = new RevisionStatusGroup { Name = "ForTesting" },
-                               CurrentRevision = new Revision { BugNumber = 1, Id = 4 }
+                               CurrentRevision = new Revision { BugNumber = 1, Rev = 4 }
                              }
                            };
       CollectionAssert.AreEqual(transitionsExp, transitions, new RevisionStatusTransitionComparer());
@@ -131,7 +131,7 @@ namespace BugDBReporterTests
     public void ForbiddenTransitionsTest()
     {
       RevisionTransitionFilter filter = new RevisionTransitionFilter();
-      Bug[] bugs = m_provider.GetBugs();
+      Bug[] bugs = m_provider.GetAllBugs();
       Revision[] revisions = m_provider.GetBugRevisions(bugs[2].Number);
 
       var transitions = new List<RevisionStatusTransition>(filter.GetTransitions(revisions));
@@ -143,25 +143,25 @@ namespace BugDBReporterTests
                                PreviousGroup = new RevisionStatusGroup { Name = "DontExist" },
                                PreviousRevision = null,
                                CurrentGroup = new RevisionStatusGroup { Name = "ForAnalysis" },
-                               CurrentRevision = new Revision { BugNumber = 3, Id = 0 },
+                               CurrentRevision = new Revision { BugNumber = 3, Rev = 0 },
                                IsForbidden = false
                              },
                              new RevisionStatusTransition
                              {
                                Name = "Removed",
                                PreviousGroup = new RevisionStatusGroup { Name = "ForAnalysis" },
-                               PreviousRevision = new Revision { BugNumber = 3, Id = 0 },
+                               PreviousRevision = new Revision { BugNumber = 3, Rev = 0 },
                                CurrentGroup = new RevisionStatusGroup { Name = "Finished" },
-                               CurrentRevision = new Revision { BugNumber = 3, Id = 1 },
+                               CurrentRevision = new Revision { BugNumber = 3, Rev = 1 },
                                IsForbidden = true
                              },
                              new RevisionStatusTransition
                              {
                                Name = "Added",
                                PreviousGroup = new RevisionStatusGroup { Name = "Finished" },
-                               PreviousRevision = new Revision { BugNumber = 3, Id = 1 },
+                               PreviousRevision = new Revision { BugNumber = 3, Rev = 1 },
                                CurrentGroup = new RevisionStatusGroup { Name = "ForWork" },
-                               CurrentRevision = new Revision { BugNumber = 3, Id = 2 },
+                               CurrentRevision = new Revision { BugNumber = 3, Rev = 2 },
                                IsForbidden = true
                              }
                            };
@@ -214,7 +214,7 @@ namespace BugDBReporterTests
         if( lhs.PreviousRevision != null && rhs.PreviousRevision != null )
         {
           if( lhs.PreviousRevision.BugNumber != rhs.PreviousRevision.BugNumber || 
-            lhs.PreviousRevision.Id != rhs.PreviousRevision.Id )
+            lhs.PreviousRevision.Rev != rhs.PreviousRevision.Rev )
           {
             return -1;
           }
@@ -226,7 +226,7 @@ namespace BugDBReporterTests
         }
 
         if( lhs.CurrentRevision.BugNumber != rhs.CurrentRevision.BugNumber || 
-          lhs.CurrentRevision.Id != rhs.CurrentRevision.Id ||
+          lhs.CurrentRevision.Rev != rhs.CurrentRevision.Rev ||
           lhs.IsForbidden != rhs.IsForbidden )
         {
           return -1;

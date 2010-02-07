@@ -94,7 +94,7 @@ namespace BugDBReporterTests
     [DeploymentItem(@"ReferenceData\projectReporterDataRef.xml", "ReferenceData")]
     public void CreateReportTest()
     {
-      Bug[] bugs = m_provider.GetBugs();
+      Bug[] bugs = m_provider.GetAllBugs();
       Revision[] revisions = m_provider.GetBugRevisions(bugs[0].Number);
 
       var period = GroupPeriod.ByWeek;

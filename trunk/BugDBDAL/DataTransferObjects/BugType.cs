@@ -6,6 +6,10 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
   public enum BugType
   {
     /// <summary>
+    /// Unspecified type.
+    /// </summary>
+    Unspecified,
+    /// <summary>
     /// Defect in software.
     /// </summary>
     Bug,

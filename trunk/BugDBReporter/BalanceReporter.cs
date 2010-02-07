@@ -132,7 +132,7 @@ namespace BugDB.Reporter
       List<Group> groups = new List<Group>();
 
       // Get bugs for specified filter
-      Bug[] bugs = m_provider.GetBugs();
+      Bug[] bugs = m_provider.GetAllBugs();
 
       // Process all bugs
       foreach( Bug bug in bugs )

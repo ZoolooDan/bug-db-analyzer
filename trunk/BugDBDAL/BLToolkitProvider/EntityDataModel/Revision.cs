@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using BLToolkit.Mapping;
-
-using BugDB.DataAccessLayer.DataTransferObjects;
 
 
 namespace BugDB.DataAccessLayer.BLToolkitProvider.EntityDataModel
@@ -25,13 +20,13 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider.EntityDataModel
     /// Bug revision number.
     /// </summary>
     [MapField("revision")]
-    public int Id { get; set; }
+    public int Rev { get; set; }
 
     /// <summary>
     /// Type of the bug record.
     /// </summary>
     [MapField("bug_type")]
-    public BugType? Type { get; set; }
+    public BugType Type { get; set; }
     
     /// <summary>
     /// Status of the revision.

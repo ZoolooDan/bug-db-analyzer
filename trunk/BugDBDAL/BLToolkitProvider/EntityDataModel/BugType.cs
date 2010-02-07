@@ -9,14 +9,19 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider.EntityDataModel
   public enum BugType
   {
     /// <summary>
-    /// Defect in software.
+    /// Type is unspecified.
     /// </summary>
     [MapValue(1)]
+    Unspecified,
+    /// <summary>
+    /// Defect in software.
+    /// </summary>
+    [MapValue(2)]
     Bug,
     /// <summary>
     /// New feature request.
     /// </summary>
-    [MapValue(2)]
+    [MapValue(3)]
     Feature
   }
 }
