@@ -4,22 +4,22 @@
     <Interval>570</Interval>
     <FromDate>2000-12-04T00:00:00+02:00</FromDate>
     <ToDate>2000-12-10T00:00:00+02:00</ToDate>
-    <Added>1</Added>
-    <Postponed>0</Postponed>
+    <Added>2</Added>
+    <Postponed>1</Postponed>
     <Reactivated>0</Reactivated>
     <Removed>0</Removed>
     <Balance1>1</Balance1>
-    <Balance2>1</Balance2>
+    <Balance2>2</Balance2>
   </Periods>
   <Periods>
     <Interval>571</Interval>
-    <FromDate>2000-12-11T00:00:00Z</FromDate>
-    <ToDate>2000-12-17T00:00:00Z</ToDate>
+    <FromDate>2000-12-11T00:00:00+02:00</FromDate>
+    <ToDate>2000-12-17T00:00:00+02:00</ToDate>
     <Added>0</Added>
     <Postponed>0</Postponed>
-    <Reactivated>0</Reactivated>
-    <Removed>1</Removed>
+    <Reactivated>1</Reactivated>
+    <Removed>2</Removed>
     <Balance1>-1</Balance1>
-    <Balance2>-1</Balance2>
+    <Balance2>-2</Balance2>
   </Periods>
 </ProjectStatisticDataSet>

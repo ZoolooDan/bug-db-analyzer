@@ -27,6 +27,10 @@ namespace BugDB.Reporter {
         
         private PeriodsDataTable tablePeriods;
         
+        private StatisticsDataTable tableStatistics;
+        
+        private InfoDataTable tableInfo;
+        
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -60,6 +64,12 @@ namespace BugDB.Reporter {
                 if ((ds.Tables["Periods"] != null)) {
                     base.Tables.Add(new PeriodsDataTable(ds.Tables["Periods"]));
                 }
+                if ((ds.Tables["Statistics"] != null)) {
+                    base.Tables.Add(new StatisticsDataTable(ds.Tables["Statistics"]));
+                }
+                if ((ds.Tables["Info"] != null)) {
+                    base.Tables.Add(new InfoDataTable(ds.Tables["Info"]));
+                }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
                 this.Namespace = ds.Namespace;
@@ -85,6 +95,24 @@ namespace BugDB.Reporter {
         public PeriodsDataTable Periods {
             get {
                 return this.tablePeriods;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public StatisticsDataTable Statistics {
+            get {
+                return this.tableStatistics;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public InfoDataTable Info {
+            get {
+                return this.tableInfo;
             }
         }
         
@@ -151,6 +179,12 @@ namespace BugDB.Reporter {
                 if ((ds.Tables["Periods"] != null)) {
                     base.Tables.Add(new PeriodsDataTable(ds.Tables["Periods"]));
                 }
+                if ((ds.Tables["Statistics"] != null)) {
+                    base.Tables.Add(new StatisticsDataTable(ds.Tables["Statistics"]));
+                }
+                if ((ds.Tables["Info"] != null)) {
+                    base.Tables.Add(new InfoDataTable(ds.Tables["Info"]));
+                }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
                 this.Namespace = ds.Namespace;
@@ -187,6 +221,18 @@ namespace BugDB.Reporter {
                     this.tablePeriods.InitVars();
                 }
             }
+            this.tableStatistics = ((StatisticsDataTable)(base.Tables["Statistics"]));
+            if ((initTable == true)) {
+                if ((this.tableStatistics != null)) {
+                    this.tableStatistics.InitVars();
+                }
+            }
+            this.tableInfo = ((InfoDataTable)(base.Tables["Info"]));
+            if ((initTable == true)) {
+                if ((this.tableInfo != null)) {
+                    this.tableInfo.InitVars();
+                }
+            }
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -198,10 +244,24 @@ namespace BugDB.Reporter {
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
             this.tablePeriods = new PeriodsDataTable(false);
             base.Tables.Add(this.tablePeriods);
+            this.tableStatistics = new StatisticsDataTable();
+            base.Tables.Add(this.tableStatistics);
+            this.tableInfo = new InfoDataTable();
+            base.Tables.Add(this.tableInfo);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         private bool ShouldSerializePeriods() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        private bool ShouldSerializeStatistics() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        private bool ShouldSerializeInfo() {
             return false;
         }
         
@@ -265,6 +325,10 @@ namespace BugDB.Reporter {
         }
         
         public delegate void PeriodsRowChangeEventHandler(object sender, PeriodsRowChangeEvent e);
+        
+        public delegate void StatisticsRowChangeEventHandler(object sender, StatisticsRowChangeEvent e);
+        
+        public delegate void InfoRowChangeEventHandler(object sender, InfoRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
@@ -502,7 +566,10 @@ namespace BugDB.Reporter {
                 base.Columns.Add(this.columnBalance1);
                 this.columnBalance2 = new global::System.Data.DataColumn("Balance2", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnBalance2);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
+                                this.columnInterval}, false));
                 this.columnInterval.AllowDBNull = false;
+                this.columnInterval.Unique = true;
                 this.columnFromDate.AllowDBNull = false;
                 this.columnToDate.AllowDBNull = false;
                 this.columnAdded.AllowDBNull = false;
@@ -596,6 +663,597 @@ namespace BugDB.Reporter {
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
                 attribute2.FixedValue = "PeriodsDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class StatisticsDataTable : global::System.Data.TypedTableBase<StatisticsRow> {
+            
+            private global::System.Data.DataColumn columnAggregate;
+            
+            private global::System.Data.DataColumn columnAdded;
+            
+            private global::System.Data.DataColumn columnPostponed;
+            
+            private global::System.Data.DataColumn columnReactivated;
+            
+            private global::System.Data.DataColumn columnRemoved;
+            
+            private global::System.Data.DataColumn columnBalance1;
+            
+            private global::System.Data.DataColumn columnBalance2;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public StatisticsDataTable() {
+                this.TableName = "Statistics";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            internal StatisticsDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected StatisticsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn AggregateColumn {
+                get {
+                    return this.columnAggregate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn AddedColumn {
+                get {
+                    return this.columnAdded;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn PostponedColumn {
+                get {
+                    return this.columnPostponed;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn ReactivatedColumn {
+                get {
+                    return this.columnReactivated;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn RemovedColumn {
+                get {
+                    return this.columnRemoved;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn Balance1Column {
+                get {
+                    return this.columnBalance1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn Balance2Column {
+                get {
+                    return this.columnBalance2;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public StatisticsRow this[int index] {
+                get {
+                    return ((StatisticsRow)(this.Rows[index]));
+                }
+            }
+            
+            public event StatisticsRowChangeEventHandler StatisticsRowChanging;
+            
+            public event StatisticsRowChangeEventHandler StatisticsRowChanged;
+            
+            public event StatisticsRowChangeEventHandler StatisticsRowDeleting;
+            
+            public event StatisticsRowChangeEventHandler StatisticsRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void AddStatisticsRow(StatisticsRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public StatisticsRow AddStatisticsRow(string Aggregate, int Added, int Postponed, int Reactivated, int Removed, int Balance1, int Balance2) {
+                StatisticsRow rowStatisticsRow = ((StatisticsRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        Aggregate,
+                        Added,
+                        Postponed,
+                        Reactivated,
+                        Removed,
+                        Balance1,
+                        Balance2};
+                rowStatisticsRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowStatisticsRow);
+                return rowStatisticsRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public override global::System.Data.DataTable Clone() {
+                StatisticsDataTable cln = ((StatisticsDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new StatisticsDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            internal void InitVars() {
+                this.columnAggregate = base.Columns["Aggregate"];
+                this.columnAdded = base.Columns["Added"];
+                this.columnPostponed = base.Columns["Postponed"];
+                this.columnReactivated = base.Columns["Reactivated"];
+                this.columnRemoved = base.Columns["Removed"];
+                this.columnBalance1 = base.Columns["Balance1"];
+                this.columnBalance2 = base.Columns["Balance2"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            private void InitClass() {
+                this.columnAggregate = new global::System.Data.DataColumn("Aggregate", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAggregate);
+                this.columnAdded = new global::System.Data.DataColumn("Added", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAdded);
+                this.columnPostponed = new global::System.Data.DataColumn("Postponed", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPostponed);
+                this.columnReactivated = new global::System.Data.DataColumn("Reactivated", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReactivated);
+                this.columnRemoved = new global::System.Data.DataColumn("Removed", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRemoved);
+                this.columnBalance1 = new global::System.Data.DataColumn("Balance1", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBalance1);
+                this.columnBalance2 = new global::System.Data.DataColumn("Balance2", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBalance2);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
+                                this.columnAggregate}, false));
+                this.columnAggregate.AllowDBNull = false;
+                this.columnAggregate.Unique = true;
+                this.columnAdded.AllowDBNull = false;
+                this.columnPostponed.AllowDBNull = false;
+                this.columnReactivated.AllowDBNull = false;
+                this.columnRemoved.AllowDBNull = false;
+                this.columnBalance1.AllowDBNull = false;
+                this.columnBalance2.AllowDBNull = false;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public StatisticsRow NewStatisticsRow() {
+                return ((StatisticsRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new StatisticsRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override global::System.Type GetRowType() {
+                return typeof(StatisticsRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.StatisticsRowChanged != null)) {
+                    this.StatisticsRowChanged(this, new StatisticsRowChangeEvent(((StatisticsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.StatisticsRowChanging != null)) {
+                    this.StatisticsRowChanging(this, new StatisticsRowChangeEvent(((StatisticsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.StatisticsRowDeleted != null)) {
+                    this.StatisticsRowDeleted(this, new StatisticsRowChangeEvent(((StatisticsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.StatisticsRowDeleting != null)) {
+                    this.StatisticsRowDeleting(this, new StatisticsRowChangeEvent(((StatisticsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void RemoveStatisticsRow(StatisticsRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                ProjectStatisticDataSet ds = new ProjectStatisticDataSet();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "StatisticsDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class InfoDataTable : global::System.Data.TypedTableBase<InfoRow> {
+            
+            private global::System.Data.DataColumn columnFromDate;
+            
+            private global::System.Data.DataColumn columnToDate;
+            
+            private global::System.Data.DataColumn columnGroupPeriod;
+            
+            private global::System.Data.DataColumn columnMinDate;
+            
+            private global::System.Data.DataColumn columnMaxDate;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public InfoDataTable() {
+                this.TableName = "Info";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            internal InfoDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected InfoDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn FromDateColumn {
+                get {
+                    return this.columnFromDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn ToDateColumn {
+                get {
+                    return this.columnToDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn GroupPeriodColumn {
+                get {
+                    return this.columnGroupPeriod;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn MinDateColumn {
+                get {
+                    return this.columnMinDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn MaxDateColumn {
+                get {
+                    return this.columnMaxDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public InfoRow this[int index] {
+                get {
+                    return ((InfoRow)(this.Rows[index]));
+                }
+            }
+            
+            public event InfoRowChangeEventHandler InfoRowChanging;
+            
+            public event InfoRowChangeEventHandler InfoRowChanged;
+            
+            public event InfoRowChangeEventHandler InfoRowDeleting;
+            
+            public event InfoRowChangeEventHandler InfoRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void AddInfoRow(InfoRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public InfoRow AddInfoRow(System.DateTime FromDate, System.DateTime ToDate, string GroupPeriod, System.DateTime MinDate, System.DateTime MaxDate) {
+                InfoRow rowInfoRow = ((InfoRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        FromDate,
+                        ToDate,
+                        GroupPeriod,
+                        MinDate,
+                        MaxDate};
+                rowInfoRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowInfoRow);
+                return rowInfoRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public override global::System.Data.DataTable Clone() {
+                InfoDataTable cln = ((InfoDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new InfoDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            internal void InitVars() {
+                this.columnFromDate = base.Columns["FromDate"];
+                this.columnToDate = base.Columns["ToDate"];
+                this.columnGroupPeriod = base.Columns["GroupPeriod"];
+                this.columnMinDate = base.Columns["MinDate"];
+                this.columnMaxDate = base.Columns["MaxDate"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            private void InitClass() {
+                this.columnFromDate = new global::System.Data.DataColumn("FromDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFromDate);
+                this.columnToDate = new global::System.Data.DataColumn("ToDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnToDate);
+                this.columnGroupPeriod = new global::System.Data.DataColumn("GroupPeriod", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnGroupPeriod);
+                this.columnMinDate = new global::System.Data.DataColumn("MinDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMinDate);
+                this.columnMaxDate = new global::System.Data.DataColumn("MaxDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMaxDate);
+                this.columnFromDate.AllowDBNull = false;
+                this.columnToDate.AllowDBNull = false;
+                this.columnGroupPeriod.AllowDBNull = false;
+                this.columnMinDate.AllowDBNull = false;
+                this.columnMaxDate.AllowDBNull = false;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public InfoRow NewInfoRow() {
+                return ((InfoRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new InfoRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override global::System.Type GetRowType() {
+                return typeof(InfoRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.InfoRowChanged != null)) {
+                    this.InfoRowChanged(this, new InfoRowChangeEvent(((InfoRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.InfoRowChanging != null)) {
+                    this.InfoRowChanging(this, new InfoRowChangeEvent(((InfoRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.InfoRowDeleted != null)) {
+                    this.InfoRowDeleted(this, new InfoRowChangeEvent(((InfoRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.InfoRowDeleting != null)) {
+                    this.InfoRowDeleting(this, new InfoRowChangeEvent(((InfoRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void RemoveInfoRow(InfoRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                ProjectStatisticDataSet ds = new ProjectStatisticDataSet();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "InfoDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -772,6 +1430,156 @@ namespace BugDB.Reporter {
         }
         
         /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+        public partial class StatisticsRow : global::System.Data.DataRow {
+            
+            private StatisticsDataTable tableStatistics;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            internal StatisticsRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tableStatistics = ((StatisticsDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public string Aggregate {
+                get {
+                    return ((string)(this[this.tableStatistics.AggregateColumn]));
+                }
+                set {
+                    this[this.tableStatistics.AggregateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public int Added {
+                get {
+                    return ((int)(this[this.tableStatistics.AddedColumn]));
+                }
+                set {
+                    this[this.tableStatistics.AddedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public int Postponed {
+                get {
+                    return ((int)(this[this.tableStatistics.PostponedColumn]));
+                }
+                set {
+                    this[this.tableStatistics.PostponedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public int Reactivated {
+                get {
+                    return ((int)(this[this.tableStatistics.ReactivatedColumn]));
+                }
+                set {
+                    this[this.tableStatistics.ReactivatedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public int Removed {
+                get {
+                    return ((int)(this[this.tableStatistics.RemovedColumn]));
+                }
+                set {
+                    this[this.tableStatistics.RemovedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public int Balance1 {
+                get {
+                    return ((int)(this[this.tableStatistics.Balance1Column]));
+                }
+                set {
+                    this[this.tableStatistics.Balance1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public int Balance2 {
+                get {
+                    return ((int)(this[this.tableStatistics.Balance2Column]));
+                }
+                set {
+                    this[this.tableStatistics.Balance2Column] = value;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+        public partial class InfoRow : global::System.Data.DataRow {
+            
+            private InfoDataTable tableInfo;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            internal InfoRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tableInfo = ((InfoDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public System.DateTime FromDate {
+                get {
+                    return ((global::System.DateTime)(this[this.tableInfo.FromDateColumn]));
+                }
+                set {
+                    this[this.tableInfo.FromDateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public System.DateTime ToDate {
+                get {
+                    return ((global::System.DateTime)(this[this.tableInfo.ToDateColumn]));
+                }
+                set {
+                    this[this.tableInfo.ToDateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public string GroupPeriod {
+                get {
+                    return ((string)(this[this.tableInfo.GroupPeriodColumn]));
+                }
+                set {
+                    this[this.tableInfo.GroupPeriodColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public System.DateTime MinDate {
+                get {
+                    return ((global::System.DateTime)(this[this.tableInfo.MinDateColumn]));
+                }
+                set {
+                    this[this.tableInfo.MinDateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public System.DateTime MaxDate {
+                get {
+                    return ((global::System.DateTime)(this[this.tableInfo.MaxDateColumn]));
+                }
+                set {
+                    this[this.tableInfo.MaxDateColumn] = value;
+                }
+            }
+        }
+        
+        /// <summary>
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
@@ -789,6 +1597,68 @@ namespace BugDB.Reporter {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public PeriodsRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+        public class StatisticsRowChangeEvent : global::System.EventArgs {
+            
+            private StatisticsRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public StatisticsRowChangeEvent(StatisticsRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public StatisticsRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+        public class InfoRowChangeEvent : global::System.EventArgs {
+            
+            private InfoRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public InfoRowChangeEvent(InfoRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public InfoRow Row {
                 get {
                     return this.eventRow;
                 }

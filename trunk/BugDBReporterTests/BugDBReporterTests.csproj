@@ -79,6 +79,15 @@
     <Content Include="ReferenceData\projectReporterDataRef.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="ReferenceData\projRepRef_InfoTableTest_SpecPeriod.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReferenceData\projRepRef_InfoTableTest_WholePeriod.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReferenceData\projRepRef_PeriodsTableTest_SpecPeriod.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\DatabaseScripts\BugDB3.sql">
