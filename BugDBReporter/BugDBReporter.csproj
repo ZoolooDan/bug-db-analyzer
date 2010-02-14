@@ -49,6 +49,7 @@
     <Compile Include="Configuration\ReporterConfig.cs" />
     <Compile Include="DeveloperStatisticsReporter.cs" />
     <Compile Include="IReporter.cs" />
+    <Compile Include="PeriodGroup.cs" />
     <Compile Include="ProjectReporter\ProjectStatisticDataSet.cs">
       <DependentUpon>ProjectStatisticDataSet.xsd</DependentUpon>
       <SubType>Component</SubType>

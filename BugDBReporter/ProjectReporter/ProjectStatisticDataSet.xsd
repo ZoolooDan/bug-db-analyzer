@@ -27,7 +27,39 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="Statistics" msprop:Generator_UserTableName="Statistics" msprop:Generator_RowDeletedName="StatisticsRowDeleted" msprop:Generator_RowChangedName="StatisticsRowChanged" msprop:Generator_RowClassName="StatisticsRow" msprop:Generator_RowChangingName="StatisticsRowChanging" msprop:Generator_RowEvArgName="StatisticsRowChangeEvent" msprop:Generator_RowEvHandlerName="StatisticsRowChangeEventHandler" msprop:Generator_TableClassName="StatisticsDataTable" msprop:Generator_TableVarName="tableStatistics" msprop:Generator_RowDeletingName="StatisticsRowDeleting" msprop:Generator_TablePropName="Statistics">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Aggregate" msprop:Generator_UserColumnName="Aggregate" msprop:Generator_ColumnVarNameInTable="columnAggregate" msprop:Generator_ColumnPropNameInRow="Aggregate" msprop:Generator_ColumnPropNameInTable="AggregateColumn" type="xs:string" />
+              <xs:element name="Added" msprop:Generator_UserColumnName="Added" msprop:Generator_ColumnVarNameInTable="columnAdded" msprop:Generator_ColumnPropNameInRow="Added" msprop:Generator_ColumnPropNameInTable="AddedColumn" type="xs:int" />
+              <xs:element name="Postponed" msprop:Generator_UserColumnName="Postponed" msprop:Generator_ColumnVarNameInTable="columnPostponed" msprop:Generator_ColumnPropNameInRow="Postponed" msprop:Generator_ColumnPropNameInTable="PostponedColumn" type="xs:int" />
+              <xs:element name="Reactivated" msprop:Generator_UserColumnName="Reactivated" msprop:Generator_ColumnVarNameInTable="columnReactivated" msprop:Generator_ColumnPropNameInRow="Reactivated" msprop:Generator_ColumnPropNameInTable="ReactivatedColumn" type="xs:int" />
+              <xs:element name="Removed" msprop:Generator_UserColumnName="Removed" msprop:Generator_ColumnVarNameInTable="columnRemoved" msprop:Generator_ColumnPropNameInRow="Removed" msprop:Generator_ColumnPropNameInTable="RemovedColumn" type="xs:int" />
+              <xs:element name="Balance1" msprop:Generator_UserColumnName="Balance1" msprop:Generator_ColumnVarNameInTable="columnBalance1" msprop:Generator_ColumnPropNameInRow="Balance1" msprop:Generator_ColumnPropNameInTable="Balance1Column" type="xs:int" />
+              <xs:element name="Balance2" msprop:Generator_UserColumnName="Balance2" msprop:Generator_ColumnVarNameInTable="columnBalance2" msprop:Generator_ColumnPropNameInRow="Balance2" msprop:Generator_ColumnPropNameInTable="Balance2Column" type="xs:int" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Info" msprop:Generator_UserTableName="Info" msprop:Generator_RowDeletedName="InfoRowDeleted" msprop:Generator_RowChangedName="InfoRowChanged" msprop:Generator_RowClassName="InfoRow" msprop:Generator_RowChangingName="InfoRowChanging" msprop:Generator_RowEvArgName="InfoRowChangeEvent" msprop:Generator_RowEvHandlerName="InfoRowChangeEventHandler" msprop:Generator_TableClassName="InfoDataTable" msprop:Generator_TableVarName="tableInfo" msprop:Generator_RowDeletingName="InfoRowDeleting" msprop:Generator_TablePropName="Info">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="FromDate" msprop:Generator_UserColumnName="FromDate" msprop:Generator_ColumnVarNameInTable="columnFromDate" msprop:Generator_ColumnPropNameInRow="FromDate" msprop:Generator_ColumnPropNameInTable="FromDateColumn" type="xs:dateTime" />
+              <xs:element name="ToDate" msprop:Generator_UserColumnName="ToDate" msprop:Generator_ColumnVarNameInTable="columnToDate" msprop:Generator_ColumnPropNameInRow="ToDate" msprop:Generator_ColumnPropNameInTable="ToDateColumn" type="xs:dateTime" />
+              <xs:element name="GroupPeriod" msprop:Generator_UserColumnName="GroupPeriod" msprop:Generator_ColumnVarNameInTable="columnGroupPeriod" msprop:Generator_ColumnPropNameInRow="GroupPeriod" msprop:Generator_ColumnPropNameInTable="GroupPeriodColumn" type="xs:string" />
+              <xs:element name="MinDate" msprop:Generator_UserColumnName="MinDate" msprop:Generator_ColumnVarNameInTable="columnMinDate" msprop:Generator_ColumnPropNameInRow="MinDate" msprop:Generator_ColumnPropNameInTable="MinDateColumn" type="xs:dateTime" />
+              <xs:element name="MaxDate" msprop:Generator_UserColumnName="MaxDate" msprop:Generator_ColumnVarNameInTable="columnMaxDate" msprop:Generator_ColumnPropNameInRow="MaxDate" msprop:Generator_ColumnPropNameInTable="MaxDateColumn" type="xs:dateTime" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
+    <xs:unique name="Constraint1">
+      <xs:selector xpath=".//mstns:Periods" />
+      <xs:field xpath="mstns:Interval" />
+    </xs:unique>
+    <xs:unique name="Statistics_Constraint1" msdata:ConstraintName="Constraint1">
+      <xs:selector xpath=".//mstns:Statistics" />
+      <xs:field xpath="mstns:Aggregate" />
+    </xs:unique>
   </xs:element>
 </xs:schema>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.IO;
+using System.Linq;
 
 using BugDB.Aggregator;
 using BugDB.DataAccessLayer;
@@ -88,32 +89,147 @@ namespace BugDBReporterTests
     #endregion Test Setup
 
     /// <summary>
-    ///A test for CreateReport
-    ///</summary>
+    /// Test Info table for whole period.
+    /// </summary>
     [TestMethod]
-    [DeploymentItem(@"ReferenceData\projectReporterDataRef.xml", "ReferenceData")]
-    public void CreateReportTest()
+    [DeploymentItem(@"ReferenceData\projRepRef_InfoTableTest_WholePeriod.xml", "ReferenceData")]
+    public void InfoTableTest_WholePeriod()
     {
-      Bug[] bugs = m_provider.GetAllBugs();
-      Revision[] revisions = m_provider.GetBugRevisions(bugs[0].Number);
+      TableTest_Impl("Info",
+        "projRepRef_InfoTableTest_WholePeriod.xml",
+        DateTime.MinValue, 
+        DateTime.MaxValue);
+    }
 
-      var period = GroupPeriod.ByWeek;
-      var fromDate = DateTime.MinValue;
-      var toDate = DateTime.MaxValue;
-      var reporter = new ProjectStatisticsReporter(revisions, period, fromDate, toDate);
+    /// <summary>
+    /// Test Info table for specific period.
+    /// </summary>
+    [TestMethod]
+    [DeploymentItem(@"ReferenceData\projRepRef_InfoTableTest_SpecPeriod.xml", "ReferenceData")]
+    public void InfoTableTest_SpecificPeriod()
+    {
+      TableTest_Impl("Info", 
+        "projRepRef_InfoTableTest_SpecPeriod.xml",
+        new DateTime(2000, 12, 09), 
+        new DateTime(2000, 12, 14));
+    }
+
+    /// <summary>
+    /// Test Periods table for specific period.
+    /// </summary>
+    [TestMethod]
+    [DeploymentItem(@"ReferenceData\projRepRef_PeriodsTableTest_SpecPeriod.xml", "ReferenceData")]
+    public void PeriodsTableTest_SpecificPeriod()
+    {
+      TableTest_Impl("Periods",
+        "projRepRef_PeriodsTableTest_SpecPeriod.xml",
+        new DateTime(2000, 12, 09), 
+        new DateTime(2000, 12, 14));
+    }
+
+    #region Helper Methods
+    /// <summary>
+    /// Common test for specific table.
+    /// </summary>
+    private void TableTest_Impl(string tableName, string refFileName, 
+      DateTime from, DateTime to)
+    {
+      Application app = (from a in m_provider.GetAllApplications()
+                        where a.Title == "App1"
+                        select a).First();
+
+      Revision[] revisions = m_provider.GetRevisions(
+        new QueryParams
+        {
+          Apps = new[] {app.Id}
+        });
+
+      var period = GroupingPeriod.Week;
+      var reporter = new ProjectStatisticsReporter(revisions, period, from, to);
 
       // Create report
       DataSet actual = reporter.CreateReport();
       // Write it for reference
-      actual.WriteXml(@"d:\Work\MyProjects\BugDBAnalyzer4\BugDBReporterTests\ReferenceData\projectReporterDataRef_.xml");
+      DataSet filtered = WriteDataSetRef(actual, refFileName,
+        new[] {tableName});
 
-      // Load reference dataset from XML file
-      DataSet expected = new ProjectStatisticDataSet();
-      string refDataPath = Path.Combine(this.TestContext.TestDeploymentDir,
-                                        @"ReferenceData\projectReporterDataRef.xml");
-      expected.ReadXml(refDataPath);
+      // Read reference
+      var expected = ReadDataSet(refFileName);
 
-      Assert.AreEqual(expected.GetXml(), actual.GetXml());
+      // Compare
+      Assert.AreEqual(expected.GetXml(), filtered.GetXml());
     }
+
+    /// <summary>
+    /// Writes dataset for reference.
+    /// </summary>
+    private DataSet WriteDataSetRef(DataSet dataSet, string fileName, string[] tables)
+    {
+      string fileName2 = Path.GetFileNameWithoutExtension(fileName) +
+                         "_" + Path.GetExtension(fileName);
+      return WriteDataSet(dataSet, fileName2, tables);
+    }
+
+
+    /// <summary>
+    /// Writes only specified tables from dataset.
+    /// </summary>
+    private DataSet WriteDataSet(DataSet dataSet, string fileName, string[] tables)
+    {
+      string path = Path.Combine(
+        this.TestContext.TestDeploymentDir,
+        Path.Combine("ReferenceData", fileName));
+
+      DataSet clone = dataSet.Copy();
+      foreach( DataTable table in clone.Tables )
+      {
+        if( Array.IndexOf(tables, table.TableName) == -1 )
+        {
+          table.Clear();
+        }
+      }
+      clone.WriteXml(path);
+
+      return clone;
+    }
+
+    /// <summary>
+    /// Reads dataset from specified file.
+    /// </summary>
+    private ProjectStatisticDataSet ReadDataSet(string fileName)
+    {
+      var dataSet = new ProjectStatisticDataSet();
+      string refDataPath = Path.Combine(
+        this.TestContext.TestDeploymentDir,
+        Path.Combine("ReferenceData", fileName));
+      dataSet.ReadXml(refDataPath);
+      return dataSet;
+    }
+
+    /// <summary>
+    /// Reads specific tables to dataset from specified file.
+    /// </summary>
+    private ProjectStatisticDataSet ReadDataSet(string fileName, 
+      string[] tables)
+    {
+      var dataSet = new ProjectStatisticDataSet();
+      string refDataPath = Path.Combine(
+        this.TestContext.TestDeploymentDir,
+        Path.Combine("ReferenceData", fileName));
+
+      // Read all
+      dataSet.ReadXml(refDataPath);
+
+      // But clear tables which aren't specified
+      foreach(DataTable table in dataSet.Tables)
+      {
+        if( Array.IndexOf(tables, table.TableName) == -1 )
+        {
+          table.Clear();
+        }
+      }
+      return dataSet;
+    }
+    #endregion Helper Methods
   }
 }

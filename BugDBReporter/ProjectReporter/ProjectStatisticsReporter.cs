@@ -16,7 +16,7 @@ namespace BugDB.Reporter
   {
     #region Private Fields
     private Revision[] m_revisions;
-    private GroupPeriod m_period;
+    private GroupingPeriod m_groupBy;
     private DateTime m_fromDate;
     private DateTime m_toDate;
     #endregion Private Fields
@@ -25,10 +25,10 @@ namespace BugDB.Reporter
     /// <summary>
     /// Constructs reporter.
     /// </summary>
-    public ProjectStatisticsReporter(Revision[] revisions, GroupPeriod period, DateTime fromDate, DateTime toDate)
+    public ProjectStatisticsReporter(Revision[] revisions, GroupingPeriod groupBy, DateTime fromDate, DateTime toDate)
     {
       m_revisions = revisions;
-      m_period = period;
+      m_groupBy = groupBy;
       m_fromDate = fromDate;
       m_toDate = toDate;
     }
@@ -80,9 +80,11 @@ namespace BugDB.Reporter
     /// --------------------------------------------------
     /// Report information table contains parameters 
     /// for which report was created:
-    /// +) FromDate - 
-    /// +) ToDate
-    /// +) GroupPeriod - ByDay, ByWeek, etc
+    /// +) GroupPeriod - Day, Week, etc
+    /// +) FromDate - start date of report
+    /// +) ToDate - end date of report
+    /// +) MinDate - minimum date of handled revision
+    /// +) MaxDate - maximum date of handled revision
     /// </remarks>
     public DataSet CreateReport()
     {
@@ -98,10 +100,11 @@ namespace BugDB.Reporter
       var query = from t in filter.GetTransitions(m_revisions)
                   where t.CurrentRevision.Date >= m_fromDate &&
                         t.CurrentRevision.Date <= m_toDate
-                  group t by GetGroup(m_period, t.CurrentRevision) into g
+                  group t by GetGroup(m_groupBy, t.CurrentRevision) into g
                   orderby g.Key.Interval
                   select g;
 
+      DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
       int prevInterval = -1;
       // Count transitions
       foreach(var group in query)
@@ -120,6 +123,16 @@ namespace BugDB.Reporter
           postponed += transition.Name == "Postponed" ? 1 : 0;
           reactivated += transition.Name == "Reactivated" ? 1 : 0;
           removed += transition.Name == "Removed" ? 1 : 0;
+
+          // Remember min/max dates
+          if( transition.CurrentRevision.Date < minDate )
+          {
+            minDate = transition.CurrentRevision.Date;
+          }
+          if( transition.CurrentRevision.Date > maxDate )
+          {
+            maxDate = transition.CurrentRevision.Date;
+          }
         }
 
         // Fill gaps between nonempty periods with zero rows
@@ -128,7 +141,7 @@ namespace BugDB.Reporter
           for (int interval = prevInterval + 1; interval < group.Key.Interval; interval++)
           {
             DateTime fromDate, toDate;
-            GetIntervalDates(m_period, interval, out fromDate, out toDate);
+            GetIntervalDates(m_groupBy, interval, out fromDate, out toDate);
             dataSet.Periods.AddPeriodsRow(interval, fromDate, toDate, 
               0, 0, 0, 0);
           }
@@ -141,6 +154,12 @@ namespace BugDB.Reporter
         // Remember current interval
         prevInterval = group.Key.Interval;
       }
+
+      // Fill info table
+      dataSet.Info.AddInfoRow(m_fromDate, m_toDate, m_groupBy.ToString(),
+                              minDate, maxDate);
+
+      // Fill statistics table
 
       return dataSet;
     }
@@ -159,7 +178,7 @@ namespace BugDB.Reporter
     /// 
     /// Reference point is Jan-1, 1990.
     /// </remarks>
-    private static Group GetGroup(GroupPeriod period, Revision revision)
+    private static PeriodGroup GetGroup(GroupingPeriod groupBy, Revision revision)
     {
       DateTime date = revision.Date;
       DateTime refDate = new DateTime(1990, 1, 1);
@@ -167,19 +186,19 @@ namespace BugDB.Reporter
       TimeSpan offset = revision.Date - refDate;
 
       int index = -1;
-      // ByDay
-      if( period == GroupPeriod.ByDay )
+      // Day
+      if( groupBy == GroupingPeriod.Day )
       {
         // For days it's just number of days
         // from reference point till revision date
         index = offset.Days;
       }
-      else if( period == GroupPeriod.ByWeek ) // ByWeek
+      else if( groupBy == GroupingPeriod.Week ) // Week
       {
         // For weeks it's quotient of division days by 7
         index = offset.Days/7;
       }
-      else if( period == GroupPeriod.ByMonth ) // ByMonth
+      else if( groupBy == GroupingPeriod.Month ) // Month
       {
         // 01.1990 - 0  = (1990 - 1990)*12 + (01 - 01) = 0*12 + 0
         // 12.1990 - 11 = (1990 - 1990)*12 + (12 - 01) = 0*12 + 11
@@ -190,12 +209,12 @@ namespace BugDB.Reporter
         // Number of full years plus
         index = (date.Year - refDate.Year)*12 + (date.Month - refDate.Month);
       }
-      else if( period == GroupPeriod.ByQuater ) // ByQuater
+      else if( groupBy == GroupingPeriod.Quater ) // Quater
       {
         // Same as months but divided by 3
         index = ((date.Year - refDate.Year)*12 + (date.Month - refDate.Month))/3;
       }
-      else if( period == GroupPeriod.ByYear ) // ByYear
+      else if( groupBy == GroupingPeriod.Year ) // Year
       {
         // Offset of year
         index = date.Year - refDate.Year;
@@ -206,9 +225,9 @@ namespace BugDB.Reporter
 
       DateTime intervalStart, intervalEnd;
       // Get dates
-      GetIntervalDates(period, index, out intervalStart, out intervalEnd);
+      GetIntervalDates(groupBy, index, out intervalStart, out intervalEnd);
       // Create new group
-      Group group = new Group(index, intervalStart, intervalEnd);
+      PeriodGroup group = new PeriodGroup(index, intervalStart, intervalEnd);
 
       return group;
     }
@@ -216,7 +235,7 @@ namespace BugDB.Reporter
     /// <summary>
     /// Returns start and end dates of interval.
     /// </summary>
-    private static void GetIntervalDates(GroupPeriod period, int interval, 
+    private static void GetIntervalDates(GroupingPeriod groupBy, int interval, 
       out DateTime intervalStart, out DateTime intervalEnd)
     {
       DateTime refDate = new DateTime(1990, 1, 1);
@@ -224,21 +243,21 @@ namespace BugDB.Reporter
       intervalStart = DateTime.MinValue;
       intervalEnd = DateTime.MinValue;
 
-      // ByDay
-      if( period == GroupPeriod.ByDay )
+      // Day
+      if( groupBy == GroupingPeriod.Day )
       {
         // Shift reference date by interval days
         intervalStart = refDate + new TimeSpan(interval, 0, 0, 0);
         // Interval end is the same as start
         intervalEnd = intervalStart;
       }
-      else if( period == GroupPeriod.ByWeek ) // ByWeek
+      else if( groupBy == GroupingPeriod.Week ) // Week
       {
         // Shift reference date by interval weeks
         intervalStart = refDate.AddDays(interval*7);
         intervalEnd = intervalStart.AddDays(6);
       }
-      else if( period == GroupPeriod.ByMonth ) // ByMonth
+      else if( groupBy == GroupingPeriod.Month ) // Month
       {
         // 01.1990 - 0  = (1990 - 1990)*12 + (01 - 01) = 0*12 + 0
         // 12.1990 - 11 = (1990 - 1990)*12 + (12 - 01) = 0*12 + 11
@@ -250,7 +269,7 @@ namespace BugDB.Reporter
         intervalStart = new DateTime(refDate.Year + interval/12, refDate.Month + interval%12, 1);
         intervalEnd = intervalStart.AddMonths(1) - new TimeSpan(1, 0, 0, 0);
       }
-      else if( period == GroupPeriod.ByQuater ) // ByQuater
+      else if( groupBy == GroupingPeriod.Quater ) // Quater
       {
         // Multiply by 4 to get months
         int months1 = interval*3;
@@ -260,7 +279,7 @@ namespace BugDB.Reporter
         intervalEnd = new DateTime(refDate.Year + months2/12, refDate.Month + months2%12, 1) 
           - new TimeSpan(1, 0, 0, 0);
       }
-      else if( period == GroupPeriod.ByYear ) // ByYear
+      else if( groupBy == GroupingPeriod.Year ) // Year
       {
         // Shift years
         intervalStart = new DateTime(refDate.Year + interval, 1, 1);

@@ -11,18 +11,6 @@ using BugDB.DataAccessLayer.DataTransferObjects;
 
 namespace BugDB.Reporter
 {
-  /// <summary>
-  /// Grouping period.
-  /// </summary>
-  public enum GroupPeriod
-  {
-    ByDay,
-    ByWeek,
-    ByMonth,
-    ByQuater,
-    ByYear
-  }
-
   // C:\Program Files\Microsoft Visual Studio 9.0\vc\bin>
   // xsd d:\Work\MyProjects\BugDBAnalyzer4\BugDBReporter\config\ReporterConfig.xsd /classes /l:CS /n:BugDB.Reporter.Configuration /out:d:\Work\MyProjects\BugDBAnalyzer4\BugDBReporter\Configuration
 
@@ -120,7 +108,7 @@ namespace BugDB.Reporter
     /// <summary>
     /// Creates balance report.
     /// </summary>
-    public List<Group> CreateReport(GroupPeriod period, bool ignorePostponed)
+    public List<PeriodGroup> CreateReport(GroupingPeriod groupBy, bool ignorePostponed)
     {
       // Input data:
       // +) revisions (filter for bugs)
@@ -129,7 +117,7 @@ namespace BugDB.Reporter
 
 
       // Resulting groups
-      List<Group> groups = new List<Group>();
+      List<PeriodGroup> groups = new List<PeriodGroup>();
 
       // Get bugs for specified filter
       Bug[] bugs = m_provider.GetAllBugs();
@@ -151,7 +139,7 @@ namespace BugDB.Reporter
           if( trans != StatusTransition.None )
           {
             // Get record for period correspondent to the date of current revision
-            Group group = GetGroup(groups, period, revision);
+            PeriodGroup group = GetGroup(groups, groupBy, revision);
 
             // Update correspondent values
             group.Added += trans == StatusTransition.Added ? 1 : 0;
@@ -169,7 +157,7 @@ namespace BugDB.Reporter
       groups.Sort((x, y) => x.Interval - y.Interval);
 
       // Make groups go without gaps
-      UnsparseGroups(groups, period);
+      UnsparseGroups(groups, groupBy);
      
       // Return report
       return groups;
@@ -205,7 +193,7 @@ namespace BugDB.Reporter
     /// 
     /// Reference point is Jan-1, 1990.
     /// </remarks>
-    private static Group GetGroup(List<Group> groups, GroupPeriod period, Revision revision)
+    private static PeriodGroup GetGroup(List<PeriodGroup> groups, GroupingPeriod groupBy, Revision revision)
     {
       DateTime date = revision.Date;
       DateTime refDate = new DateTime(1990, 1, 1);
@@ -213,19 +201,19 @@ namespace BugDB.Reporter
       TimeSpan offset = revision.Date - refDate;
 
       int index = -1;
-      // ByDay
-      if( period == GroupPeriod.ByDay )
+      // Day
+      if( groupBy == GroupingPeriod.Day )
       {
         // For days it's just number of days
         // from reference point till revision date
         index = offset.Days;
       }
-      else if( period == GroupPeriod.ByWeek ) // ByWeek
+      else if( groupBy == GroupingPeriod.Week ) // Week
       {
         // For weeks it's quotient of division days by 7
         index = offset.Days/7;
       }
-      else if( period == GroupPeriod.ByMonth ) // ByMonth
+      else if( groupBy == GroupingPeriod.Month ) // Month
       {
         // 01.1990 - 0  = (1990 - 1990)*12 + (01 - 01) = 0*12 + 0
         // 12.1990 - 11 = (1990 - 1990)*12 + (12 - 01) = 0*12 + 11
@@ -236,12 +224,12 @@ namespace BugDB.Reporter
         // Number of full years plus
         index = (date.Year - refDate.Year)*12 + (date.Month - refDate.Month);
       }
-      else if( period == GroupPeriod.ByQuater ) // ByQuater
+      else if( groupBy == GroupingPeriod.Quater ) // Quater
       {
         // Same as months but divided by 3
         index = ((date.Year - refDate.Year)*12 + (date.Month - refDate.Month))/3;
       }
-      else if( period == GroupPeriod.ByYear ) // ByYear
+      else if( groupBy == GroupingPeriod.Year ) // Year
       {
         // Offset of year
         index = date.Year - refDate.Year;
@@ -250,14 +238,14 @@ namespace BugDB.Reporter
       // Check that it's been caluclated
       Debug.Assert( index > 0 );
 
-      Group group = groups.Find(item => item.Interval == index);
+      PeriodGroup group = groups.Find(item => item.Interval == index);
       if( group == null )
       {
         DateTime intervalStart, intervalEnd;
         // Get dates
-        GetIntervalDates(period, index, out intervalStart, out intervalEnd);
+        GetIntervalDates(groupBy, index, out intervalStart, out intervalEnd);
         // Create new group
-        group = new Group(index, intervalStart, intervalEnd);
+        group = new PeriodGroup(index, intervalStart, intervalEnd);
         groups.Add(group);
       }
 
@@ -399,7 +387,7 @@ namespace BugDB.Reporter
     /// <summary>
     /// Make groups go without gaps.
     /// </summary>
-    private static void UnsparseGroups(IList<Group> groups, GroupPeriod period)
+    private static void UnsparseGroups(IList<PeriodGroup> groups, GroupingPeriod groupBy)
     {
       // Just exit if empty collection
       if( groups.Count == 0 )
@@ -416,8 +404,8 @@ namespace BugDB.Reporter
         {
           // Insert new group
           DateTime intervalStart, intervalEnd; 
-          GetIntervalDates(period, interval, out intervalStart, out intervalEnd);
-          Group group = new Group(interval, intervalStart, intervalEnd);
+          GetIntervalDates(groupBy, interval, out intervalStart, out intervalEnd);
+          PeriodGroup group = new PeriodGroup(interval, intervalStart, intervalEnd);
           groups.Insert(i, group);
         }
         prevInterval = interval;
@@ -427,7 +415,7 @@ namespace BugDB.Reporter
     /// <summary>
     /// Returns start and end dates of interval.
     /// </summary>
-    private static void GetIntervalDates(GroupPeriod period, int interval, 
+    private static void GetIntervalDates(GroupingPeriod groupBy, int interval, 
       out DateTime intervalStart, out DateTime intervalEnd)
     {
       DateTime refDate = new DateTime(1990, 1, 1);
@@ -435,21 +423,21 @@ namespace BugDB.Reporter
       intervalStart = DateTime.MinValue;
       intervalEnd = DateTime.MinValue;
 
-      // ByDay
-      if( period == GroupPeriod.ByDay )
+      // Day
+      if( groupBy == GroupingPeriod.Day )
       {
         // Shift reference date by interval days
         intervalStart = refDate + new TimeSpan(interval, 0, 0, 0);
         // Interval end is the same as start
         intervalEnd = intervalStart;
       }
-      else if( period == GroupPeriod.ByWeek ) // ByWeek
+      else if( groupBy == GroupingPeriod.Week ) // Week
       {
         // Shift reference date by interval weeks
         intervalStart = refDate.AddDays(interval*7);
         intervalEnd = intervalStart.AddDays(6);
       }
-      else if( period == GroupPeriod.ByMonth ) // ByMonth
+      else if( groupBy == GroupingPeriod.Month ) // Month
       {
         // 01.1990 - 0  = (1990 - 1990)*12 + (01 - 01) = 0*12 + 0
         // 12.1990 - 11 = (1990 - 1990)*12 + (12 - 01) = 0*12 + 11
@@ -461,7 +449,7 @@ namespace BugDB.Reporter
         intervalStart = new DateTime(refDate.Year + interval/12, refDate.Month + interval%12, 1);
         intervalEnd = intervalStart.AddMonths(1) - new TimeSpan(1, 0, 0, 0);
       }
-      else if( period == GroupPeriod.ByQuater ) // ByQuater
+      else if( groupBy == GroupingPeriod.Quater ) // Quater
       {
         // Multiply by 4 to get months
         int months1 = interval*3;
@@ -471,7 +459,7 @@ namespace BugDB.Reporter
         intervalEnd = new DateTime(refDate.Year + months2/12, refDate.Month + months2%12, 1) 
           - new TimeSpan(1, 0, 0, 0);
       }
-      else if( period == GroupPeriod.ByYear ) // ByYear
+      else if( groupBy == GroupingPeriod.Year ) // Year
       {
         // Shift years
         intervalStart = new DateTime(refDate.Year + interval, 1, 1);
@@ -555,82 +543,7 @@ namespace BugDB.Reporter
   }
 
 
-  /// <summary>
-  /// Represents group which is created for each time interval.
-  /// </summary>
-  /// <remarks>
-  /// Grouping in balance report is accomplished by date.
-  /// Time axis is divided into descrete intervals.
-  /// Duration of interval is integer number and counted in days.
-  /// Reference point is Jan-1, 1990, which is Monday that
-  /// simplifies by week, by month, etc interval calculations.
-  /// Only index of interval of is stored.
-  /// </remarks>
-  public class Group
-  {
-    #region Private Fields
-   
-    #endregion Private Fields
-
-    #region Constructors
-    /// <summary>
-    /// Constructs group item for specified interval.
-    /// </summary>
-    /// <param name="intervalIdx">Index of interval</param>
-    /// <param name="intervalStart">Start date of interval</param>
-    /// <param name="intervalEnd">End date of interval</param>
-    public Group(int intervalIdx, DateTime intervalStart, DateTime intervalEnd)
-    {
-      this.Interval = intervalIdx;
-      this.IntervalStart = intervalStart;
-      this.IntervalEnd = intervalEnd;
-    }
-    #endregion Constructor
-
-    #region Public Fields
-    /// <summary>
-    /// Interval index.
-    /// </summary>
-    public int Interval { get; private set; }
-
-    /// <summary>
-    /// Start of the interval.
-    /// </summary>
-    public DateTime IntervalStart { get; set; }
-    /// <summary>
-    /// End of the interval
-    /// </summary>
-    public DateTime IntervalEnd { get; set; }
-
-    /// <summary>
-    /// Number of added bugs.
-    /// </summary>
-    public int Added { get; set; }
-
-    /// <summary>
-    /// Number of removed bugs.
-    /// </summary>
-    public int Removed { get; set; }
-
-    /// <summary>
-    /// Number of postponed bugs.
-    /// </summary>
-    public int Postponed { get; set; }
-
-    /// <summary>
-    /// Number of reactivated bugs.
-    /// </summary>
-    public int Reactivated { get; set; }
-    #endregion Public Fields
-
-    #region Public Methods
-
-    #endregion Public Methods
-
-  }
-
-
-/*
+  /*
  * /// http://blog.jagregory.com/page/5/
   public class CustomerRepository
   {

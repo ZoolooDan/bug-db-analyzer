@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone="yes"?>
+<ProjectStatisticDataSet xmlns="http://tempuri.org/ProjectStatisticDataSet.xsd">
+  <Info>
+    <FromDate>0001-01-01T00:00:00+02:00</FromDate>
+    <ToDate>9999-12-31T23:59:59.9999999+02:00</ToDate>
+    <GroupPeriod>Week</GroupPeriod>
+    <MinDate>2000-12-08T00:00:00+02:00</MinDate>
+    <MaxDate>2000-12-16T00:00:00+02:00</MaxDate>
+  </Info>
+</ProjectStatisticDataSet>
