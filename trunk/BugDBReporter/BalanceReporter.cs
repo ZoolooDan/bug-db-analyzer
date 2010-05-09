@@ -120,13 +120,13 @@ namespace BugDB.Reporter
       List<PeriodGroup> groups = new List<PeriodGroup>();
 
       // Get bugs for specified filter
-      Bug[] bugs = m_provider.GetAllBugs();
+      Bug[] bugs = m_provider.GetBugs();
 
       // Process all bugs
       foreach( Bug bug in bugs )
       {
         // Get all revisions for selected bugs (they should be sorted)
-        Revision[] revisions = m_provider.GetBugRevisions(bug.Number);
+        Revision[] revisions = m_provider.GetRevisions(bug.Number);
 
         Revision prevRevision = null;
         // Go through revisions of one bug

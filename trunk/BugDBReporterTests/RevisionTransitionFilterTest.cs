@@ -98,8 +98,8 @@ namespace BugDBReporterTests
     public void AllowedTransitionsTest()
     {
       RevisionTransitionFilter filter = new RevisionTransitionFilter();
-      Bug[] bugs = m_provider.GetAllBugs();
-      Revision[] revisions = m_provider.GetBugRevisions(bugs[0].Number);
+      Bug[] bugs = m_provider.GetBugs();
+      Revision[] revisions = m_provider.GetRevisions(bugs[0].Number);
 
       var transitions = new List<RevisionStatusTransition>(filter.GetTransitions(revisions));
       var transitionsExp = new List<RevisionStatusTransition>
@@ -131,8 +131,8 @@ namespace BugDBReporterTests
     public void ForbiddenTransitionsTest()
     {
       RevisionTransitionFilter filter = new RevisionTransitionFilter();
-      Bug[] bugs = m_provider.GetAllBugs();
-      Revision[] revisions = m_provider.GetBugRevisions(bugs[2].Number);
+      Bug[] bugs = m_provider.GetBugs();
+      Revision[] revisions = m_provider.GetRevisions(bugs[2].Number);
 
       var transitions = new List<RevisionStatusTransition>(filter.GetTransitions(revisions));
       var transitionsExp = new List<RevisionStatusTransition>

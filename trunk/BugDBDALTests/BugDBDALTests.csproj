@@ -34,7 +34,6 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.TeamSystem.Data.UnitTesting, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -66,12 +65,16 @@
       <Project>{3D281C5F-8FE3-4AC4-AB65-4C2D4CFDE1DF}</Project>
       <Name>BugDBDAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UnitTestUtils\UnitTestUtils.csproj">
+      <Project>{58A809A5-89C5-440D-94E5-66CD3F300A08}</Project>
+      <Name>UnitTestUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\DatabaseScripts\BugDB3.sql">
       <Link>DatabaseScripts\BugDB3.sql</Link>
     </None>
-    <None Include="App.config" />
+    <None Include="Properties\App.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ReferenceData\getRevisionsData.txt">

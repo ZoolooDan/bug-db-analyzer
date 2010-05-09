@@ -134,7 +134,7 @@ namespace BugDBReporterTests
     private void TableTest_Impl(string tableName, string refFileName, 
       DateTime from, DateTime to)
     {
-      Application app = (from a in m_provider.GetAllApplications()
+      Application app = (from a in m_provider.GetApplications()
                         where a.Title == "App1"
                         select a).First();
 
