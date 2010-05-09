@@ -3,6 +3,9 @@
 +) Login is name of mailbox at GMail <mailbox>@gmai.com (login=mailbox)
 +) Password can be found at page https://code.google.com/hosting/settings
 
++) BLToolkit 3.1 from http://bltoolkit.net/Home.ashx shall be downloaded
++) Probably location to BLToolkit proj file shall be altered in the solution file
+
 --- Database initialization ---
 +) Run VS as administrator
 +) Create connection to server "WS136\SQLEXPRESS" and database "BugDB"
