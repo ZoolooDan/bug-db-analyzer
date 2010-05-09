@@ -44,7 +44,7 @@ namespace BugDB.Analyzer.GUI
       FillDatabase();
 
       // Request applications
-      Application[] apps = m_provider.GetAllApplications();
+      Application[] apps = m_provider.GetApplications();
       // Assign them to list data source
       appsListBox.ItemsSource = apps;
       appsListBox.DisplayMemberPath = "Title";
@@ -57,7 +57,7 @@ namespace BugDB.Analyzer.GUI
       {
         Application app = (Application)appsListBox.SelectedValue;
         // Request all releases
-        Release[] releases = m_provider.GetApplicationReleases(app.Id);
+        Release[] releases = m_provider.GetReleases(app.Id);
         // And show
         targetReleasesListBox.ItemsSource = releases;
         targetReleasesListBox.DisplayMemberPath = "Title";
@@ -84,5 +84,10 @@ namespace BugDB.Analyzer.GUI
       }
     }
     #endregion Helper Methods
+
+    private void button1_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
   }
 }

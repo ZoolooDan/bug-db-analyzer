@@ -29,6 +29,14 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
 
     #region Constructors
     /// <summary>
+    /// Creates provider without possibility to create DB.
+    /// </summary>
+    public BLToolkitDataProvider()
+      : this(null)
+    {
+    }
+
+    /// <summary>
     /// Constructs provider with specific DB create string.
     /// </summary>
     public BLToolkitDataProvider(string createDbScriptPath)
@@ -48,9 +56,15 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     ///
     /// This implementation uses <see cref="SqlScriptRunner"/> to 
     /// execute DB creation script.
+    /// 
+    /// DB creation script shall be specified during 
+    /// provider creation.
     /// </remarks>
     public void InitializeStorage()
     {
+      if(m_createDbScriptPath == null)
+        throw new Exception("Database creation script wasn't specified");
+
       string connString;
       // Use DbManager.Connection to access connection string
       using(DbManager db = new DbManager())
@@ -60,7 +74,6 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
       // Use script runner to execute script
       SqlScriptRunner runner = new SqlScriptRunner(connString);
       runner.Execute(m_createDbScriptPath);
-
     }
 
     /// <summary>
@@ -73,7 +86,12 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// </remarks>
     public void CleanStorage()
     {
-      throw new NotImplementedException();
+      // Insert application
+      using(DbManager db = new DbManager())
+      {
+        db.SetSpCommand("Storage_Clean", null);
+        db.ExecuteNonQuery();
+      }
     }
 
     /// <summary>
@@ -104,7 +122,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// <summary>
     /// Returns all applications.
     /// </summary>
-    public DTO.Application[] GetAllApplications()
+    public DTO.Application[] GetApplications()
     {
       List<EDM.Application> appEDMs;
       using (DbManager db = new DbManager())
@@ -153,7 +171,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// <summary>
     /// Returns all bugs.
     /// </summary>
-    public DTO.Bug[] GetAllBugs()
+    public DTO.Bug[] GetBugs()
     {
       List<EDM.Bug> bugEDMs;
       using (DbManager db = new DbManager())
@@ -172,7 +190,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// <summary>
     /// Returns all revisions of the specifi bug.
     /// </summary>
-    public DTO.Revision[] GetBugRevisions(int bugNumber)
+    public DTO.Revision[] GetRevisions(int bugNumber)
     {
       List<EDM.Revision> revEDMs;
       using (DbManager db = new DbManager())
@@ -345,7 +363,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// <summary>
     /// Returns all releases of the specified application.
     /// </summary>
-    public DTO.Release[] GetApplicationReleases(int appId)
+    public DTO.Release[] GetReleases(int appId)
     {
       List<EDM.Release> relEDMs;
       using (DbManager db = new DbManager())
@@ -426,7 +444,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// <summary>
     /// Returns all modules of specific application.
     /// </summary>
-    public DTO.Module[] GetApplicationModules(int appId)
+    public DTO.Module[] GetModules(int appId)
     {
       List<EDM.Module> moduleEDMs;
       using (DbManager db = new DbManager())
@@ -467,7 +485,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// <summary>
     /// Returns all sub modules of specific module.
     /// </summary>
-    public DTO.SubModule[] GetModuleSubModules(int moduleId)
+    public DTO.SubModule[] GetSubModules(int moduleId)
     {
       List<EDM.SubModule> subModuleEDMs;
       using (DbManager db = new DbManager())
@@ -488,5 +506,12 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     }
 
     #endregion
+
+    #region Helper Methods
+    private DbManager CreateDbManager()
+    {
+      return null;
+    }
+    #endregion Helper Methods
   }
 }

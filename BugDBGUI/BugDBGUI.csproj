@@ -74,6 +74,10 @@
       <Project>{3D281C5F-8FE3-4AC4-AB65-4C2D4CFDE1DF}</Project>
       <Name>BugDBDAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BugDBReporter\BugDBReporter.csproj">
+      <Project>{EDE24341-4863-4114-A8AC-AA960ABD27BF}</Project>
+      <Name>BugDBReporter</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\bugs.txt">
@@ -85,6 +89,10 @@
       <Link>DatabaseScripts\BugDB3.sql</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Properties\DataSources\BugDB.Reporter.ProjectStatisticDataSet.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Report1.rdlc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

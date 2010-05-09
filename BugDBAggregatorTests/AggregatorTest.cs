@@ -86,7 +86,7 @@ namespace BugDBAggregatorTests
       string path = Path.Combine(this.TestContext.TestDeploymentDir, RecordSourceFileName);
 
       // Check that storage is empty
-      Application[] apps = m_provider.GetAllApplications();
+      Application[] apps = m_provider.GetApplications();
       Assert.AreEqual(0, apps.Length);
 
       // Fill storage
@@ -94,14 +94,14 @@ namespace BugDBAggregatorTests
       aggregator.FillStorage(path);
 
       // Check applications
-      apps = m_provider.GetAllApplications();
+      apps = m_provider.GetApplications();
       Assert.AreNotEqual(0, apps.Length);
 
       Application tmmApp = Array.Find(apps, app => app.Title == "VPI TMM/CM");
       Assert.IsNotNull(tmmApp, "No 'VPI TMM/CM' application.");
 
       // Check modules
-      Module[] modules = m_provider.GetApplicationModules(tmmApp.Id);
+      Module[] modules = m_provider.GetModules(tmmApp.Id);
       Assert.AreNotEqual(0, modules.Length);
       // Check for unique modules in application
       // ToDo: Could be done as constraint in database
@@ -120,12 +120,12 @@ namespace BugDBAggregatorTests
 
       // Check submodules
       Module player = Array.Find(modules, module => module.Title == "player");
-      SubModule[] subModules = m_provider.GetModuleSubModules(player.Id);
+      SubModule[] subModules = m_provider.GetSubModules(player.Id);
       Assert.AreNotEqual(0, subModules.Length);
       Assert.IsTrue(Array.Exists(subModules, subModule => subModule.Title == "repper"));
 
       // Check releases
-      Release[] rels = m_provider.GetApplicationReleases(tmmApp.Id);
+      Release[] rels = m_provider.GetReleases(tmmApp.Id);
       Assert.AreNotEqual(0, rels.Length);
 
       // Check that there are no revisions which starts or ends with quote ('"')
@@ -138,10 +138,10 @@ namespace BugDBAggregatorTests
 
       // Check that different applications may have releases with the same number
       Application tmmApp1 = Array.Find(apps, app => app.Title == "VPI TMM/CM_1");
-      Release[] tmmApp1Rels = m_provider.GetApplicationReleases(tmmApp1.Id);
+      Release[] tmmApp1Rels = m_provider.GetReleases(tmmApp1.Id);
       Assert.AreNotEqual(0, tmmApp1Rels);
       Application tmmApp2 = Array.Find(apps, app => app.Title == "VPI TMM/CM_2");
-      Release[] tmmApp2Rels = m_provider.GetApplicationReleases(tmmApp2.Id);
+      Release[] tmmApp2Rels = m_provider.GetReleases(tmmApp2.Id);
       Assert.AreNotEqual(0, tmmApp2Rels);
       
       Assert.AreNotEqual(tmmApp1Rels[0].AppId, tmmApp2Rels[0].AppId);
@@ -154,7 +154,7 @@ namespace BugDBAggregatorTests
 
 
       // Bugs
-      Bug[] bugs = m_provider.GetAllBugs();
+      Bug[] bugs = m_provider.GetBugs();
       Assert.IsNotNull(bugs);
       Assert.AreNotEqual(0, bugs.Length);
 
@@ -162,7 +162,7 @@ namespace BugDBAggregatorTests
       Assert.IsNotNull(bug1470);
 
       // Revisions
-      Revision[] revisions = m_provider.GetBugRevisions(bug1470.Number);
+      Revision[] revisions = m_provider.GetRevisions(bug1470.Number);
       Assert.IsNotNull(revisions);
       Assert.AreNotEqual(0, revisions.Length);
     }

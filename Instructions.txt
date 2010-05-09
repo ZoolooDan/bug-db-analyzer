@@ -15,3 +15,65 @@
 +) Open "BugDB3.sql" script
 +) Press "Connect" button in toolbar and "Execute SQL"
 +) Repeat above steps
+
+--- BugDB Schema ---
+Applications
+	app_id - int, not null
+	app_title - varchar(50), not null
+  
+Staff
+	person_id - int, NOT NULL,
+	person_login - varchar(30) NOT NULL,
+	person_title - varchar(50) NULL,
+
+Modules
+	module_id - int IDENTITY(1,1) NOT NULL,
+	app_id - int NOT NULL,
+	module_title - varchar(50) NOT NULL,
+
+Submodules
+	submodule_id - int IDENTITY(1,1) NOT NULL,
+	module_id - int NOT NULL,
+	submodule_title - varchar(50) NOT NULL,
+
+Releases
+	release_id - int IDENTITY(1,1) NOT NULL,
+	app_id - int NOT NULL,
+	release_title - varchar(30) NOT NULL,
+
+Bugs
+	bug_number - int NOT NULL,
+	recent_revision - int NOT NULL,
+
+Summaries
+	summary_id - int IDENTITY(1,1) NOT NULL,
+	summary_text - varchar(160) NOT NULL,
+	
+Revisions
+	bug_number - int NOT NULL,
+	revision - int NOT NULL,
+	date - datetime NOT NULL,
+	bug_type - int NOT NULL,
+	app_id - int NOT NULL,
+	module_id - int NULL,
+	submodule_id - int NULL,
+	status - int NOT NULL,
+	found_release_id - int NULL,
+	target_release_id - int NULL,
+	severity - int NULL,
+	priority - int NULL,
+	contributor_id - int NOT NULL,
+	leader_id - int NULL,
+	developer_id - int NULL,
+	qa_id - int NULL,
+	summary_id - int NOT NULL,
+
+
+--- Test configuration ---
++) Settings are in BugDBDALTests -> App.config
++) StorageInitMethod = Initialize -> recreates database via SQL script
++) StorageInitMethod = Clean -> cleans database via DELETE statements
++) BLToolkit.DefaultConfiguration = WithPooling -> faster
++) BLToolkit.DefaultConfiguration = WithoutPooling -> allow multiple DB recreation
++) Rebuild project if only App.config is changed because it will not be
+   taken into account by test execution
