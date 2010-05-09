@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AAF24F5B-A3E5-461D-B064-F31237D25078}"
 	ProjectSection(SolutionItems) = preProject
 		BugDBAnalyzer.vsmdi = BugDBAnalyzer.vsmdi
+		Instructions.txt = Instructions.txt
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 	EndProjectSection
 EndProject
