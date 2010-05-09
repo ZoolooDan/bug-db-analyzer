@@ -63,9 +63,11 @@ namespace BugDB.DataAccessLayer.Utils
     /// </remarks>
     private void ExecuteScriptText(string script)
     {
-      SqlConnection connection = new SqlConnection(m_connString);
-      Server server = new Server(new ServerConnection(connection));
-      server.ConnectionContext.ExecuteNonQuery(script);
+      using(SqlConnection connection = new SqlConnection(m_connString))
+      {
+        Server server = new Server(new ServerConnection(connection));
+        server.ConnectionContext.ExecuteNonQuery(script);
+      }
     }
     #endregion Helper Methods
   }
