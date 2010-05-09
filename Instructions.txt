@@ -1,0 +1,14 @@
+--- Source Code ---
++) Code is located at https://code.google.com/p/bug-db-analyzer/
++) Login is name of mailbox at GMail <mailbox>@gmai.com (login=mailbox)
++) Password can be found at page https://code.google.com/hosting/settings
+
+--- Database initialization ---
++) Run VS as administrator
++) Create connection to server "WS136\SQLEXPRESS" and database "BugDB"
++) Open "Database Diagrams" node and answer yes to request make yoursefl owner of database
+-> Now database creation scripts should work
+!> If not working:
++) Open "BugDB3.sql" script
++) Press "Connect" button in toolbar and "Execute SQL"
++) Repeat above steps
