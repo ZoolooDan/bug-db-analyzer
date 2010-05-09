@@ -5,7 +5,7 @@ namespace BugDB.DAL.Tests
 {
   /// <summary>
   /// ObjectMapper tests
-  ///</summary>
+  /// </summary>
   [TestClass]
   public class ObjectMapperTest
   {
@@ -46,22 +46,6 @@ namespace BugDB.DAL.Tests
     //}
     //
     #endregion
-
-    /// <summary>
-    ///A test for Map
-    ///</summary>
-    public void MapTestHelper<S, T>()
-
-        where T : new()
-    {
-      S source = default(S); // TODO: Initialize to an appropriate value
-      T expected = new T(); // TODO: Initialize to an appropriate value
-      T actual;
-      actual = ObjectMapper.Map<S, T>(source);
-      Assert.AreEqual(expected, actual);
-      Assert.Inconclusive("Verify the correctness of this test method.");
-    }
-
 
     internal enum EnA
     {
@@ -133,22 +117,13 @@ namespace BugDB.DAL.Tests
       public int? PropE { get; set; }
     }
 
+    /// <summary>
+    /// Tests copying similar objects.
+    /// </summary>
     [TestMethod]
-    public void MapTest()
+    public void CopyTestSimilar()
     {
-      MapTestHelper<GenericParameterHelper, GenericParameterHelper>();
-      A a = new A() {PropA = 10};
-      B b = ObjectMapper.Map<A, B>(a);
-
-      Assert.AreEqual(a.PropA, b.PropA);
-      Assert.AreEqual(B.PropBValue, b.GetB());
-      Assert.AreEqual(B.PropDValue, b.GetD());
-    }
-
-    [TestMethod]
-    public void CopyTest()
-    {
-      var copier = new ObjectCopier<A, B>();
+      var copier = new ObjectMapper<A, B>();
 
       A a1 = new A();
       B b1 = copier.Copy(a1);
@@ -171,6 +146,53 @@ namespace BugDB.DAL.Tests
       A a3 = new A {PropC = null};
       B b3 = copier.Copy(a3);
       Assert.IsFalse(b3.PropC.HasValue);
+    }
+    ///////////////////////////////////////////////////////////
+
+    class C
+    {
+      public const int PropAValue = 10;
+      public const double PropBValue = 145;
+
+      public C()
+      {
+        this.PropA = PropAValue;
+        this.PropB = PropBValue;
+      }
+
+      public int PropA { get; set; }
+      public double PropB { get; set; }
+    }
+
+    class D
+    {
+      public const double PropAValue = 3.5;
+      public const int PropBValue = 56;
+
+      public D()
+      {
+        this.PropA = PropAValue;
+        this.PropB = PropBValue;
+      }
+
+      public double PropA { get; set; }
+      public int PropB { get; set; }
+    }
+
+    /// <summary>
+    /// Tests copying a little bit different objects.
+    /// </summary>
+    [TestMethod]
+    public void CopyTestDifferent()
+    {
+      var copier = new ObjectMapper<C, D>();
+
+      C c1 = new C();
+      D d1 = copier.Copy(c1);
+
+      Assert.IsNotNull(d1);
+      Assert.AreEqual(c1.PropA, d1.PropA);
+      Assert.AreEqual(c1.PropB, d1.PropB);
     }
   }
 }

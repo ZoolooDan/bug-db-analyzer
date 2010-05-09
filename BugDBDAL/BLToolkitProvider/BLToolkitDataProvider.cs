@@ -16,13 +16,13 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
   public class BLToolkitDataProvider : IDataProvider
   {
     #region Private Fields
-    private static ObjectCopier<DTO.Bug, EDM.Bug> s_bugCopier = new ObjectCopier<DTO.Bug, EDM.Bug>();
-    private static ObjectCopier<DTO.Application, EDM.Application> s_appCopier = new ObjectCopier<DTO.Application, EDM.Application>();
-    private static ObjectCopier<DTO.Module, EDM.Module> s_moduleCopier = new ObjectCopier<DTO.Module, EDM.Module>();
-    private static ObjectCopier<DTO.SubModule, EDM.SubModule> s_subModuleCopier = new ObjectCopier<DTO.SubModule, EDM.SubModule>();
-    private static ObjectCopier<DTO.Release, EDM.Release> s_relCopier = new ObjectCopier<DTO.Release, EDM.Release>();
-    private static ObjectCopier<DTO.Person, EDM.Person> s_personCopier = new ObjectCopier<DTO.Person, EDM.Person>();
-    private static ObjectCopier<DTO.Revision, EDM.Revision> s_revisionCopier = new ObjectCopier<DTO.Revision, EDM.Revision>();
+    private static ObjectMapper<DTO.Bug, EDM.Bug> s_bugCopier = new ObjectMapper<DTO.Bug, EDM.Bug>();
+    private static ObjectMapper<DTO.Application, EDM.Application> s_appCopier = new ObjectMapper<DTO.Application, EDM.Application>();
+    private static ObjectMapper<DTO.Module, EDM.Module> s_moduleCopier = new ObjectMapper<DTO.Module, EDM.Module>();
+    private static ObjectMapper<DTO.SubModule, EDM.SubModule> s_subModuleCopier = new ObjectMapper<DTO.SubModule, EDM.SubModule>();
+    private static ObjectMapper<DTO.Release, EDM.Release> s_relCopier = new ObjectMapper<DTO.Release, EDM.Release>();
+    private static ObjectMapper<DTO.Person, EDM.Person> s_personCopier = new ObjectMapper<DTO.Person, EDM.Person>();
+    private static ObjectMapper<DTO.Revision, EDM.Revision> s_revisionCopier = new ObjectMapper<DTO.Revision, EDM.Revision>();
 
     private string m_createDbScriptPath;
     #endregion Private Fields
