@@ -49,10 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLToolkitDataProviderTest.cs" />
-    <Compile Include="DatabaseSetup.cs" />
-    <Compile Include="DatabaseUnitTest1.cs">
-      <SubType>Designer</SubType>
-    </Compile>
     <Compile Include="DBCleanerTest.cs" />
     <Compile Include="ObjectMapperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,11 +72,6 @@
       <Link>DatabaseScripts\BugDB3.sql</Link>
     </None>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DatabaseUnitTest1.resx">
-      <DependentUpon>DatabaseUnitTest1.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="ReferenceData\getRevisionsData.txt">
