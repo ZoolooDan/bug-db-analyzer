@@ -180,7 +180,7 @@ namespace BugDB.Aggregator
         BugType type = ProcessType(record);
 
         // Process status
-        BugStatus? status = ProcessStatus(record);
+        BugStatus status = ProcessStatus(record);
 
         // Process severity
         BugSeverity? severity = ProcessSeverity(record);
@@ -314,13 +314,13 @@ namespace BugDB.Aggregator
     /// <summary>
     /// Process status.
     /// </summary>
-    private static BugStatus? ProcessStatus(Record record)
+    private static BugStatus ProcessStatus(Record record)
     {
-      BugStatus status = BugStatus.Open;
+      BugStatus status = BugStatus.None;
       string str = record[StatusCol];
       bool found = str != null ? s_statusMappings.TryGetValue(str, out status) : false;
-
-      return found ? new BugStatus?(status) : null;
+      
+      return found ? status : BugStatus.None;
     }
 
     /// <summary>
@@ -480,7 +480,7 @@ namespace BugDB.Aggregator
     /// Create revision based on provided information.
     /// </summary>
     private void ProcessRevision(int number, int revision, DateTime date,
-      BugType type, BugStatus? status, string summary,
+      BugType type, BugStatus status, string summary,
       BugSeverity? severity, int? priority, Application app,
       Module module, SubModule subModule, Release foundRelease, Release targetRelease,
       Person contributor, Person leader, Person developer, Person tester)

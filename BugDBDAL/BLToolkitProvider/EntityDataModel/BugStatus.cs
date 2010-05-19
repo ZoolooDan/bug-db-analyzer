@@ -11,6 +11,12 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider.EntityDataModel
     /// <summary>
     /// Bug is just opened.
     /// </summary>
+    [MapValue(0)]
+    None,
+
+    /// <summary>
+    /// Bug is just opened.
+    /// </summary>
     [MapValue(1)]
     Open,
     /// <summary>

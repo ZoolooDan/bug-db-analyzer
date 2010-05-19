@@ -1,10 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BugDB.DataAccessLayer.DataTransferObjects
 {
+  /// <summary>
+  /// Extensions for DateTime class.
+  /// </summary>
+  public static class DateTimeCompareExtensions
+  {
+    /// <summary>
+    /// Compares objects with some tolerance.
+    /// </summary>
+    /// <remarks>
+    /// SQL Server "datetime" values are rounded to increments of .000, .003, or .007 seconds
+    /// http://msdn.microsoft.com/en-us/library/ms187819.aspx
+    /// 
+    /// This extension method can be used to compare DateTime objects with some tolerance.
+    /// http://stackoverflow.com/questions/381401/how-do-you-compare-datetime-objects-using-a-specified-tolerance-in-c
+    /// </remarks>
+    public static bool EqualsTol(this DateTime d1, DateTime d2, TimeSpan tolerance)
+    {
+      return (d1 - d2) < tolerance;
+    }
+  }
+
   /// <summary>
   /// Revision represents state of the bug
   /// at some particular time.
@@ -17,7 +35,7 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
   /// corresponds to the most recent revision. This revision
   /// represents current state of the bug.
   /// </remarks>
-  public class Revision
+  public class Revision : IEquatable<Revision>
   {
     /// <summary>
     /// Unique number of the bug record.
@@ -37,7 +55,7 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
     /// <summary>
     /// Status of the revision.
     /// </summary>
-    public BugStatus? Status { get; set; }
+    public BugStatus Status { get; set; }
 
     /// <summary>
     /// Date of the revision.
@@ -114,6 +132,59 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
     /// </summary>
     public string Summary { get; set; }
 
+    #region Equality Overrides
+    public bool Equals(Revision other)
+    {
+      if (ReferenceEquals(null, other)) return false;
+      if (ReferenceEquals(this, other)) return true;
+      // Notice comparison of DateTime objects
+      return other.BugNumber == BugNumber && other.Rev == Rev && Equals(other.Type, Type) && other.Status.Equals(Status) && other.Date.EqualsTol(Date, TimeSpan.FromMilliseconds(2)) && other.AppId == AppId && other.ModuleId.Equals(ModuleId) && other.SubModuleId.Equals(SubModuleId) && other.FoundReleaseId.Equals(FoundReleaseId) && other.TargetReleaseId.Equals(TargetReleaseId) && other.Severity.Equals(Severity) && other.Priority.Equals(Priority) && other.ContributorId == ContributorId && other.TeamLeaderId.Equals(TeamLeaderId) && other.DeveloperId.Equals(DeveloperId) && other.TesterId.Equals(TesterId) && Equals(other.Summary, Summary);
+    }
+
+    public override bool Equals(object obj)
+    {
+      if (ReferenceEquals(null, obj)) return false;
+      if (ReferenceEquals(this, obj)) return true;
+      if (obj.GetType() != typeof (Revision)) return false;
+      return Equals((Revision) obj);
+    }
+
+    public override int GetHashCode()
+    {
+      unchecked
+      {
+        int result = BugNumber;
+        result = (result*397) ^ Rev;
+        result = (result*397) ^ Type.GetHashCode();
+        result = (result*397) ^ Status.GetHashCode();
+        result = (result*397) ^ Date.GetHashCode();
+        result = (result*397) ^ AppId;
+        result = (result*397) ^ (ModuleId.HasValue ? ModuleId.Value : 0);
+        result = (result*397) ^ (SubModuleId.HasValue ? SubModuleId.Value : 0);
+        result = (result*397) ^ (FoundReleaseId.HasValue ? FoundReleaseId.Value : 0);
+        result = (result*397) ^ (TargetReleaseId.HasValue ? TargetReleaseId.Value : 0);
+        result = (result*397) ^ (Severity.HasValue ? Severity.Value.GetHashCode() : 0);
+        result = (result*397) ^ (Priority.HasValue ? Priority.Value : 0);
+        result = (result*397) ^ ContributorId;
+        result = (result*397) ^ (TeamLeaderId.HasValue ? TeamLeaderId.Value : 0);
+        result = (result*397) ^ (DeveloperId.HasValue ? DeveloperId.Value : 0);
+        result = (result*397) ^ (TesterId.HasValue ? TesterId.Value : 0);
+        result = (result*397) ^ (Summary != null ? Summary.GetHashCode() : 0);
+        return result;
+      }
+    }
+
+    public static bool operator ==(Revision left, Revision right)
+    {
+      return Equals(left, right);
+    }
+
+    public static bool operator !=(Revision left, Revision right)
+    {
+      return !Equals(left, right);
+    }
+    #endregion Equality Overrides
+
     /// <summary>
     /// Prints debugging information.
     /// </summary>
@@ -122,7 +193,7 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
       string str = String.Format("{{{0},{1}}}-{2},{3},{4}", 
         this.BugNumber, this.Rev,
         this.Type, 
-        this.Status.HasValue ? this.Status.ToString() : "None",
+        this.Status,
         this.Date.ToShortDateString());
       return str;
     }
