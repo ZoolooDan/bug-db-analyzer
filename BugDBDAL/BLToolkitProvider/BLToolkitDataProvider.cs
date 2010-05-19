@@ -143,7 +143,19 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     /// </summary>
     public DTO.Application GetApplication(int appId)
     {
-      throw new NotImplementedException();
+      EDM.Application appEDM;
+      using( DbManager db = new DbManager() )
+      {
+        appEDM = db.SetCommand(
+          @"SELECT * FROM Applications WHERE app_id = @AppId",
+          db.InputParameter("@AppId", appId)).
+          ExecuteObject<EDM.Application>();
+      }
+
+      // Copy EDMs to DTOs
+      DTO.Application appDTO = s_appCopier.Copy(appEDM);
+
+      return appDTO;
     }
 
     /// <summary>
@@ -196,11 +208,17 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
       using (DbManager db = new DbManager())
       {
         revEDMs = db.SetCommand(@"
-            SELECT * FROM Revisions 
+            SELECT bug_number, revision, date, bug_type, app_id, module_id, 
+            submodule_id, status, found_release_id, target_release_id, 
+            severity, priority, contributor_id, leader_id, developer_id, 
+            qa_id, S.summary_text AS summary 
+            FROM Revisions AS R INNER JOIN Summaries AS S ON R.summary_id = S.summary_id
             WHERE bug_number=@BugNumber
             ORDER BY revision",
             db.InputParameter("@BugNumber", bugNumber)).
           ExecuteList<EDM.Revision>();
+
+
       }
 
       List<DTO.Revision> revDTOs = new List<DTO.Revision>(revEDMs.Count);
