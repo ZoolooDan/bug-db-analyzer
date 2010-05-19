@@ -26,6 +26,10 @@ namespace BugDB.DataAccessLayer.DataTransferObjects
   public enum BugStatus
   {
     /// <summary>
+    /// Status isn't specified.
+    /// </summary>
+    None,
+    /// <summary>
     /// Bug is just opened.
     /// </summary>
     Open,

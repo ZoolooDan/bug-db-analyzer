@@ -378,7 +378,7 @@ namespace BugDB.Reporter
       if( revision != null )
       {
         // Get status group (treat empty status as if but is just open)
-        Debug.Assert(mapping.TryGetValue(revision.Status ?? BugStatus.Open, 
+        Debug.Assert(mapping.TryGetValue(revision.Status, 
           out statusGroup));
       }
       return statusGroup;

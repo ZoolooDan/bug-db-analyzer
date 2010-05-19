@@ -32,7 +32,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider.EntityDataModel
     /// Status of the revision.
     /// </summary>
     [MapField("status")]
-    public BugStatus? Status { get; set; }
+    public BugStatus Status { get; set; }
 
     /// <summary>
     /// Date of the revision.

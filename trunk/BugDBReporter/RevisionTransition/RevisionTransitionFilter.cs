@@ -138,7 +138,7 @@ namespace BugDB.Reporter.RevisionTransition
       if( revision != null )
       {
         // treat empty status as if but is just open
-        string statusStr = (revision.Status ?? BugStatus.Open).ToString();
+        string statusStr = revision.Status.ToString();
 
         var query = from g in m_reportConfig.StatusGroups
                     where Array.IndexOf(g.Status ?? new string[0], statusStr) != -1
