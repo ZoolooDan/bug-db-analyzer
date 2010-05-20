@@ -14,29 +14,20 @@ namespace BugDB.DAL.Tests
   [TestClass]
   public class RevisionQueryTests : DatabaseStorageTestBase
   {
-    #region Additional test attributes
+    public RevisionQueryTests() : base(false)
+    {
+      
+    }
 
-    //
-    // You can use the following additional attributes as you write your tests:
-    //
-    // Use ClassInitialize to run code before running the first test in the class
-    // [ClassInitialize()]
-    // public static void MyClassInitialize(TestContext testContext) { }
-    //
-    // Use ClassCleanup to run code after all tests in a class have run
-    // [ClassCleanup()]
-    // public static void MyClassCleanup() { }
-    //
-    // Use TestInitialize to run code before running each test 
-    // [TestInitialize()]
-    // public void MyTestInitialize() { }
-    //
-    // Use TestCleanup to run code after each test has run
-    // [TestCleanup()]
-    // public void MyTestCleanup() { }
-    //
-
-    #endregion
+    public override void FillStorage()
+    {
+      // Fill storage with data
+      string dbDataPath = Path.Combine(
+        TestContext.TestDeploymentDir,
+        @"ReferenceData\getRevisionsData.txt");
+      var aggregator = new StorageAggregator(Provider);
+      aggregator.FillStorage(dbDataPath);
+    }
 
     /// <summary>
     /// Test for GetRevisions(query).
@@ -45,18 +36,11 @@ namespace BugDB.DAL.Tests
     [DeploymentItem(@"ReferenceData\getRevisionsData.txt", "ReferenceData")]
     public void GetRevisionsByQueryTest()
     {
-      // Fill storage with data
-      string dbDataPath = Path.Combine(
-        TestContext.TestDeploymentDir,
-        @"ReferenceData\getRevisionsData.txt");
-      var aggregator = new StorageAggregator(m_provider);
-      aggregator.FillStorage(dbDataPath);
-
       var prms = new QueryParams
       {
         Apps = new[]
                               {
-                                (from a in m_provider.GetApplications()
+                                (from a in Provider.GetApplications()
                                  where a.Title == "App1"
                                  select a.Id).First()
                               }
@@ -64,7 +48,7 @@ namespace BugDB.DAL.Tests
 
       // Get all revisions for bugs where application of 
       // the most recent revision is "App1"
-      Revision[] actual = m_provider.GetRevisions(prms);
+      Revision[] actual = Provider.GetRevisions(prms);
 
       Assert.AreEqual(6, actual.Length);
     }

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using BugDB.Aggregator;
-using BugDB.DataAccessLayer;
 using BugDB.DataAccessLayer.DataTransferObjects;
 using BugDB.Tests.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BugDB.DataAccessLayer.BLToolkitProvider;
 
 namespace BugDB.DAL.Tests
 {
@@ -27,7 +22,7 @@ namespace BugDB.DAL.Tests
       const string appTitle = "TestApp";
 
       var app = new Application {Title = appTitle};
-      Application actual = m_provider.CreateApplicaton(app);
+      Application actual = Provider.CreateApplicaton(app);
       Assert.IsNotNull(actual);
       Assert.AreNotEqual(0, actual.Id);
       Assert.AreEqual(appTitle, actual.Title);
@@ -43,9 +38,9 @@ namespace BugDB.DAL.Tests
 
       // Create application
       var app = new Application {Title = appTitle};
-      app = m_provider.CreateApplicaton(app);
+      app = Provider.CreateApplicaton(app);
 
-      Application actual = m_provider.GetApplication(app.Id);
+      Application actual = Provider.GetApplication(app.Id);
       Assert.IsNotNull(actual);
       Assert.AreEqual(app.Id, actual.Id);
       Assert.AreEqual(appTitle, actual.Title);
@@ -62,11 +57,11 @@ namespace BugDB.DAL.Tests
 
       // Create application
       var app1 = new Application {Title = appTitle1};
-      app1 = m_provider.CreateApplicaton(app1);
+      app1 = Provider.CreateApplicaton(app1);
       var app2 = new Application {Title = appTitle2};
-      app2 = m_provider.CreateApplicaton(app2);
+      app2 = Provider.CreateApplicaton(app2);
 
-      Application[] actual = m_provider.GetApplications();
+      Application[] actual = Provider.GetApplications();
       Assert.IsNotNull(actual);
       Assert.AreEqual(2, actual.Length);
       Assert.IsNotNull(actual[0]);
@@ -85,10 +80,10 @@ namespace BugDB.DAL.Tests
     public void CreateReleaseTest()
     {
       var app = new Application {Title = "App1"};
-      app = m_provider.CreateApplicaton(app);
+      app = Provider.CreateApplicaton(app);
 
       var release = new Release {AppId = app.Id, Title = "Release1"};
-      Release actual = m_provider.CreateRelease(release);
+      Release actual = Provider.CreateRelease(release);
 
       Assert.IsNotNull(actual);
       Assert.AreNotEqual(0, actual.Id);
@@ -102,12 +97,12 @@ namespace BugDB.DAL.Tests
     public void GetReleasesTest()
     {
       var app = new Application {Title = "App1"};
-      app = m_provider.CreateApplicaton(app);
+      app = Provider.CreateApplicaton(app);
 
-      Release release1 = m_provider.CreateRelease(new Release {AppId = app.Id, Title = "Release1"});
-      Release release2 = m_provider.CreateRelease(new Release {AppId = app.Id, Title = "Release2"});
+      Release release1 = Provider.CreateRelease(new Release {AppId = app.Id, Title = "Release1"});
+      Release release2 = Provider.CreateRelease(new Release {AppId = app.Id, Title = "Release2"});
 
-      Release[] actual = m_provider.GetReleases(app.Id);
+      Release[] actual = Provider.GetReleases(app.Id);
 
       Assert.IsNotNull(actual);
       Assert.AreEqual(2, actual.Length);
@@ -125,10 +120,10 @@ namespace BugDB.DAL.Tests
     public void CreateModuleTest()
     {
       var app = new Application {Title = "App1"};
-      app = m_provider.CreateApplicaton(app);
+      app = Provider.CreateApplicaton(app);
 
       var module = new Module {AppId = app.Id, Title = "Module1"};
-      Module actual = m_provider.CreateModule(module);
+      Module actual = Provider.CreateModule(module);
 
       Assert.IsNotNull(actual);
       Assert.AreNotEqual(0, actual.Id);
@@ -143,17 +138,17 @@ namespace BugDB.DAL.Tests
     public void GetModulesTest()
     {
       var app1 = new Application {Title = "App1"};
-      app1 = m_provider.CreateApplicaton(app1);
+      app1 = Provider.CreateApplicaton(app1);
 
-      m_provider.CreateModule(new Module {AppId = app1.Id, Title = "Module1"});
-      m_provider.CreateModule(new Module {AppId = app1.Id, Title = "Module2"});
+      Provider.CreateModule(new Module {AppId = app1.Id, Title = "Module1"});
+      Provider.CreateModule(new Module {AppId = app1.Id, Title = "Module2"});
 
       var app2 = new Application {Title = "App2"};
-      app2 = m_provider.CreateApplicaton(app2);
-      Module module3 = m_provider.CreateModule(new Module {AppId = app2.Id, Title = "Module1"});
-      Module module4 = m_provider.CreateModule(new Module {AppId = app2.Id, Title = "Module4"});
+      app2 = Provider.CreateApplicaton(app2);
+      Module module3 = Provider.CreateModule(new Module {AppId = app2.Id, Title = "Module1"});
+      Module module4 = Provider.CreateModule(new Module {AppId = app2.Id, Title = "Module4"});
 
-      Module[] actual = m_provider.GetModules(app2.Id);
+      Module[] actual = Provider.GetModules(app2.Id);
 
       Assert.IsNotNull(actual);
       Assert.AreEqual(2, actual.Length);
@@ -175,13 +170,13 @@ namespace BugDB.DAL.Tests
       const string title = "SubModule1";
 
       var app = new Application { Title = "App1" };
-      app = m_provider.CreateApplicaton(app);
+      app = Provider.CreateApplicaton(app);
 
       var module = new Module { AppId = app.Id, Title = "Module1" };
-      module = m_provider.CreateModule(module);
+      module = Provider.CreateModule(module);
 
       var subModule = new SubModule { ModuleId = module.Id, Title = title };
-      var actual = m_provider.CreateSubModule(subModule);
+      var actual = Provider.CreateSubModule(subModule);
 
       Assert.IsNotNull(actual);
       Assert.AreNotEqual(0, actual.Id);
@@ -200,23 +195,23 @@ namespace BugDB.DAL.Tests
       const string title3 = "SubModule3";
 
       var app = new Application { Title = "App1" };
-      app = m_provider.CreateApplicaton(app);
+      app = Provider.CreateApplicaton(app);
 
       var module1 = new Module { AppId = app.Id, Title = "Module1" };
-      module1 = m_provider.CreateModule(module1);
+      module1 = Provider.CreateModule(module1);
       var module2 = new Module { AppId = app.Id, Title = "Module2" };
-      module2 = m_provider.CreateModule(module2);
+      module2 = Provider.CreateModule(module2);
 
-      m_provider.CreateSubModule(
+      Provider.CreateSubModule(
         new SubModule { ModuleId = module1.Id, Title = title1 });
-      m_provider.CreateSubModule(
+      Provider.CreateSubModule(
         new SubModule { ModuleId = module1.Id, Title = title2 });
-      m_provider.CreateSubModule(
+      Provider.CreateSubModule(
         new SubModule { ModuleId = module2.Id, Title = title2 });
-      m_provider.CreateSubModule(
+      Provider.CreateSubModule(
         new SubModule { ModuleId = module2.Id, Title = title3 });
       
-      var actual = m_provider.GetSubModules(module2.Id);
+      var actual = Provider.GetSubModules(module2.Id);
 
       Assert.IsNotNull(actual);
       Assert.AreEqual(2, actual.Length);
@@ -236,7 +231,7 @@ namespace BugDB.DAL.Tests
     public void CreatePersonTest()
     {
       var person = new Person {Login = "user1", Title = "User Clever"};
-      person = m_provider.CreatePerson(person);
+      person = Provider.CreatePerson(person);
       Assert.IsNotNull(person);
       Assert.AreNotEqual(0, person.Id);
     }
@@ -248,9 +243,9 @@ namespace BugDB.DAL.Tests
     public void GetStaffTest()
     {
       var person = new Person {Login = "user1", Title = "User Clever"};
-      person = m_provider.CreatePerson(person);
+      person = Provider.CreatePerson(person);
 
-      Person[] actual = m_provider.GetStaff();
+      Person[] actual = Provider.GetStaff();
       Assert.IsNotNull(actual);
       Assert.AreEqual(1, actual.Length);
       Assert.IsNotNull(actual[0]);
@@ -269,28 +264,28 @@ namespace BugDB.DAL.Tests
     {
       // Add some records to all collections
       var app = new Application { Title = "App1" };
-      app = m_provider.CreateApplicaton(app);
+      app = Provider.CreateApplicaton(app);
 
       var contributor = new Person { Login = "user1", Title = "Contributor" };
-      contributor = m_provider.CreatePerson(contributor);
+      contributor = Provider.CreatePerson(contributor);
 
       var leader = new Person { Login = "user2", Title = "Leader" };
-      leader = m_provider.CreatePerson(leader);
+      leader = Provider.CreatePerson(leader);
 
       var dev = new Person { Login = "user3", Title = "Developer" };
-      dev = m_provider.CreatePerson(dev);
+      dev = Provider.CreatePerson(dev);
 
       var tester = new Person { Login = "user4", Title = "QM" };
-      tester = m_provider.CreatePerson(tester);
+      tester = Provider.CreatePerson(tester);
 
       var module = new Module { AppId = app.Id, Title = "Module1" };
-      module = m_provider.CreateModule(module);
+      module = Provider.CreateModule(module);
 
       var subModule = new SubModule { ModuleId = module.Id, Title = "SubModule1" };
-      subModule = m_provider.CreateSubModule(subModule);
+      subModule = Provider.CreateSubModule(subModule);
 
       var release = new Release { AppId = app.Id, Title = "Release1" };
-      release = m_provider.CreateRelease(release);
+      release = Provider.CreateRelease(release);
 
 
       var revision1 = new Revision
@@ -311,7 +306,7 @@ namespace BugDB.DAL.Tests
         Summary = "Summary text"
       };
 
-      var actual1 = m_provider.CreateRevision(revision1);
+      var actual1 = Provider.CreateRevision(revision1);
 
       Assert.IsNotNull(actual1);
       Assert.AreEqual(app.Id, actual1.AppId);
@@ -353,7 +348,7 @@ namespace BugDB.DAL.Tests
         Summary = "Summary text 2"
       };
 
-      var actual2 = m_provider.CreateRevision(revision2);
+      var actual2 = Provider.CreateRevision(revision2);
 
       Assert.IsNotNull(actual2);
       Assert.AreEqual(app.Id, actual2.AppId);
@@ -383,31 +378,31 @@ namespace BugDB.DAL.Tests
     {
       // Add some records to all collections
       var app = new Application { Title = "App1" };
-      app = m_provider.CreateApplicaton(app);
+      app = Provider.CreateApplicaton(app);
 
       var contributor = new Person { Login = "user1", Title = "Contributor" };
-      contributor = m_provider.CreatePerson(contributor);
+      contributor = Provider.CreatePerson(contributor);
 
       var leader = new Person { Login = "user2", Title = "Leader" };
-      leader = m_provider.CreatePerson(leader);
+      leader = Provider.CreatePerson(leader);
 
       var dev = new Person { Login = "user3", Title = "Developer" };
-      dev = m_provider.CreatePerson(dev);
+      dev = Provider.CreatePerson(dev);
 
       var tester = new Person { Login = "user4", Title = "QM" };
-      tester = m_provider.CreatePerson(tester);
+      tester = Provider.CreatePerson(tester);
 
       var module = new Module { AppId = app.Id, Title = "Module1" };
-      module = m_provider.CreateModule(module);
+      module = Provider.CreateModule(module);
 
       var subModule = new SubModule { ModuleId = module.Id, Title = "SubModule1" };
-      subModule = m_provider.CreateSubModule(subModule);
+      subModule = Provider.CreateSubModule(subModule);
 
       var release = new Release { AppId = app.Id, Title = "Release1" };
-      release = m_provider.CreateRelease(release);
+      release = Provider.CreateRelease(release);
 
 
-      var revision1 = m_provider.CreateRevision(
+      var revision1 = Provider.CreateRevision(
         new Revision
           {
             AppId = app.Id,
@@ -426,7 +421,7 @@ namespace BugDB.DAL.Tests
             Summary = "Summary text"
           });
 
-      var revision2 = m_provider.CreateRevision(
+      var revision2 = Provider.CreateRevision(
         new Revision
           {
             AppId = app.Id,
@@ -448,7 +443,7 @@ namespace BugDB.DAL.Tests
             Summary = "Summary text 2"
           });
 
-      var revision3 = m_provider.CreateRevision(
+      Provider.CreateRevision(
         new Revision
           {
             AppId = app.Id,
@@ -461,7 +456,7 @@ namespace BugDB.DAL.Tests
             Summary = "Summary text 2"
           });
 
-      var revisions = m_provider.GetRevisions(10);
+      var revisions = Provider.GetRevisions(10);
 
       Assert.IsNotNull(revisions);
       Assert.AreEqual(2, revisions.Length);
@@ -477,7 +472,7 @@ namespace BugDB.DAL.Tests
     {
       CreateRevisionTest();
 
-      Bug[] bugs = m_provider.GetBugs();
+      Bug[] bugs = Provider.GetBugs();
       Assert.IsNotNull(bugs);
       Assert.AreEqual(1, bugs.Length);
       Assert.AreEqual(10, bugs[0].Number);
@@ -492,19 +487,19 @@ namespace BugDB.DAL.Tests
     {
       // Add some records to all collections
       var app = new Application {Title = "App1"};
-      app = m_provider.CreateApplicaton(app);
+      app = Provider.CreateApplicaton(app);
 
       var person = new Person {Login = "user1", Title = "User Clever"};
-      person = m_provider.CreatePerson(person);
+      person = Provider.CreatePerson(person);
 
       var module = new Module {AppId = app.Id, Title = "Module1"};
-      module = m_provider.CreateModule(module);
+      module = Provider.CreateModule(module);
 
       var subModule = new SubModule {ModuleId = module.Id, Title = "SubModule1"};
-      subModule = m_provider.CreateSubModule(subModule);
+      subModule = Provider.CreateSubModule(subModule);
 
       var release = new Release {AppId = app.Id, Title = "Release1"};
-      release = m_provider.CreateRelease(release);
+      release = Provider.CreateRelease(release);
 
       var revision = new Revision
                        {
@@ -524,27 +519,27 @@ namespace BugDB.DAL.Tests
                          Summary = "Summary text"
                        };
 
-      m_provider.CreateRevision(revision);
+      Provider.CreateRevision(revision);
 
       // Check that everything is added to storage
-      Assert.AreNotEqual(0, m_provider.GetApplications().Length);
-      Assert.AreNotEqual(0, m_provider.GetModules(app.Id).Length);
-      Assert.AreNotEqual(0, m_provider.GetSubModules(module.Id).Length);
-      Assert.AreNotEqual(0, m_provider.GetStaff().Length);
-      //      Assert.AreNotEqual(0, m_provider.GetBugs().Length);
-      Assert.AreNotEqual(0, m_provider.GetRevisions(10).Length);
-      //      Assert.AreNotEqual(0, m_provider.GetReleases().Length);
+      Assert.AreNotEqual(0, Provider.GetApplications().Length);
+      Assert.AreNotEqual(0, Provider.GetModules(app.Id).Length);
+      Assert.AreNotEqual(0, Provider.GetSubModules(module.Id).Length);
+      Assert.AreNotEqual(0, Provider.GetStaff().Length);
+      //      Assert.AreNotEqual(0, Provider.GetBugs().Length);
+      Assert.AreNotEqual(0, Provider.GetRevisions(10).Length);
+      //      Assert.AreNotEqual(0, Provider.GetReleases().Length);
 
       // Clean storage
-      m_provider.CleanStorage();
+      Provider.CleanStorage();
       // And check that it is cleared
-      Assert.AreEqual(0, m_provider.GetApplications().Length);
-      Assert.AreEqual(0, m_provider.GetModules(app.Id).Length);
-      Assert.AreEqual(0, m_provider.GetSubModules(module.Id).Length);
-      Assert.AreEqual(0, m_provider.GetStaff().Length);
-      //      Assert.AreEqual(0, m_provider.GetBugs().Length);
-      Assert.AreEqual(0, m_provider.GetRevisions(10).Length);
-      //      Assert.AreEqual(0, m_provider.GetReleases().Length);
+      Assert.AreEqual(0, Provider.GetApplications().Length);
+      Assert.AreEqual(0, Provider.GetModules(app.Id).Length);
+      Assert.AreEqual(0, Provider.GetSubModules(module.Id).Length);
+      Assert.AreEqual(0, Provider.GetStaff().Length);
+      //      Assert.AreEqual(0, Provider.GetBugs().Length);
+      Assert.AreEqual(0, Provider.GetRevisions(10).Length);
+      //      Assert.AreEqual(0, Provider.GetReleases().Length);
     }
 
     #region Helper Methods
