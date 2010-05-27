@@ -29,12 +29,13 @@ namespace BugDB.DAL.Tests
       aggregator.FillStorage(dbDataPath);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
     /// <summary>
     /// Test for GetRevisions(query).
     /// </summary>
     [TestMethod]
     [DeploymentItem(@"ReferenceData\getRevisionsData.txt", "ReferenceData")]
-    public void GetRevisionsByQueryTest()
+    public void GetRevisionsByApp()
     {
       var prms = new QueryParams
       {

@@ -77,3 +77,7 @@ Revisions
 +) BLToolkit.DefaultConfiguration = WithoutPooling -> allow multiple DB recreation
 +) Rebuild project if only App.config is changed because it will not be
    taken into account by test execution
+   
+--- Presentation ---
+Prism 2.1
+
