@@ -28,8 +28,8 @@ namespace BugDB.Modules.BugReport
     {
       RegisterViewsAndServices();
 
-      //m_regionManager.RegisterViewWithRegion(RegionNames.MainRegion, 
-      //  () => m_container.Resolve<IBugReportPresentationModel>().View);
+      m_regionManager.RegisterViewWithRegion(RegionNames.MainRegion, 
+        () => m_container.Resolve<IBugReportPresentationModel>().View);
       m_regionManager.RegisterViewWithRegion(RegionNames.Sidebar,
         () => m_container.Resolve<QueryDefinitionPresentationModel>().View);
     }

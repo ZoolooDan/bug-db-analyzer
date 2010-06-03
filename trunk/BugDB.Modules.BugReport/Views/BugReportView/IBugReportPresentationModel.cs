@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace BugDB.Modules.BugReport
 {
-  public class Item
+  public class BugModel
   {
-    public int Number { get; set; }
-    public string Title { get; set; }
-    public DateTime Date { get; set; }
+    public int BugNumber { get; set; }
+    public string Summary { get; set; }
+    
   }
 
   public interface IBugReportPresentationModel
   {
     IBugReportView View { get; }
 
-    IList<Item> Items { get; }
+    IList<BugModel> Items { get; }
   }
 }
