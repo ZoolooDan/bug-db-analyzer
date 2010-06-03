@@ -52,6 +52,7 @@ namespace BugDB.DAL.Tests
       Revision[] actual = Provider.GetRevisions(prms);
 
       Assert.AreEqual(6, actual.Length);
+      Assert.IsNotNull(actual[0].Summary);
     }
   }
 }

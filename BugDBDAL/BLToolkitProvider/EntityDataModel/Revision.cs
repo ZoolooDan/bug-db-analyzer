@@ -119,7 +119,7 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider.EntityDataModel
     /// <summary>
     /// Short description of the bug.
     /// </summary>
-    [MapField("summary")]
+    [MapField("summary_text")]
     public string Summary { get; set; }  
   }
 }

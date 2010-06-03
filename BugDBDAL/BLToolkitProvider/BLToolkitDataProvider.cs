@@ -181,6 +181,73 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
     }
 
     /// <summary>
+    /// Gets all possible bug types.
+    /// </summary>
+    public BugType[] GetTypes()
+    {
+      return new[]
+               {
+                 BugType.Bug,
+                 BugType.Feature
+               };
+    }
+
+    /// <summary>
+    /// Gets all possible statuses.
+    /// </summary>
+    public BugStatus[] GetStatuses()
+    {
+      return new[]
+               {
+                 BugStatus.None, 
+                 BugStatus.Open,
+                 BugStatus.Invalid,
+                 BugStatus.Duplicate,
+                 BugStatus.Analyzed,
+                 BugStatus.Suspend,
+                 BugStatus.ToBeAssigned,
+                 BugStatus.Assigned,
+                 BugStatus.WorksForMe,
+                 BugStatus.Active,
+                 BugStatus.Fixed,
+                 BugStatus.Reopen,
+                 BugStatus.Modeling,
+                 BugStatus.Regression,
+                 BugStatus.TestCases,
+                 BugStatus.Verified,
+                 BugStatus.Closed,
+                 BugStatus.Deleted
+               };
+    }
+
+    /// <summary>
+    /// Gets all possible severities.
+    /// </summary>
+    public BugSeverity[] GetSeverities()
+    {
+      return new[]
+               {
+                 BugSeverity.Fatal,
+                 BugSeverity.Critical,
+                 BugSeverity.Serious,
+                 BugSeverity.Minor,
+                 BugSeverity.Sev5,
+                 BugSeverity.Sev6,
+                 BugSeverity.Sev7,
+                 BugSeverity.Sev8,
+                 BugSeverity.Sev9
+               };
+    }
+
+    /// <summary>
+    /// Gets all possible priorities.
+    /// </summary>
+    public int[] GetPriorities()
+    {
+      return new [] {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    }
+
+    /// <summary>
     /// Returns all bugs.
     /// </summary>
     public DTO.Bug[] GetBugs()
@@ -299,7 +366,9 @@ namespace BugDB.DataAccessLayer.BLToolkitProvider
 
         // Final query
         string query = String.Format(
-          @"SELECT * FROM Revisions WHERE bug_number IN ({0}{1}{2}) 
+          @"SELECT * FROM Revisions AS R INNER JOIN Summaries AS S
+            ON R.summary_id = S.summary_id 
+            WHERE bug_number IN ({0}{1}{2}) 
             ORDER BY bug_number, revision", 
           subQueryBase,
           condition.Length != 0 ? " WHERE " : "",

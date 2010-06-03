@@ -92,6 +92,37 @@ namespace BugDB.DataAccessLayer
     /// </summary>
     Person[] GetStaff();
 
+
+    //////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Gets all possible bug types.
+    /// </summary>
+    BugType[] GetTypes();
+
+
+    //////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Gets all possible statuses.
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>
+    /// Returns all possible but not only those that existed in
+    /// storage.
+    /// </remarks>
+    BugStatus[] GetStatuses();
+
+    //////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Gets all possible severities.
+    /// </summary>
+    BugSeverity[] GetSeverities();
+
+    //////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Gets all possible priorities.
+    /// </summary>
+    int[] GetPriorities();
+    
     //////////////////////////////////////////////////////////////
     /// <summary>
     /// Returns all bugs.
