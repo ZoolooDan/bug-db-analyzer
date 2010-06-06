@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using BugDB.Common;
 using BugDB.DataAccessLayer;
 using BugDB.DataAccessLayer.DataTransferObjects;
@@ -41,8 +38,6 @@ namespace BugDB.Modules.BugReport
                              BugNumber = g.Last().BugNumber, 
                              Summary = g.Last().Summary
                            };
-      
-
 
       this.Items = query.ToList();
     }

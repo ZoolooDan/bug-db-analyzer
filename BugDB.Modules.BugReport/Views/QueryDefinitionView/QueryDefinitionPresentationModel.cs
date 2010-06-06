@@ -213,7 +213,7 @@ namespace BugDB.Modules.BugReport.Views
         if (m_apps != value)
         {
           m_apps = value;
-          FireProperyChanged("Applications");
+          FirePropertyChanged("Applications");
         }
       }
     }
@@ -229,7 +229,7 @@ namespace BugDB.Modules.BugReport.Views
         if (m_modules != value)
         {
           m_modules = value;
-          FireProperyChanged("Modules");
+          FirePropertyChanged("Modules");
         }
       }
     }
@@ -245,7 +245,7 @@ namespace BugDB.Modules.BugReport.Views
         if (m_subModules != value)
         {
           m_subModules = value;
-          FireProperyChanged("SubModules");
+          FirePropertyChanged("SubModules");
         }
       }
     }
@@ -261,7 +261,7 @@ namespace BugDB.Modules.BugReport.Views
         if (m_foundReleases != value)
         {
           m_foundReleases = value;
-          FireProperyChanged("FoundReleases");
+          FirePropertyChanged("FoundReleases");
         }
       }
     }
@@ -296,7 +296,7 @@ namespace BugDB.Modules.BugReport.Views
         if( m_targetReleases != value )
         {
           m_targetReleases = value;
-          FireProperyChanged("TargetReleases");
+          FirePropertyChanged("TargetReleases");
         }
       }
     }
@@ -424,9 +424,9 @@ namespace BugDB.Modules.BugReport.Views
 
     public void NotifyAppsChanged()
     {
-      FireProperyChanged("Modules");
-      FireProperyChanged("TargetReleases");
-      FireProperyChanged("FoundReleases");
+      FirePropertyChanged("Modules");
+      FirePropertyChanged("TargetReleases");
+      FirePropertyChanged("FoundReleases");
     }
 
 

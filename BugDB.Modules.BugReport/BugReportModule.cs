@@ -45,13 +45,14 @@ namespace BugDB.Modules.BugReport
     private static IDataProvider GetDataProvider()
     {
       IDataProvider provider = new BLToolkitDataProvider(null);
-      provider.CleanStorage();
-
-      string dataPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                     @"Data\data.txt");
-
-      StorageAggregator aggregator = new StorageAggregator(provider);
-      aggregator.FillStorage(dataPath);
+//      provider.CleanStorage();
+//
+//      string dataPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+//                                     @"Data\data.txt");
+//      string dataPath = @"c:\Work\!vpi\tmm\!work\245 Bug Analysis\BugDB\1\tmm-report.txt";
+//
+//      StorageAggregator aggregator = new StorageAggregator(provider);
+//      aggregator.FillStorage(dataPath);
 
       return provider;
     }

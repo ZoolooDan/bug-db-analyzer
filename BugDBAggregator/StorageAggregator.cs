@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 using BugDB.DataAccessLayer;
 using BugDB.DataAccessLayer.DataTransferObjects;
@@ -70,6 +71,8 @@ namespace BugDB.Aggregator
     private IDictionary<ComplexKey, SubModule> m_subModuleCache;
     private IDictionary<ComplexKey, Release> m_relCache;
     private IDictionary<string, Person> m_personCache;
+    private int m_recordsCount = -1;
+
     #endregion Private Fields
 
     #region Constructors
@@ -122,7 +125,15 @@ namespace BugDB.Aggregator
     }
     #endregion Constructors
 
+    #region Public Events
+    /// <summary>
+    /// Occurs when progress changed.
+    /// </summary>
+    public event EventHandler<AggregatorProgressArgs> ProgressChanged;
+    #endregion Public Events
+
     #region Public Methods
+
     /// <summary>
     /// Reads query results from file and fills database.
     /// </summary>
@@ -131,10 +142,18 @@ namespace BugDB.Aggregator
     /// </remarks>
     public void FillStorage(string dataPath)
     {
+      // Count records
+      using(TextReader reader = new StreamReader(dataPath))
+      {
+        m_recordsCount = CountRecords(reader);
+      }
+
+      // Fill storage
       using(TextReader reader = new StreamReader(dataPath))
       {
         FillStorage(reader);
       }
+      m_recordsCount = -1;
     }
 
     /// <summary>
@@ -158,6 +177,7 @@ namespace BugDB.Aggregator
       m_relCache = new Dictionary<ComplexKey, Release>();
       m_personCache = new Dictionary<string, Person>();
 
+      int current = 0;
       // Enumerate records (actually revisions)
       while( records.MoveNext() )
       {
@@ -227,6 +247,10 @@ namespace BugDB.Aggregator
           summary, severity, priority, app, module, 
           subModule, foundRelease, 
           targetRelease, contributor, leader, developer, tester);
+
+        current++;
+        // Notify progress
+        FireProgressChanged(current);
       }
     }
 
@@ -395,7 +419,7 @@ namespace BugDB.Aggregator
     /// </summary>
     private SubModule ProcessSubModule(Record record, Module module)
     {
-      Debug.Assert(module != null); // application shall be specified
+      Debug.Assert(module != null); // module shall be specified
 
       string title;
       SubModule subModule = null;
@@ -519,7 +543,59 @@ namespace BugDB.Aggregator
                      };
       m_provider.CreateRevision(rev);
     }
+    
+    /// <summary>
+    /// Fires ProgressChanged event.
+    /// </summary>
+    private void FireProgressChanged(int current)
+    {
+      if (ProgressChanged != null)
+      {
+        ProgressChanged(this, new AggregatorProgressArgs(current, m_recordsCount));
+      }
+    }
+
+    /// <summary>
+    /// Calculates number of records of data available.
+    /// </summary>
+    private static int CountRecords(TextReader reader)
+    {
+      int count = 0;
+      // Create records enumerator from stream
+      IEnumerator<Record> records = QueryResultParser.CreateRecordsEnumerator(reader);
+      while( records.MoveNext() )
+      {
+        count++;
+      }
+      return count;
+    }
+
     #endregion Helper Methods
+  }
+
+  /// <summary>
+  /// Arguments for StorageAggregator ProgressChanged event.
+  /// </summary>
+  public class AggregatorProgressArgs : EventArgs
+  {
+    private int m_current;
+    private int m_total;
+
+    public AggregatorProgressArgs(int current, int total)
+    {
+      m_current = current;
+      m_total = total;
+    }
+
+    public int Current
+    {
+      get { return m_current; }
+    }
+
+    public int Total
+    {
+      get { return m_total; }
+    }
   }
 
   /// <summary>
