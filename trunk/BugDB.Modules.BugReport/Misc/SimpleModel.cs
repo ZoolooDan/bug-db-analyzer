@@ -10,7 +10,7 @@ namespace BugDB.Modules.BugReport.Misc
   {
     public event PropertyChangedEventHandler PropertyChanged;
 
-    protected void FireProperyChanged(string propName)
+    protected void FirePropertyChanged(string propName)
     {
       if (PropertyChanged != null)
       {

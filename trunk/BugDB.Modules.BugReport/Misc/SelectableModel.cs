@@ -22,7 +22,7 @@
         if( !ReferenceEquals(m_data, value) )
         {
           m_data = value;
-          FireProperyChanged("Data");
+          FirePropertyChanged("Data");
         }
       }
     }
@@ -41,7 +41,7 @@
         if( m_isSelected != value )
         {
           m_isSelected = value;
-          FireProperyChanged("IsSelected");
+          FirePropertyChanged("IsSelected");
         }
       }
     }
